@@ -1,0 +1,1 @@
+ALTER TABLE sponsors_donations ADD `deletedBy` text DEFAULT NULL REFERENCES users(id);

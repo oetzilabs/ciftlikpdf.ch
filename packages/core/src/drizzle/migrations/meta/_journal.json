@@ -1,0 +1,55 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1699655635157,
+      "tag": "0000_heavy_mystique",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1699695970013,
+      "tag": "0001_modern_kronos",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1699698975087,
+      "tag": "0002_nervous_blindfold",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1699709315109,
+      "tag": "0003_wakeful_wallop",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1699783888235,
+      "tag": "0004_violet_sabra",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1699785953022,
+      "tag": "0005_silly_korvac",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1699785961630,
+      "tag": "0006_icy_magma",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "ciftlikpdf",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sst dev",
+    "build": "sst build",
+    "deploy": "sst deploy",
+    "remove": "sst remove",
+    "console": "sst console",
+    "typecheck": "tsc --noEmit",
+    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "18.2.2",
+    "aws-cdk-lib": "2.95.1",
+    "constructs": "10.2.69",
+    "sst": "2.36.1",
+    "typescript": "^5.2.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "intl-messageformat": "10.5.4"
+    }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
