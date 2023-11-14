@@ -23,7 +23,7 @@ export function DocXToPDFStackV2({ stack, app }: StackContext) {
       cors: {
         allowHeaders: ["*"],
         allowMethods: ["POST"],
-        allowOrigins: ["http://dashboard." + dns.domain, "http://localhost:3000", "http://localhost:3001"],
+        allowOrigins: ["*"],
         allowCredentials: false,
       },
     },
