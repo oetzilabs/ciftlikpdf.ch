@@ -18,9 +18,7 @@ export function DashboardSolidStartStack({ stack, app }: StackContext) {
     buildCommand: "pnpm build",
     environment: {
       VITE_API_URL: apiUrl,
-      VITE_S3_BUCKET: bucket.bucketName,
       VITE_AUTH_URL: apiUrl + "/auth",
-      VITE_DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
     },
     customDomain: {
       domainName: "dashboard." + dns.domain,

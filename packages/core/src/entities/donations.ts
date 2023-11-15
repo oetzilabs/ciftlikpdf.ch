@@ -158,7 +158,7 @@ export const createPDFFromTemplate = z
       });
       const pdfFileKey = `sponsor-pdf/${sponsor.id}/${donation.id}.pdf`;
       const getObjCommand = new GetObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME!,
+        Bucket: Bucket["ciftlikpdf-bucket"].bucketName,
         Key: pdfFileKey,
         ResponseContentDisposition: `attachment; filename="${donation.year}_${sponsor.name}.pdf"`,
       });
@@ -195,14 +195,14 @@ export const createPDFFromTemplate = z
     });
     const pdfFileKey = `sponsor-pdf/${sponsor.id}/${donation.id}.pdf`;
     const putObjCommand = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME!,
+      Bucket: Bucket["ciftlikpdf-bucket"].bucketName,
       Key: pdfFileKey,
       Body: pdfFileBuffer,
     });
     await s3Client.send(putObjCommand);
     await update({ id: donation.id, s3Key: pdfFileKey });
     const getObjCommand = new GetObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME!,
+      Bucket: Bucket["ciftlikpdf-bucket"].bucketName,
       Key: pdfFileKey,
       ResponseContentDisposition: `attachment; filename="${donation.year}_${sponsor.name}.pdf"`,
     });

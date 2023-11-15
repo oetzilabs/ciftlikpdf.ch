@@ -18,8 +18,6 @@ export function SolidStartStack({ stack, app }: StackContext) {
     buildCommand: "pnpm build",
     environment: {
       VITE_API_URL: api.customDomainUrl || api.url,
-      VITE_S3_BUCKET: bucket.bucketName,
-      VITE_DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
     },
     customDomain: {
       domainName: dns.domain,
