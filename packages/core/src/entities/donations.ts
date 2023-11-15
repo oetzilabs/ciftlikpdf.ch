@@ -171,7 +171,11 @@ export const createPDFFromTemplate = z
     if (!defaultTemplate) {
       throw new Error("No default template found");
     }
+    console.log("trying to download template");
     const docxFile = await Template.download(defaultTemplate.Key);
+    console.log("template downloaded");
+    console.log("trying to convert to pdf");
+    const docxBuffer = Buffer.from(docxFile);
     const url = process.env.DOCX_TO_PDF_URL;
     if (!url) throw new Error("No DOCX_TO_PDF_URL env var");
     const pdfFileBuffer = await fetch(url, {
@@ -180,7 +184,7 @@ export const createPDFFromTemplate = z
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        templateFile: docxFile.buffer,
+        templateFile: docxBuffer.toJSON().data,
         user: sponsor.name,
         addres: sponsor.address,
         amount: donation.amount,
@@ -189,17 +193,23 @@ export const createPDFFromTemplate = z
         date: dayjs().locale(tr).format("Do MMMM YYYY"),
       }),
     }).then((res) => res.json() as Promise<number[]>);
+    console.log("converted to pdf");
     const s3Client = new S3Client({
       region: "eu-central-1",
     });
     const pdfFileKey = `sponsor-pdf/${sponsor.id}/${donation.id}.pdf`;
+    console.log("pdfFileKey", pdfFileKey);
+    console.log("trying to upload pdf file");
     const putObjCommand = new PutObjectCommand({
       Bucket: Bucket["ciftlikpdf-bucket"].bucketName,
       Key: pdfFileKey,
       Body: Buffer.from(pdfFileBuffer),
     });
     await s3Client.send(putObjCommand);
+    console.log("pdf file uploaded");
+    console.log("trying to update db");
     await update({ id: donation.id, s3Key: pdfFileKey });
+    console.log("db updated");
     const getObjCommand = new GetObjectCommand({
       Bucket: Bucket["ciftlikpdf-bucket"].bucketName,
       Key: pdfFileKey,
