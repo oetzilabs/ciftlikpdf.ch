@@ -3,24 +3,8 @@ import aws from "aws-sdk";
 import { createReport } from "docx-templates";
 import util from "util";
 import fs from "fs";
-import { convertTo } from '@shelf/aws-lambda-libreoffice';
-
-
-const s3Client = new aws.S3({
-  region: process.env.AWS_BUCKET_REGION,
-});
-
-const downloadFromS3 = async (templateFile: string) => {
-  const bucketName = process.env.AWS_BUCKET_NAME || "";
-  const key = `templates/${templateFile}`;
-
-  const response = await s3Client.getObject({ Bucket: bucketName, Key: key }).promise();
-  const b = response.Body;
-  if (!b) {
-    throw new Error("No body in response");
-  }
-  return Buffer.from(b as any);
-};
+import { convertTo } from "@shelf/aws-lambda-libreoffice";
+import { z } from "zod";
 
 const fillDataIntoDocx = async (docxContent: Buffer, replacementDict: Record<string, any>) => {
   const buffer = await createReport({
@@ -44,19 +28,6 @@ const createPdf = async (docxBuffer: Buffer) => {
   return pdfBuffer;
 };
 
-const uploadToS3 = async (pdfBuffer: Buffer, sponsorId: string, donationId: string) => {
-  const bucketName = process.env.AWS_BUCKET_NAME;
-  const s3Key = `sponsor-pdf/${sponsorId}/${donationId}.pdf`;
-
-  try {
-    await s3Client.putObject({ Bucket: bucketName!, Key: s3Key, Body: pdfBuffer }).promise();
-    return s3Key;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 export const handler = async (
   event: {
     body: string;
@@ -68,15 +39,6 @@ export const handler = async (
   },
   context: Context
 ) => {
-  if (process.env.IS_LOCAL) {
-    return {
-      statusCode: 403,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    };
-  }
   if (event.requestContext.http.method !== "POST") {
     return {
       statusCode: 405,
@@ -88,80 +50,45 @@ export const handler = async (
   }
   const data = JSON.parse(event.body || "{}");
   if (!data) {
-    throw new Error("No body provided");
-  }
-  if (!data) {
     throw new Error("No data provided");
   }
 
-  const sponsorId = data.sid;
-  const donationId = data.did;
+  const validation = z
+    .object({
+      templateFile: z.array(z.number()), // this is a buffer
+      user: z.string(),
+      addres: z.string(),
+      amount: z.number(),
+      currency: z.string(),
+      year: z.number(),
+      date: z.string(),
+    })
+    .safeParse(data);
 
-  console.log("sponsorId", sponsorId);
-  console.log("donationId", donationId);
-
-  if (!sponsorId || !donationId) {
+  if (!validation.success) {
     return {
       statusCode: 400,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message: "Missing sponsorId or donationId" }),
+      body: JSON.stringify({ message: "Bad request" }),
     };
   }
-
-  const s3Key = `sponsor-pdf/${sponsorId}/${donationId}.pdf`;
-
-  try {
-    await s3Client.headObject({ Bucket: process.env.AWS_BUCKET_NAME!, Key: s3Key }).promise();
-    const signedUrl = await s3Client.getSignedUrlPromise("getObject", {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: s3Key,
-      Expires: 60 * 60, // URL expiration time in seconds
-    });
-
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ pdfUrl: signedUrl }),
-    };
-  } catch (error) {
-    console.error(error);
-  }
-  const tf = data.templateFile;
+  const tf = validation.data.templateFile;
   if (!tf) {
     throw new Error("No template file provided");
   }
-  const docxContent = await downloadFromS3(tf);
+  const docxContent = await Buffer.from(tf);
   if (!docxContent) {
     throw new Error("Template not found");
   }
+
   const newDocx = await fillDataIntoDocx(docxContent, data);
-
   const pdf = await createPdf(newDocx);
-
-  const key = await uploadToS3(pdf, sponsorId, donationId);
-
-  const downloadUrl = await s3Client.getSignedUrlPromise("getObject", {
-    Bucket: process.env.AWS_BUCKET_NAME || "",
-    Key: key,
-    Expires: 60 * 60, // URL expiration time in seconds
-  });
 
   return {
     statusCode: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ pdfUrl: downloadUrl }),
+    body: pdf.toString("base64"),
+    isBase64Encoded: true,
   };
-  // return {
-  //   statusCode: 200,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(body),
-  // };
 };

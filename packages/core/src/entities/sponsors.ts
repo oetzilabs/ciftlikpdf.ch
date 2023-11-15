@@ -3,6 +3,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { db } from "../drizzle/sql";
 import { SponsorSelect, sponsors, sponsors_donations } from "../drizzle/sql/schema";
+import { Donation } from "../entities/donations";
 
 export * as Sponsor from "./sponsors";
 
@@ -324,6 +325,32 @@ export const invalidateDonations = z.function(z.tuple([z.string().uuid()])).impl
     .returning();
   return x;
 });
+
+export const createPDF = z
+  .function(z.tuple([z.string().uuid(), z.string().uuid()]))
+  .implement(async (sponsorId, donationId) => {
+    const x = await db.query.sponsors_donations.findFirst({
+      where: (fields, operators) =>
+        operators.and(operators.eq(fields.sponsorId, sponsorId), operators.eq(fields.id, donationId)),
+      with: {
+        sponsor: {
+          columns: {
+            name: true,
+            address: true,
+          },
+        },
+      },
+    });
+    if (!x) {
+      throw new Error("Donation not found");
+    }
+    const pdfUrl = await Donation.createPDFFromTemplate({
+      sponsorId: x.sponsorId,
+      donationId: x.id,
+    });
+
+    return pdfUrl;
+  });
 
 export type Frontend = NonNullable<Awaited<ReturnType<typeof findById>>>;
 

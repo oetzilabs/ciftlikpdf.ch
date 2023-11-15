@@ -126,4 +126,20 @@ export const getDefault = z.function(z.tuple([])).implement(async () => {
   });
 });
 
+export const download = z.function(z.tuple([z.string()])).implement(async (key) => {
+  const client = new S3Client({
+    region: "eu-central-1",
+  });
+
+  const command = new GetObjectCommand({
+    Bucket: Bucket["ciftlikpdf-bucket"].bucketName,
+    Key: key,
+  });
+
+  const { Body } = await client.send(command);
+  // turn body into buffer
+  if (!Body) throw new Error("Body is null");
+  return Body.transformToByteArray();
+});
+
 export type Frontend = NonNullable<Awaited<ReturnType<typeof findById>>>;

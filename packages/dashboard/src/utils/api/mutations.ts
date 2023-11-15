@@ -42,42 +42,15 @@ export const Sponsors = {
       }).then((res) => res.json() as ReturnType<typeof Sponsor.createWithDonation>)
     ),
   createPDF: z
-    .function(
-      z.tuple([
-        z.string(),
-        z.string().uuid(),
-        z.string().uuid(),
-        z.string(),
-        z.object({
-          user: z.string(),
-          addres: z.string(),
-          amount: z.number().transform((x) => x.toString()),
-          currency: z.string(),
-          year: z.number().transform((x) => x.toString()),
-          date: z.string(),
-        }),
-      ])
-    )
-    .implement(async (token, sponsorId, donationId, templateFileName, data) =>
-      fetch(DOCX_TO_PDF_API, {
+    .function(z.tuple([z.string(), z.string().uuid(), z.string().uuid()]))
+    .implement(async (token, sponsorId, donationId) =>
+      fetch(`${API_BASE}/sponsor/${sponsorId}/pdf/${donationId}`, {
         method: "POST",
         headers: {
           authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...data, sid: sponsorId, did: donationId, templateFile: templateFileName }),
-      }).then(
-        (res) =>
-          res.json() as Promise<{
-            pdfUrl: string;
-          }>
-      )
+      }).then((res) => res.text() as ReturnType<typeof Sponsor.createPDF>)
     ),
-  testDocker: z.function(z.tuple([])).implement(async () =>
-    fetch(DOCX_TO_PDF_API, {
-      method: "POST",
-    }).then((res) => res.json())
-  ),
   donate: z
     .function(
       z.tuple([

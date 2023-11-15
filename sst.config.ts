@@ -19,8 +19,8 @@ export default {
       //
       .stack(DNSStack)
       .stack(StorageStack)
-      .stack(ApiStack)
       .stack(DocXToPDFStackV2)
+      .stack(ApiStack)
       .stack(DashboardSolidStartStack)
       .stack(SolidStartStack);
   },

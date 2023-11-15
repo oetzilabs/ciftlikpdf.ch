@@ -1,14 +1,20 @@
-import { Octokit } from "@octokit/rest";
-import dayjs from "dayjs";
 import { eq, sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-import fetch from "node-fetch";
-import { Config } from "sst/node/config";
 import { z } from "zod";
 import { db } from "../drizzle/sql";
-import { SponsorDonationsSelect, sponsors_donations, SponsorSelect } from "../drizzle/sql/schema";
+import { SponsorDonationsSelect, sponsors_donations } from "../drizzle/sql/schema";
+import { Template } from "./templates";
+import { Sponsor } from "../entities/sponsors";
+import fetch from "node-fetch";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Bucket } from "sst/node/bucket";
+import dayjs from "dayjs";
+import tr from "dayjs/locale/tr";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+dayjs.extend(advancedFormat);
 
-export * as Sponsor from "./sponsors";
+export * as Donation from "./donations";
 
 export const create = z.function(z.tuple([createInsertSchema(sponsors_donations)])).implement(async (input) => {
   const [x] = await db.insert(sponsors_donations).values(input).returning();
@@ -126,6 +132,86 @@ export const updateAmount = z
 export const isAllowedToSignUp = z.function(z.tuple([z.object({ email: z.string() })])).implement(async (input) => {
   return true;
 });
+
+export const createPDFFromTemplate = z
+  .function(
+    z.tuple([
+      z.object({
+        sponsorId: z.string().uuid(),
+        donationId: z.string().uuid(),
+      }),
+    ])
+  )
+  .implement(async (input) => {
+    const donation = await findById(input.donationId);
+    if (!donation) {
+      throw new Error("No sponsor found");
+    }
+    const sponsor = await Sponsor.findById(input.sponsorId);
+    if (!sponsor) {
+      throw new Error("No sponsor found");
+    }
+    // check if donation already has a pdf
+    if (donation.s3Key) {
+      const s3Client = new S3Client({
+        region: process.env.AWS_REGION,
+      });
+      const pdfFileKey = `sponsor-pdf/${sponsor.id}/${donation.id}.pdf`;
+      const getObjCommand = new GetObjectCommand({
+        Bucket: process.env.AWS_BUCKET_NAME!,
+        Key: pdfFileKey,
+        ResponseContentDisposition: `attachment; filename="${donation.year}_${sponsor.name}.pdf"`,
+      });
+      const pdfFileUrl = getSignedUrl(s3Client, getObjCommand, {
+        expiresIn: 60 * 60,
+      });
+      return pdfFileUrl;
+    }
+    const defaultTemplate = await Template.getDefault();
+    if (!defaultTemplate) {
+      throw new Error("No default template found");
+    }
+    const docxFile = await Template.download(defaultTemplate.Key);
+    const pdfFile = await fetch(process.env.DOCX_TO_PDF_URL!, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        templateFile: docxFile.buffer,
+        user: sponsor.name,
+        addres: sponsor.address,
+        amount: donation.amount,
+        currency: donation.currency,
+        year: donation.year,
+        date: dayjs().locale(tr).format("Do MMMM YYYY"),
+      }),
+    });
+    if (!pdfFile.ok) {
+      throw new Error("Could not create pdf");
+    }
+    const pdfFileBuffer = await pdfFile.arrayBuffer().then((x) => Buffer.from(x));
+    const s3Client = new S3Client({
+      region: process.env.AWS_REGION,
+    });
+    const pdfFileKey = `sponsor-pdf/${sponsor.id}/${donation.id}.pdf`;
+    const putObjCommand = new PutObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME!,
+      Key: pdfFileKey,
+      Body: pdfFileBuffer,
+    });
+    await s3Client.send(putObjCommand);
+    await update({ id: donation.id, s3Key: pdfFileKey });
+    const getObjCommand = new GetObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME!,
+      Key: pdfFileKey,
+      ResponseContentDisposition: `attachment; filename="${donation.year}_${sponsor.name}.pdf"`,
+    });
+    const pdfFileUrl = getSignedUrl(s3Client, getObjCommand, {
+      expiresIn: 60 * 60,
+    });
+    return pdfFileUrl;
+  });
 
 export type Frontend = NonNullable<Awaited<ReturnType<typeof findById>>>;
 

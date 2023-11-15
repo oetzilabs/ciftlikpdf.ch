@@ -519,27 +519,8 @@ export const CreatePDFModal = (props: { sponsor: Sponsor.Frontend }) => {
     if (!token) return Promise.reject("No token found. Please login first.");
     const defaultTemplate = await Queries.Templates.getDefault(token);
     if (!defaultTemplate) return Promise.reject("No default template found. Please create one first.");
-    const resultUrl = await Mutations.Sponsors.createPDF(
-      token,
-      props.sponsor.id,
-      donationId,
-      defaultTemplate.Key.replace("templates/", ""),
-      {
-        user: props.sponsor.name,
-        addres: `${props.sponsor.name}\n${props.sponsor.address}`,
-        amount: props.sponsor.donations?.find((d) => d.id === donationId)!.amount,
-        currency: props.sponsor.donations?.find((d) => d.id === donationId)!.currency,
-        year: props.sponsor.donations?.find((d) => d.id === donationId)!.year,
-        date: dayjs().locale("tr").format("Do MMMM YYYY"),
-      }
-    );
-
-    if (!resultUrl) return Promise.reject("No result url found.");
-    await Mutations.Templates.syncOld(token);
-    return resultUrl;
-
+    return Mutations.Sponsors.createPDF(token, props.sponsor.id, donationId);
   });
-
 
   return (
     <Modal
@@ -584,10 +565,9 @@ export const CreatePDFModal = (props: { sponsor: Sponsor.Frontend }) => {
                       onClick={async () => {
                         const data = await createPDF.mutateAsync(donation.id);
                         if (!data) return;
-                        if (!data.pdfUrl) return;
                         //make a anchor tag and click it
                         const a = document.createElement("a");
-                        a.href = data.pdfUrl;
+                        a.href = data;
                         const regex = /[^a-zA-Z0-9]/g;
                         a.download = `${props.sponsor.name.replaceAll(regex, "-")}_${donation.year}.pdf`;
                         a.click();

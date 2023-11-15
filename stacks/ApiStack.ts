@@ -1,9 +1,11 @@
 import { Api, Config, StackContext, use } from "sst/constructs";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
+import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
 
 export function ApiStack({ stack }: StackContext) {
   const dns = use(DNSStack);
+  const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
   const secrets = Config.Secret.create(stack, "DATABASE_URL", "DATABASE_AUTH_TOKEN", "JWT_SECRET");
 
   const { bucket } = use(StorageStack);
@@ -15,13 +17,15 @@ export function ApiStack({ stack }: StackContext) {
     },
     defaults: {
       function: {
+        environment: {
+          DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
+        },
         nodejs: {
           install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp", "pandoc"],
           // esbuild: { external: ["@libsql/linux-x64-gnu"] },
         },
         // handler: "packages/functions/src/migrator.handler",
         bind: [secrets.DATABASE_URL, secrets.DATABASE_AUTH_TOKEN, secrets.JWT_SECRET, bucket],
-        layers: ["arn:aws:lambda:eu-central-1:764866452798:layer:libreoffice-gzip:1"],
         copyFiles: [
           {
             from: "packages/core/src/drizzle",

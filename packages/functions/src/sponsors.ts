@@ -1,13 +1,12 @@
-import { StatusCodes } from "http-status-codes";
 import { Sponsor } from "@ciftlikpdf/core/entities/sponsors";
-import { Template } from "@ciftlikpdf/core/entities/templates";
-import { error, getUser, json } from "./utils";
-import { usePathParam, ApiHandler, useFormData, useQueryParam } from "sst/node/api";
+import { StatusCodes } from "http-status-codes";
+import { ApiHandler, useFormData, usePathParam, useQueryParam } from "sst/node/api";
+import { error, getUser, json, text } from "./utils";
 
 export const get = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
   const id = usePathParam("id");
   if (!id) {
@@ -41,7 +40,7 @@ export const create = ApiHandler(async () => {
 export const createWithDonation = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
   const body = useFormData();
   if (!body) {
@@ -61,7 +60,7 @@ export const createWithDonation = ApiHandler(async () => {
 export const donate = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
   const id = usePathParam("id");
   if (!id) {
@@ -89,7 +88,7 @@ export const donate = ApiHandler(async () => {
 export const all = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
   const filter = useQueryParam("filter");
   if (!filter) {
@@ -107,7 +106,7 @@ export const all = ApiHandler(async () => {
 export const update = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
   const id = usePathParam("id");
   if (!id) {
@@ -135,7 +134,7 @@ export const update = ApiHandler(async () => {
 export const updateDonation = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
 
   const sponsorId = usePathParam("id");
@@ -167,7 +166,7 @@ export const updateDonation = ApiHandler(async () => {
 export const removeDonation = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
 
   const sponsorId = usePathParam("id");
@@ -185,7 +184,7 @@ export const removeDonation = ApiHandler(async () => {
 export const remove = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
 
   const id = usePathParam("id");
@@ -199,7 +198,7 @@ export const remove = ApiHandler(async () => {
 export const count = ApiHandler(async () => {
   const user = await getUser();
   if (!user) {
-    return error("User not found", StatusCodes.NOT_FOUND);
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
   const filter = useQueryParam("filter");
   if (!filter) {
@@ -212,4 +211,29 @@ export const count = ApiHandler(async () => {
   }
 
   return error("Invalid filter");
+});
+
+export const donationPdf = ApiHandler(async () => {
+  const user = await getUser();
+  if (!user) {
+    return error("User not authorized", StatusCodes.UNAUTHORIZED);
+  }
+
+  const sponsorId = usePathParam("id");
+  if (!sponsorId) {
+    return error("No sponsor id");
+  }
+  const donationId = usePathParam("did");
+  if (!donationId) {
+    return error("No donation id");
+  }
+  try {
+    const pdfDownloadUrl = await Sponsor.createPDF(sponsorId, donationId);
+    return text(pdfDownloadUrl);
+  } catch (e) {
+    const er = e as Error;
+    return error(er.message);
+  }
+
+  return error("Unexpected error");
 });

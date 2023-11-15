@@ -35,3 +35,12 @@ export const error = <T extends string | Record<string, any>>(error: T, statusCo
     },
   };
 };
+export const text = (input: string, statusCode = StatusCodes.OK) => {
+  return {
+    statusCode,
+    body: input,
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  };
+};
