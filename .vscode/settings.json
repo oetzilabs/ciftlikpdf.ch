@@ -1,5 +1,6 @@
 {
   "search.exclude": {
     "**/.sst": true
-  }
+  },
+  "github-actions.workflows.pinned.workflows": [".github/workflows/deploy-to-prod.yml"]
 }

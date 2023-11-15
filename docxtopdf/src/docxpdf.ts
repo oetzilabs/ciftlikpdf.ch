@@ -78,21 +78,21 @@ export const handler = async (
   if (!tf) {
     throw new Error("No template file provided");
   }
-  console.log("templateFile received");
+  // console.log("templateFile received");
   const docxContent = Buffer.from(tf);
   if (!docxContent) {
     throw new Error("Template not found");
   }
-  console.log("templateFile buffer created");
+  // console.log("templateFile buffer created");
 
   const { templateFile, ...rest } = validation.data;
 
-  console.log("filling data into docx");
+  // console.log("filling data into docx");
   const newDocx = await fillDataIntoDocx(docxContent, rest);
-  console.log("docx filled");
-  console.log("creating pdf");
+  // console.log("docx filled");
+  // console.log("creating pdf");
   const pdfBuffer = await createPdf(newDocx);
-  console.log("pdf created");
+  // console.log("pdf created");
   const dataBuffer = pdfBuffer.toJSON().data;
 
   return {
