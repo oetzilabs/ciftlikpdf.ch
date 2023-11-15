@@ -174,7 +174,7 @@ export const createPDFFromTemplate = z
     const docxFile = await Template.download(defaultTemplate.Key);
     const url = process.env.DOCX_TO_PDF_URL;
     if (!url) throw new Error("No DOCX_TO_PDF_URL env var");
-    const pdfFile = await fetch(url, {
+    const pdfFileBuffer = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -188,8 +188,7 @@ export const createPDFFromTemplate = z
         year: donation.year,
         date: dayjs().locale(tr).format("Do MMMM YYYY"),
       }),
-    }).then((res)=>res.text());
-    const pdfFileBuffer = Buffer.from(pdfFile, "base64");
+    }).then((res) => res.json() as Promise<number[]>);
     const s3Client = new S3Client({
       region: "eu-central-1",
     });
@@ -197,7 +196,7 @@ export const createPDFFromTemplate = z
     const putObjCommand = new PutObjectCommand({
       Bucket: Bucket["ciftlikpdf-bucket"].bucketName,
       Key: pdfFileKey,
-      Body: pdfFileBuffer,
+      Body: Buffer.from(pdfFileBuffer),
     });
     await s3Client.send(putObjCommand);
     await update({ id: donation.id, s3Key: pdfFileKey });
@@ -206,7 +205,7 @@ export const createPDFFromTemplate = z
       Key: pdfFileKey,
       ResponseContentDisposition: `attachment; filename="${donation.year}_${sponsor.name}.pdf"`,
     });
-    const pdfFileUrl = getSignedUrl(s3Client, getObjCommand, {
+    const pdfFileUrl = await getSignedUrl(s3Client, getObjCommand, {
       expiresIn: 60 * 60,
     });
     return pdfFileUrl;

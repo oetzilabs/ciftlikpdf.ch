@@ -74,12 +74,12 @@ export const handler = async (
       body: JSON.stringify({ message: "Bad request" }),
     };
   }
-  const tf = validation.data.templateFile;
+  const tf: readonly number[] = validation.data.templateFile;
   if (!tf) {
     throw new Error("No template file provided");
   }
   console.log("templateFile received");
-  const docxContent = await Buffer.from(tf);
+  const docxContent = Buffer.from(tf);
   if (!docxContent) {
     throw new Error("Template not found");
   }
@@ -91,12 +91,15 @@ export const handler = async (
   const newDocx = await fillDataIntoDocx(docxContent, rest);
   console.log("docx filled");
   console.log("creating pdf");
-  const pdf = await createPdf(newDocx);
+  const pdfBuffer = await createPdf(newDocx);
   console.log("pdf created");
+  const dataBuffer = pdfBuffer.toJSON().data;
 
   return {
     statusCode: 200,
-    body: pdf.toString("base64"),
-    isBase64Encoded: true,
+    body: JSON.stringify(dataBuffer),
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
 };
