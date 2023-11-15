@@ -189,9 +189,6 @@ export const createPDFFromTemplate = z
         date: dayjs().locale(tr).format("Do MMMM YYYY"),
       }),
     });
-    if (!pdfFile.ok) {
-      throw new Error("Could not create pdf");
-    }
     const pdfFileBuffer = await pdfFile.arrayBuffer().then((x) => Buffer.from(x));
     const s3Client = new S3Client({
       region: process.env.AWS_REGION,
