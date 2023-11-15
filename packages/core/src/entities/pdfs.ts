@@ -99,5 +99,7 @@ export const removeByKey = z.function(z.tuple([z.string()])).implement(async (ke
   });
   const response = await client.send(command);
   if (!response) throw new Error("not found");
+  // update db
+  await db.update(sponsors_donations).set({ s3Key: null }).where(eq(sponsors_donations.s3Key, key)).returning();
   return response.DeleteMarker;
 });
