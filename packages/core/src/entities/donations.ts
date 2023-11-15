@@ -188,8 +188,8 @@ export const createPDFFromTemplate = z
         year: donation.year,
         date: dayjs().locale(tr).format("Do MMMM YYYY"),
       }),
-    });
-    const pdfFileBuffer = await pdfFile.body().then((x) => Buffer.from(x, "base64"));
+    }).then((res)=>res.text());
+    const pdfFileBuffer = Buffer.from(pdfFile, "base64");
     const s3Client = new S3Client({
       region: "eu-central-1",
     });
