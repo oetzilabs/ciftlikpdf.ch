@@ -83,7 +83,9 @@ export const handler = async (
     throw new Error("Template not found");
   }
 
-  const newDocx = await fillDataIntoDocx(docxContent, data);
+  const { templateFile, ...rest } = validation.data;
+
+  const newDocx = await fillDataIntoDocx(docxContent, rest);
   const pdf = await createPdf(newDocx);
 
   return {
