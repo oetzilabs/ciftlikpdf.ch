@@ -189,7 +189,7 @@ export const createPDFFromTemplate = z
         date: dayjs().locale(tr).format("Do MMMM YYYY"),
       }),
     });
-    const pdfFileBuffer = await pdfFile.text().then((x) => Buffer.from(x, "base64"));
+    const pdfFileBuffer = await pdfFile.body().then((x) => Buffer.from(x, "base64"));
     const s3Client = new S3Client({
       region: "eu-central-1",
     });
