@@ -17,9 +17,6 @@ export function ApiStack({ stack }: StackContext) {
     },
     defaults: {
       function: {
-        environment: {
-          DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
-        },
         nodejs: {
           install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp", "pandoc"],
           // esbuild: { external: ["@libsql/linux-x64-gnu"] },
@@ -111,6 +108,9 @@ export function ApiStack({ stack }: StackContext) {
         function: {
           handler: "packages/functions/src/sponsors.donationPdf",
           description: "This is the sponsors donationPdf function",
+          environment: {
+            DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
+          },
         },
       },
       "GET /sponsors/all": {

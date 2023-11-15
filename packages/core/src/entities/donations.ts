@@ -172,7 +172,9 @@ export const createPDFFromTemplate = z
       throw new Error("No default template found");
     }
     const docxFile = await Template.download(defaultTemplate.Key);
-    const pdfFile = await fetch(process.env.DOCX_TO_PDF_URL!, {
+    const url = process.env.DOCX_TO_PDF_URL;
+    if (!url) throw new Error("No DOCX_TO_PDF_URL env var");
+    const pdfFile = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

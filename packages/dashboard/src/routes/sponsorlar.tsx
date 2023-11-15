@@ -517,8 +517,6 @@ export const CreatePDFModal = (props: { sponsor: Sponsor.Frontend }) => {
   const createPDF = createMutation(async (donationId: string) => {
     const token = user().token;
     if (!token) return Promise.reject("No token found. Please login first.");
-    const defaultTemplate = await Queries.Templates.getDefault(token);
-    if (!defaultTemplate) return Promise.reject("No default template found. Please create one first.");
     return Mutations.Sponsors.createPDF(token, props.sponsor.id, donationId);
   });
 
@@ -565,11 +563,8 @@ export const CreatePDFModal = (props: { sponsor: Sponsor.Frontend }) => {
                       onClick={async () => {
                         const data = await createPDF.mutateAsync(donation.id);
                         if (!data) return;
-                        //make a anchor tag and click it
                         const a = document.createElement("a");
                         a.href = data;
-                        const regex = /[^a-zA-Z0-9]/g;
-                        a.download = `${props.sponsor.name.replaceAll(regex, "-")}_${donation.year}.pdf`;
                         a.click();
                       }}
                       disabled={createPDF.isLoading}
