@@ -536,7 +536,7 @@ export const CreatePDFModal = (props: { sponsor: Sponsor.Frontend }) => {
 
     if (!resultUrl) return Promise.reject("No result url found.");
     await Mutations.Templates.syncOld(token);
-    return { pdfUrl: resultUrl };
+    return resultUrl;
 
   });
 
