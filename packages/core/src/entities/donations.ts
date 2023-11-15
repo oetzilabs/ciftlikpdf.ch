@@ -189,9 +189,9 @@ export const createPDFFromTemplate = z
         date: dayjs().locale(tr).format("Do MMMM YYYY"),
       }),
     });
-    const pdfFileBuffer = await pdfFile.arrayBuffer().then((x) => Buffer.from(x));
+    const pdfFileBuffer = await pdfFile.text().then((x) => Buffer.from(x, "base64"));
     const s3Client = new S3Client({
-      region: process.env.AWS_REGION,
+      region: "eu-central-1",
     });
     const pdfFileKey = `sponsor-pdf/${sponsor.id}/${donation.id}.pdf`;
     const putObjCommand = new PutObjectCommand({
