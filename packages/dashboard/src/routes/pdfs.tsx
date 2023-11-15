@@ -22,6 +22,9 @@ export default function PdfsPage() {
       get enabled() {
         return user().isAuthenticated;
       },
+      refetchInterval: 1000 * 60,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -114,7 +117,7 @@ export default function PdfsPage() {
             </div>
           }
         >
-          <Match when={pdfs.isSuccess && pdfs.data !== undefined && filteredPdfs(pdfs.data)}>
+          <Match when={pdfs.isSuccess && typeof pdfs.data !== "undefined" && filteredPdfs(pdfs.data)}>
             {(sps) => (
               <For
                 each={sps()}

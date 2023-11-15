@@ -123,8 +123,13 @@ const SettingsPage = () => {
         const u = user();
         return u.isAuthenticated && u.user?.type === "superadmin";
       },
+      refetchInterval: 1000 * 5,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
     }
   );
+
+  const errorsKeys = () => Object.keys(errors());
 
   return (
     <div class="container mx-auto flex flex-col py-10 gap-10">
@@ -155,9 +160,7 @@ const SettingsPage = () => {
                 onInput={(e) => setNewPassword(e.currentTarget.value)}
               />
             </div>
-            <For each={Object.keys(errors())}>
-              {(key) => <div class="text-red-500 text-sm font-bold">{errors()[key]}</div>}
-            </For>
+            <For each={errorsKeys()}>{(key) => <div class="text-red-500 text-sm font-bold">{errors()[key]}</div>}</For>
           </div>
           <button
             type="button"
@@ -197,7 +200,7 @@ const SettingsPage = () => {
                   onInput={(e) => setPassword(e.currentTarget.value)}
                 />
               </div>
-              <For each={Object.keys(errors())}>
+              <For each={errorsKeys()}>
                 {(key) => <div class="text-red-500 text-sm font-bold">{errors()[key]}</div>}
               </For>
             </div>
@@ -217,70 +220,74 @@ const SettingsPage = () => {
           <div class="w-full flex flex-col gap-4">
             <div class="w-full flex flex-col gap-2">
               <span class="font-bold text-xl">Admin yap</span>
-              <For each={users.data}>
+              <Show when={users.isSuccess && typeof users.data !== "undefined" && users.data}>
                 {(u) => (
-                  <div
-                    class={cn(
-                      "text-sm font-bold text-neutral-500 w-full border border-neutral-300 rounded-sm p-2 flex flex-row items-center justify-between",
-                      {
-                        "text-blue-500": u.type === "superadmin",
-                        "text-green-500": u.type === "admin",
-                        "text-red-500": u.type === "viewer",
-                      }
+                  <For each={u()}>
+                    {(u) => (
+                      <div
+                        class={cn(
+                          "text-sm font-bold text-neutral-500 w-full border border-neutral-300 rounded-sm p-2 flex flex-row items-center justify-between",
+                          {
+                            "text-blue-500": u.type === "superadmin",
+                            "text-green-500": u.type === "admin",
+                            "text-red-500": u.type === "viewer",
+                          }
+                        )}
+                      >
+                        <div class="flex w-full">
+                          {u.name} ({u.type})
+                        </div>
+                        <div class="flex flex-row gap-2.5">
+                          <button
+                            type="button"
+                            class="text-sm font-bold text-teal-500 border border-teal-500 px-2 py-1 w-max disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={
+                              u.id === user().user?.id ||
+                              u.type === "viewer" ||
+                              (makeViewer.isLoading && makeViewer.variables === u.id)
+                            }
+                            onClick={async () => {
+                              await makeViewer.mutateAsync(u.id);
+                            }}
+                          >
+                            Viewer
+                          </button>
+                          <button
+                            type="button"
+                            class="text-sm font-bold text-red-500 border border-red-500 px-2 py-1 w-max disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={
+                              u.id === user().user?.id ||
+                              u.type === "admin" ||
+                              (makeAdmin.isLoading && makeAdmin.variables === u.id) ||
+                              (makeSuperAdmin.isLoading && makeSuperAdmin.variables === u.id)
+                            }
+                            onClick={async () => {
+                              await makeAdmin.mutateAsync(u.id);
+                            }}
+                          >
+                            Admin
+                          </button>
+                          <button
+                            type="button"
+                            class="text-sm font-bold text-red-500 border border-red-500 px-2 py-1 w-max disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={
+                              u.id === user().user?.id ||
+                              u.type === "superadmin" ||
+                              (makeAdmin.isLoading && makeAdmin.variables === u.id) ||
+                              (makeSuperAdmin.isLoading && makeSuperAdmin.variables === u.id)
+                            }
+                            onClick={async () => {
+                              await makeSuperAdmin.mutateAsync(u.id);
+                            }}
+                          >
+                            SüperAdmin
+                          </button>
+                        </div>
+                      </div>
                     )}
-                  >
-                    <div class="flex w-full">
-                      {u.name} ({u.type})
-                    </div>
-                    <div class="flex flex-row gap-2.5">
-                      <button
-                        type="button"
-                        class="text-sm font-bold text-teal-500 border border-teal-500 px-2 py-1 w-max disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={
-                          u.id === user().user?.id ||
-                          u.type === "viewer" ||
-                          (makeViewer.isLoading && makeViewer.variables === u.id)
-                        }
-                        onClick={async () => {
-                          await makeViewer.mutateAsync(u.id);
-                        }}
-                      >
-                        Viewer
-                      </button>
-                      <button
-                        type="button"
-                        class="text-sm font-bold text-red-500 border border-red-500 px-2 py-1 w-max disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={
-                          u.id === user().user?.id ||
-                          u.type === "admin" ||
-                          (makeAdmin.isLoading && makeAdmin.variables === u.id) ||
-                          (makeSuperAdmin.isLoading && makeSuperAdmin.variables === u.id)
-                        }
-                        onClick={async () => {
-                          await makeAdmin.mutateAsync(u.id);
-                        }}
-                      >
-                        Admin
-                      </button>
-                      <button
-                        type="button"
-                        class="text-sm font-bold text-red-500 border border-red-500 px-2 py-1 w-max disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={
-                          u.id === user().user?.id ||
-                          u.type === "superadmin" ||
-                          (makeAdmin.isLoading && makeAdmin.variables === u.id) ||
-                          (makeSuperAdmin.isLoading && makeSuperAdmin.variables === u.id)
-                        }
-                        onClick={async () => {
-                          await makeSuperAdmin.mutateAsync(u.id);
-                        }}
-                      >
-                        SüperAdmin
-                      </button>
-                    </div>
-                  </div>
+                  </For>
                 )}
-              </For>
+              </Show>
             </div>
           </div>
         </div>

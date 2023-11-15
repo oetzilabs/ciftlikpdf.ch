@@ -42,6 +42,7 @@ const AuthPage = () => {
       },
     }
   );
+  const errorKeys = () => Object.keys(errors());
 
   return (
     <div class="max-w-[600px] w-full mx-auto flex flex-col py-10 gap-10">
@@ -63,9 +64,7 @@ const AuthPage = () => {
           value={password()}
           onInput={(e) => setPassword(e.currentTarget.value)}
         />
-        <For each={Object.keys(errors())}>
-          {(key) => <div class="text-red-500 text-sm font-bold">{errors()[key]}</div>}
-        </For>
+        <For each={errorKeys()}>{(key) => <div class="text-red-500 text-sm font-bold">{errors()[key]}</div>}</For>
       </div>
       <button
         type="button"

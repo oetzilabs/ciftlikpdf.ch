@@ -19,7 +19,8 @@ export default function Home() {
       return Queries.PDFs.Search.sponsors(se);
     },
     {
-      refetchInterval: 1000 * 60, // 5 seconds
+      refetchInterval: 1000 * 60,
+      refetchIntervalInBackground: true,
       refetchOnWindowFocus: false,
       get enabled() {
         return search().length >= 3;

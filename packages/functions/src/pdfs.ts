@@ -9,7 +9,7 @@ export const all = ApiHandler(async () => {
   if (!user) {
     return error("User not authorized", StatusCodes.UNAUTHORIZED);
   }
-  const pdfs = await PDF.all();
+  const pdfs = await PDF.all().catch((e) => []);
 
   return json(pdfs);
 });

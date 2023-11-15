@@ -13,11 +13,11 @@ export const all = ApiHandler(async () => {
   }
   const filter = useQueryParam("filter");
   if (filter === "non-deleted") {
-    const templates = await Template.allWithoutDeleted();
+    const templates = await Template.allWithoutDeleted().catch((e) => []);
     return json(templates);
   }
 
-  const templates = await Template.all();
+  const templates = await Template.all().catch((e) => []);
 
   return json(templates);
 });

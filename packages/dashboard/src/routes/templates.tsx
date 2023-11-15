@@ -21,6 +21,9 @@ export default function TemplatesPage() {
       get enabled() {
         return user().isAuthenticated;
       },
+      refetchInterval: 1000 * 60,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -183,7 +186,9 @@ export default function TemplatesPage() {
             </div>
           }
         >
-          <Match when={templates.isSuccess && templates.data !== undefined && filteredSponsors(templates.data)}>
+          <Match
+            when={templates.isSuccess && typeof templates.data !== "undefined" && filteredSponsors(templates.data)}
+          >
             {(sps) => (
               <For
                 each={sps()}

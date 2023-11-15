@@ -22,7 +22,8 @@ export default function DashboardPage() {
       get enabled() {
         return user().isAuthenticated;
       },
-      refetchInterval: 1000 * 60, // 1 minute
+      refetchInterval: 1000 * 5,
+      refetchIntervalInBackground: true,
       refetchOnWindowFocus: false,
     }
   );
@@ -58,7 +59,7 @@ export default function DashboardPage() {
               </svg>
             }
           >
-            <Match when={sponsors.isSuccess && sponsors.data}>
+            <Match when={sponsors.isSuccess && typeof sponsors.data !== "undefined" && sponsors.data}>
               {(sps) => <span class="text-2xl font-bold">{sps().count}</span>}
             </Match>
           </Switch>

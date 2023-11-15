@@ -92,11 +92,11 @@ export const all = ApiHandler(async () => {
   }
   const filter = useQueryParam("filter");
   if (!filter) {
-    const sponsors = await Sponsor.all();
+    const sponsors = await Sponsor.all().catch((e) => []);
     return json(sponsors);
   }
   if (filter === "non-deleted") {
-    const sponsors = await Sponsor.allWithoutDeleted();
+    const sponsors = await Sponsor.allWithoutDeleted().catch((e) => []);
     return json(sponsors);
   }
 

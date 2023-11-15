@@ -1120,6 +1120,9 @@ export default function SponsorlarPage() {
       get enabled() {
         return user().isAuthenticated;
       },
+      refetchInterval: 1000 * 60,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -1168,7 +1171,7 @@ export default function SponsorlarPage() {
             </div>
           }
         >
-          <Match when={sponsors.isSuccess && sponsors.data !== undefined && filteredSponsors(sponsors.data)}>
+          <Match when={sponsors.isSuccess && typeof sponsors.data !== "undefined" && filteredSponsors(sponsors.data)}>
             {(sps) => (
               <For
                 each={sps()}
