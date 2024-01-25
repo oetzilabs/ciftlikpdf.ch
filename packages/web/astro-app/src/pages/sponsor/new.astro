@@ -1,7 +1,17 @@
 ---
+import { API_URL } from "../../consts";
 import MainLayout from "../../layouts/MainLayout.astro";
+import { NewSponsorFormWrapper } from "../../components/NewSponsorForm";
+
+const session = Astro.cookies.get("session")?.value;
+if (!session && import.meta.env.NODE_ENV === "production") {
+  return Astro.redirect("/login");
+}
 ---
 
 <MainLayout>
-  <h1>Yeni Sponsor</h1>
+  <div class="flex flex-col gap-4">
+    <h1 class="text-3xl font-bold">Yeni Sponsor</h1>
+    <NewSponsorFormWrapper API_URL={API_URL} client:load session={session} />
+  </div>
 </MainLayout>
