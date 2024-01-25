@@ -5,6 +5,7 @@ import { DashboardSolidStartStack } from "./stacks/DashboardSolidStartStack";
 import { DNSStack } from "./stacks/DNSStack";
 import { SolidStartStack } from "./stacks/PublicSolidStartStack";
 import { DocXToPDFStackV2 } from "./stacks/DocXToPDFStackV2";
+import { AstroStack } from "./stacks/AstroStack";
 
 export default {
   config(_input) {
@@ -22,6 +23,7 @@ export default {
       .stack(DocXToPDFStackV2)
       .stack(ApiStack)
       .stack(DashboardSolidStartStack)
-      .stack(SolidStartStack);
+      .stack(SolidStartStack)
+      .stack(AstroStack);
   },
 } satisfies SSTConfig;
