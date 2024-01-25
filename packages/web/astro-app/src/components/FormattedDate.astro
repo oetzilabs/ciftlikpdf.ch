@@ -1,0 +1,19 @@
+---
+interface Props {
+  date: Date;
+  relative?: boolean;
+}
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
+const { date, relative } = Astro.props;
+const r = relative ? dayjs(date).fromNow() : dayjs(date).format("MMM D, YYYY h:mm A");
+---
+
+<time
+  datetime={date.toISOString()}
+  class="text-neutral-500 border border-neutral-300 dark:border-neutral-800 px-1.5 p-0.5 rounded text-xs"
+>
+  {r}
+</time>

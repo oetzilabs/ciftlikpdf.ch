@@ -1,0 +1,62 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import { SponsorsWrapper, type View } from "../components/SponsorsView";
+import { API_URL } from "../consts";
+---
+
+<MainLayout>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-row items-center justify-between w-full">
+      <div class="w-max">
+        <a
+          href="/"
+          class="border border-neutral-300 dark:border-neutral-800 rounded-md px-3 py-1 font-medium text-sm flex flex-row gap-2.5 w-max items-center justify-center bg-white dark:bg-black shadow-sm"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m12 19-7-7 7-7"></path>
+            <path d="M19 12H5"></path>
+          </svg>
+          <span>Back to home</span>
+        </a>
+      </div>
+      <div class="w-max">
+        <a
+          href="/sponsor/new"
+          class="border border-emerald-600 dark:border-emerald-700 rounded-md px-3 py-1 font-medium text-sm flex flex-row gap-2.5 w-max items-center justify-center bg-emerald-500 dark:bg-emerald-600 shadow-sm text-white"
+        >
+          <span>Yeni Sponsor</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="w-full flex flex-col gap-4">
+      <SponsorsWrapper
+        client:load
+        API_URL={API_URL}
+        view={(Astro.cookies.get("sponsor_view")?.value as View) ?? "table"}
+      />
+    </div>
+  </div>
+</MainLayout>

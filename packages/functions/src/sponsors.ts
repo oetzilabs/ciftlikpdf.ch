@@ -86,10 +86,10 @@ export const donate = ApiHandler(async () => {
 });
 
 export const all = ApiHandler(async () => {
-  const user = await getUser();
-  if (!user) {
-    return error("User not authorized", StatusCodes.UNAUTHORIZED);
-  }
+  // const user = await getUser();
+  // if (!user) {
+  //   return error("User not authorized", StatusCodes.UNAUTHORIZED);
+  // }
   const filter = useQueryParam("filter");
   if (!filter) {
     const sponsors = await Sponsor.all().catch((e) => []);
