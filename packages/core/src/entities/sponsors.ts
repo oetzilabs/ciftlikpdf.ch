@@ -143,6 +143,9 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
     where: (fields, operations) => operations.eq(fields.id, input),
     with: {
       donations: {
+        where(fields, operators) {
+          return operators.isNull(fields.deletedAt);
+        },
         with: {
           createdBy: {
             columns: {

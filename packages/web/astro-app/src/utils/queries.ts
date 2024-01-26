@@ -9,7 +9,7 @@ export const Sponsors = {
       fetch(`${API_URL}/sponsors/all?filter=non-deleted`).then((res) => res.json() as ReturnType<typeof Sponsor.all>)
     ),
   get: z.function(z.tuple([z.string(), z.string()])).implement((API_URL, id) =>
-    fetch(`${API_URL}/sponsor/${id}`).then((res) => res.json() as ReturnType<typeof Sponsor.findById>)
+    fetch(`${API_URL}/sponsors/${id}`).then((res) => res.json() as ReturnType<typeof Sponsor.findById>)
   ),
   remove: z.function(z.tuple([z.string(), z.string()])).implement(async (API_URL, id) => {
     const session = document.cookie.split("; ").find((row) => row.startsWith("session="));
