@@ -1,6 +1,6 @@
 import { Sponsor } from "@ciftlikpdf/core/entities/sponsors";
 import { StatusCodes } from "http-status-codes";
-import { ApiHandler, useFormData, usePathParam, useQueryParam } from "sst/node/api";
+import { ApiHandler, useFormData, useJsonBody, usePathParam, useQueryParam } from "sst/node/api";
 import { error, getUser, json, text } from "./utils";
 
 export const get = ApiHandler(async () => {
@@ -24,12 +24,13 @@ export const create = ApiHandler(async () => {
   if (!user) {
     return error("User not found", StatusCodes.NOT_FOUND);
   }
-  const body = useFormData();
+  const body = useJsonBody();
   if (!body) {
     return error("No body");
   }
-  const validation = await Sponsor.isCreateValid(body);
+  const validation = Sponsor.safeParse(body);
   if (!validation.success) {
+    console.error(validation.error);
     return error(validation.error.message);
   }
 

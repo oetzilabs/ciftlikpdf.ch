@@ -2,12 +2,13 @@ import { ApiHandler, useFormData, useQueryParam, useQueryParams } from "sst/node
 import { error, getUser, json } from "./utils";
 import { User } from "@ciftlikpdf/core/entities/users";
 import { generateJwt } from "@ciftlikpdf/core/auth";
+import dayjs from "dayjs";
 
 export type SessionResult =
   | {
       success: true;
       user: Awaited<ReturnType<typeof User.findById>>;
-      expiresAt: Date | null;
+      expiresAt: Date;
     }
   | {
       success: false;
@@ -15,10 +16,10 @@ export type SessionResult =
     };
 
 export const handler = ApiHandler(async (event, ctx) => {
-  const qp = useFormData();
-  if (!qp) return error("No query params");
-  const name = qp.get("name");
-  const password = qp.get("password");
+  const formData = useFormData();
+  if (!formData) return error("No query params");
+  const name = formData.get("name");
+  const password = formData.get("password");
   if (!name) return error("No name");
   if (!password) return error("No password");
 
@@ -29,7 +30,7 @@ export const handler = ApiHandler(async (event, ctx) => {
 
   const jwtToken = await generateJwt(user.id);
 
-  return json({ jwtToken });
+  return json({ jwtToken, expiresAt: dayjs().add(1, "week").toDate().toString(), user });
 });
 
 export const session = ApiHandler(async () => {
@@ -39,7 +40,7 @@ export const session = ApiHandler(async () => {
       success: false,
       error: "No user found",
     } as SessionResult);
-  return json({ success: true, user } as SessionResult);
+  return json({ success: true, user, expiresAt: dayjs().add(1, "week").toDate() } as SessionResult);
 });
 
 export const register = ApiHandler(async () => {
@@ -54,5 +55,5 @@ export const register = ApiHandler(async () => {
 
   const jwtToken = await generateJwt(user.id);
 
-  return json({ jwtToken });
+  return json({ jwtToken, expiresAt: dayjs().add(1, "week").toDate().toString(), user });
 });

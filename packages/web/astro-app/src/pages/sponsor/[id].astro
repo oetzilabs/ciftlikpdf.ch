@@ -1,0 +1,20 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { SponsorWrapper } from '../../components/Sponsor';
+import { API_URL } from '../../consts.ts';
+
+const params = Astro.params;
+if(!params.id) {
+  return Astro.redirect('/404', {
+    status: 404,
+  });
+}
+
+---
+
+<MainLayout>
+  <div class="w-full">
+    <SponsorWrapper API_URL={API_URL} id={params.id} />
+  </div>
+</MainLayout>
+
