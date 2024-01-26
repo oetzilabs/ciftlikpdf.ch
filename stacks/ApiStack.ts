@@ -82,8 +82,8 @@ export function ApiStack({ stack }: StackContext) {
       },
       "POST /sponsors": {
         function: {
-          handler: "packages/functions/src/sponsors.createWithDonation",
-          description: "This is the sponsors createWithDonation function",
+          handler: "packages/functions/src/sponsors.create",
+          description: "This is the sponsors create function",
         },
       },
       "POST /sponsor/{id}/donate": {

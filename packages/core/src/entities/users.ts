@@ -14,6 +14,7 @@ export const create = z.function(z.tuple([createInsertSchema(users)])).implement
     id: users.id,
     name: users.name,
     createdAt: users.createdAt,
+    type: users.type,
   });
 
   return x;

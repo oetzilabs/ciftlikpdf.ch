@@ -14,7 +14,8 @@ export default function ThemeButton(props: { theme: "light" | "dark" }) {
   onMount(() => {
     const handler = (e: KeyboardEvent) => {
       // keybind to toggle theme
-      if (e.key === "x" && e.ctrlKey) {
+      if (e.key === "j" && e.ctrlKey) {
+        e.preventDefault();
         // set cookie
         toggle();
       }

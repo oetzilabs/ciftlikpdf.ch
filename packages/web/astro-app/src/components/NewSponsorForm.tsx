@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider, createMutation } from "@tanstack/solid-query";
+import { QueryClient, QueryClientProvider, createMutation, useQueryClient } from "@tanstack/solid-query";
 import { TextField, Select } from "@kobalte/core";
 import { Mutations } from "../utils/mutations";
 import { Match, Show, Switch, createSignal } from "solid-js";
@@ -14,56 +14,58 @@ export function NewSponsorFormWrapper(props: { API_URL: string; session: string 
 }
 
 function NewSponsorForm(props: { API_URL: string; session: string }) {
+  const queryClient = useQueryClient();
   const createSponsor = createMutation(() => ({
     mutationKey: ["newSponsor"],
     mutationFn: async (sponsor: Parameters<typeof Mutations.Sponsors.create>[1]) => {
       return Mutations.Sponsors.create(props.API_URL, sponsor);
     },
   }));
-  // const donate = createMutation(() => ({
-  //   mutationKey: ["newSponsor"],
-  //   mutationFn: async (data: {
-  //     sponsor: Parameters<typeof Mutations.Donations.create>[1];
-  //     donation: Parameters<typeof Mutations.Donations.create>[2];
-  //   }) => {
-  //     return Mutations.Donations.create(props.API_URL, data.sponsor, data.donation);
-  //   },
-  // }));
   const [newSponsor, setNewSponsor] = createSignal<Parameters<typeof Mutations.Sponsors.create>[1]>({
     name: "",
     address: "",
   });
 
+  const handleSubmit = async (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const s = newSponsor();
+    if(!s.name) {
+      alert("Isim bos olamaz");
+      return;
+    };
+    if(!s.address) {
+      alert("Adress bos olamaz");
+      return;
+    }
+    const sponsor = await createSponsor.mutateAsync(s);
+    if (sponsor) {
+      console.log(sponsor);
+      await queryClient.invalidateQueries({queryKey: ["sponsors"]});
+      window.location.href = `/sponsor/${sponsor.id}`;
+    } else {
+      console.error(sponsor, createSponsor.failureReason);
+    }
+  };
+
   return (
-    <form
-      class="flex flex-col gap-4 items-start"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const sponsor = await createSponsor.mutateAsync(newSponsor());
-        if (sponsor) {
-          window.location.href = `/sponsors/${sponsor.id}`;
-        } else {
-          alert("Bir hata oluştu");
-        }
-        // const donation = await donate.mutateAsync(newDonation());
-      }}
-    >
+    <form class="flex flex-col gap-4 items-start" onSubmit={handleSubmit}>
       <TextField.Root
         required
-        class="max-w-[600px] min-w-full border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 px-3"
+        class="max-w-[600px] min-w-full border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 px-3 bg-white dark:bg-black"
         value={newSponsor().name}
         onChange={(value) => setNewSponsor((x) => ({ ...x, name: value }))}
       >
         <TextField.Input class="w-full bg-transparent px-1 py-2 outline-none" id="name" placeholder="Isim" />
       </TextField.Root>
       <TextField.Root
-        class="min-w-full max-w-[600px] border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 px-3"
+        class="min-w-full max-w-[600px] border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 px-3 bg-white dark:bg-black"
         value={newSponsor().address}
         onChange={(value) => setNewSponsor((x) => ({ ...x, address: value }))}
       >
         <TextField.TextArea
           class="w-full bg-transparent px-1 py-2 outline-none resize-none"
+          autoResize
           id="address"
           placeholder="Adress"
         />

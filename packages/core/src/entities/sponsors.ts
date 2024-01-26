@@ -7,7 +7,11 @@ import { Donation } from "../entities/donations";
 
 export * as Sponsor from "./sponsors";
 
-export const create = z.function(z.tuple([createInsertSchema(sponsors)])).implement(async (input) => {
+export const create = z.function(z.tuple([createInsertSchema(sponsors).omit({
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
+})])).implement(async (input) => {
   const [x] = await db.insert(sponsors).values(input).returning();
   return x;
 });
@@ -269,7 +273,11 @@ export const updateName = z
     return update({ id: input.id, name: input.name });
   });
 
-export const isCreateValid = createInsertSchema(sponsors).safeParseAsync;
+export const safeParse = createInsertSchema(sponsors).omit({
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
+}).safeParse;
 
 export const isCreateWithDonationValid = z.object({
   name: z.string(),
