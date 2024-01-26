@@ -1,9 +1,9 @@
 import { DropdownMenu, TextField } from "@kobalte/core";
 import dayjs from "dayjs";
 import "solid-js";
-import { For, Match, Show, Switch, createSignal } from "solid-js";
+import { For, Match, Switch, createSignal } from "solid-js";
 import { Queries } from "../utils/queries";
-import { createQuery, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/solid-query";
+import { createMutation, createQuery, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/solid-query";
 import { cn } from "../utils/cn";
 
 function SponsorsView(props: { API_URL: string; }) {
@@ -27,8 +27,22 @@ function SponsorsView(props: { API_URL: string; }) {
   const queryClient = useQueryClient();
 
   const itemClass =
-    "flex flex-row gap-2.5 p-2 py-1.5 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-900 active:bg-neutral-100 dark:active:bg-neutral-800 font-medium items-center justify-start select-none min-w-[150px]";
+    "flex flex-row gap-2.5 p-2 py-1.5 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-900 active:bg-neutral-100 dark:active:bg-neutral-800 font-medium items-center justify-between select-none min-w-[150px]";
 
+  const removeSponsor = createMutation(() => ({
+    mutationKey: ["removeSponsor"],
+    mutationFn: (id: string) => Queries.Sponsors.remove(props.API_URL, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["sponsors"],
+      });
+    },
+    onError: () => {
+      setTimeout(() => {
+        removeSponsor.reset();
+      }, 5000);
+    }
+  }));
 
   return (
     <div class="flex flex-col gap-4">
@@ -137,19 +151,22 @@ function SponsorsView(props: { API_URL: string; }) {
                             <DropdownMenu.Portal>
                               <DropdownMenu.Content class="z-50 self-end mt-1 w-fit bg-white dark:bg-black rounded-md border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-clip">
                                 <DropdownMenu.Item
-                                  onSelect={() => { }}
+                                  onSelect={() => {
+                                    window.location.href = `/sponsor/${item.id}`;
+                                  }}
                                   class={cn(
                                     itemClass,
                                     "select-none text-neutral-900 dark:text-neutral-100 hover:bg-neutral-50 active:bg-neutral-100 dark:hover:bg-neutral-950 dark:active:bg-neutral-900 dark:hover:text-white dark:active:text-white"
                                   )}
-
                                 >
                                   <span class="flex flex-row items-center gap-1.5 px-2">
                                     Düzenle
                                   </span>
                                 </DropdownMenu.Item>
                                 <DropdownMenu.Item
-                                  onSelect={() => { }}
+                                  onSelect={() => {
+                                    window.location.href = `/sponsor/${item.id}/pdf`;
+                                  }}
                                   class={cn(
                                     itemClass,
                                     "select-none text-neutral-900 dark:text-neutral-100 hover:bg-neutral-50 active:bg-neutral-100 dark:hover:bg-neutral-950 dark:active:bg-neutral-900 dark:hover:text-white dark:active:text-white"
@@ -160,14 +177,91 @@ function SponsorsView(props: { API_URL: string; }) {
                                 </DropdownMenu.Item>
                                 <DropdownMenu.Separator class="border-neutral-200 dark:border-neutral-800" />
                                 <DropdownMenu.Item
-                                  onSelect={() => { }}
+                                  closeOnSelect={false}
+                                  disabled={removeSponsor.isPending}
+                                  onSelect={async () => {
+                                    await removeSponsor.mutateAsync(item.id);
+                                  }}
                                   class={cn(
                                     itemClass,
                                     "select-none text-red-500 hover:bg-red-50 active:bg-red-100 dark:hover:bg-red-950 dark:active:bg-red-900 dark:hover:text-white dark:active:text-white"
                                   )}
-
                                 >
-                                  <span class="flex flex-row items-center gap-1.5 px-2">Sil</span>
+                                  <Switch>
+                                    <Match when={removeSponsor.isPending}>
+                                      <span class="flex flex-row items-center gap-1.5 px-2">Siliniyor...</span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="animate-spin"
+                                      >
+                                        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                                      </svg>
+                                    </Match>
+                                    <Match when={removeSponsor.isError}>
+                                      <span class="flex flex-row items-center gap-1.5 px-2">Hata olustu</span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      >
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="m15 9-6 6" />
+                                        <path d="m9 9 6 6" />
+                                      </svg>
+                                    </Match>
+                                    <Match when={removeSponsor.isSuccess}>
+                                      <span class="flex flex-row items-center gap-1.5 px-2">Silindi</span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      >
+                                        <path d="M18 6 7 17l-5-5" />
+                                        <path d="m22 10-7.5 7.5L13 16" />
+                                      </svg>
+                                    </Match>
+                                    <Match when={removeSponsor.isIdle}>
+                                      <span class="flex flex-row items-center gap-1.5 px-2">Sil</span>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-trash-2"
+                                      >
+                                        <path d="M3 6h18" />
+                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                        <line x1="10" x2="10" y1="11" y2="17" />
+                                        <line x1="14" x2="14" y1="11" y2="17" />
+                                      </svg>
+                                    </Match>
+                                  </Switch>
                                 </DropdownMenu.Item>
                               </DropdownMenu.Content>
                             </DropdownMenu.Portal>
