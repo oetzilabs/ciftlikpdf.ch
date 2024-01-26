@@ -113,7 +113,7 @@ function SponsorsView(props: { API_URL: string; }) {
                 <For each={filtered(data())}>
                   {(item) => (
                     <div class="flex flex-col gap-4 rounded-md border border-neutral-300 dark:border-neutral-700 overflow-clip shadow-sm p-4 bg-white dark:bg-black">
-                      <div class="flex flex-col gap-2">
+                      <div class="flex flex-col gap-4">
                         <div class="flex flex-row items-center justify-between">
                           <span class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                             {item.name}
@@ -144,7 +144,9 @@ function SponsorsView(props: { API_URL: string; }) {
                                   )}
 
                                 >
-                                  <span class="flex flex-row items-center gap-1.5 px-2">Edit</span>
+                                  <span class="flex flex-row items-center gap-1.5 px-2">
+                                    Düzenle
+                                  </span>
                                 </DropdownMenu.Item>
                                 <DropdownMenu.Item
                                   onSelect={() => { }}
@@ -165,20 +167,26 @@ function SponsorsView(props: { API_URL: string; }) {
                                   )}
 
                                 >
-                                  <span class="flex flex-row items-center gap-1.5 px-2">Delete</span>
+                                  <span class="flex flex-row items-center gap-1.5 px-2">Sil</span>
                                 </DropdownMenu.Item>
                               </DropdownMenu.Content>
                             </DropdownMenu.Portal>
                           </DropdownMenu.Root>
                         </div>
                         <div class="flex flex-row gap-2 min-h-full">
-                          <span class="text-xs text-neutral-500 dark:text-neutral-400">
-                            {item.donations.map((p) => (
-                              <div class="flex flex-row items-center justify-center gap-0.5 text-xs font-mono bg-transparent border border-neutral-500 rounded-md px-2 py-1 w-max">
-                                {dayjs(p.createdAt).format("YYYY")}: {p.amount} {p.currency}
+                          <div class="flex flex-col w-full text-black dark:text-white">
+                            <For each={item.donations} fallback={
+                              <div class="flex flex-row text-center items-center justify-center gap-0.5 font-mono bg-transparent border border-neutral-500 rounded-md p-4 py-1 w-full text-neutral-500 dark:text-neutral-400">
+                                Bu sponsorun hiç bağışı yok.
                               </div>
-                            ))}
-                          </span>
+                            }>
+                              {(p) => (
+                                <div class="flex flex-row items-center justify-center gap-0.5 font-mono bg-transparent border border-neutral-500 rounded-md p-4 py-1 w-full bg-neutral-100 dark:bg-neutral-900">
+                                  {dayjs(p.createdAt).format("YYYY")}: {p.amount} {p.currency}
+                                </div>
+                              )}
+                            </For>
+                          </div>
                         </div>
                       </div>
                     </div>
