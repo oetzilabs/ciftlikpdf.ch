@@ -52,11 +52,7 @@ import { API_URL } from "../consts";
       </div>
     </div>
     <div class="w-full flex flex-col gap-4">
-      <SponsorsWrapper
-        client:load
-        API_URL={API_URL}
-        view={(Astro.cookies.get("sponsor_view")?.value as View) ?? "table"}
-      />
+      <SponsorsWrapper client:load API_URL={API_URL} />
     </div>
   </div>
 </MainLayout>
