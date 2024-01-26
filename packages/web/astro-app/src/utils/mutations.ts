@@ -26,7 +26,7 @@ export const Donations = {
       z.tuple([
         z.string(),
         z.custom<Parameters<typeof Sponsor.donate>[0]>(),
-        z.custom<Omit<Parameters<typeof Sponsor.donate>[1], "createdByAdmin">>(),
+        z.custom<Omit<Parameters<typeof Sponsor.donate>[1], "createdByAdmin" | "deletedByAdmin" | "updatedByAdmin">>(),
       ])
     )
     .implement((API_URL, id, data) =>

@@ -1,7 +1,7 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import ThemeSwitch from "./ThemeSwitch";
-import Menu from "./Menu";
+import HeaderMenu from "./HeaderMenu";
 import { SITE_TITLE } from "../consts";
 ---
 
@@ -19,7 +19,7 @@ import { SITE_TITLE } from "../consts";
     </div>
     <div class="w-max flex flex-row items-center justify-between gap-4">
       <ThemeSwitch theme={(Astro.cookies.get("theme")?.value as "dark" | "light") ?? "light"} client:load />
-      <Menu client:load />
+      <HeaderMenu client:load />
     </div>
   </nav>
 </header>

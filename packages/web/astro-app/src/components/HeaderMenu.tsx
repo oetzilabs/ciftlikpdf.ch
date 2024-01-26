@@ -1,7 +1,7 @@
 import { DropdownMenu } from "@kobalte/core";
 import "solid-js";
 
-export default function Menu() {
+export default function HeaderMenu() {
   return (
     <DropdownMenu.Root placement="bottom-end">
       <DropdownMenu.Trigger class="border border-neutral-300 dark:border-neutral-800 rounded-md px-3 py-1 shadow-sm font-medium text-sm">
