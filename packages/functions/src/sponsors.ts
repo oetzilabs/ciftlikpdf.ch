@@ -4,10 +4,6 @@ import { ApiHandler, useFormData, useJsonBody, usePathParam, useQueryParam } fro
 import { error, getUser, json, text } from "./utils";
 
 export const get = ApiHandler(async () => {
-  const user = await getUser();
-  if (!user) {
-    return error("User not authorized", StatusCodes.UNAUTHORIZED);
-  }
   const id = usePathParam("id");
   if (!id) {
     return error("No sponsor id");

@@ -15,7 +15,7 @@ export function SponsorWrapper(props: { id: string, API_URL: string }) {
 
 function Sponsor(props: { id: string, API_URL: string }) {
   const sponsor = createQuery(() => ({
-    queryKey: ["sponsor"],
+    queryKey: ["sponsor", props.id],
     queryFn: () => Queries.Sponsors.get(props.API_URL, props.id),
   }));
 
@@ -33,15 +33,17 @@ function Sponsor(props: { id: string, API_URL: string }) {
 function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Queries.Sponsors.get>>> }) {
   return (
     <div class="w-full flex flex-col gap-4">
-      <div class="flex flex-row gap-4">
+      <div class="flex flex-col gap-4">
         <div class="text-2xl font-bold">{props.data.name}</div>
-        <div class="text-xl">{props.data.address}</div>
+        <div class="flex flex-col gap-0.5">
+          <For each={props.data.address.split("\n")}>{(a) => <div class="text-xl">{a}</div>}</For>
+        </div>
       </div>
       <div class="flex flex-row gap-4">
         <div class="w-full">
           <For each={props.data.donations}>
-            {(donation) => (<div class="flex flex-row gap-4">
-              <div class="text-xl">{donation.year} {donation.amount} {donation.currency}</div>
+            {(donation) => (<div class="flex flex-row gap-4 border border-neutral-300 p-4 dark:border-neutral-800 rounded-md bg-white dark:bg-black shadow-sm w-max">
+              <div class="text-xl">{donation.year}: {donation.amount} {donation.currency}</div>
             </div>
             )}
           </For>
