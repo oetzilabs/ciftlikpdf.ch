@@ -14,8 +14,7 @@ import { SITE_TITLE } from "../consts";
       <h2 class="w-max font-bold">{SITE_TITLE}</h2>
     </a>
     <div class="container flex flex-row items-center justify-center gap-2 w-max">
-      <HeaderLink href="/">PDFler</HeaderLink>
-      <HeaderLink href="/">About</HeaderLink>
+      <HeaderLink href="/">Sponsorlar</HeaderLink>
     </div>
     <div class="w-max flex flex-row items-center justify-between gap-4">
       <ThemeSwitch theme={(Astro.cookies.get("theme")?.value as "dark" | "light") ?? "light"} client:load />

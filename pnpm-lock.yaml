@@ -21,8 +21,8 @@ importers:
         specifier: 10.3.0
         version: 10.3.0
       sst:
-        specifier: 2.39.10
-        version: 2.39.10
+        specifier: 2.39.13
+        version: 2.39.13
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -118,8 +118,8 @@ importers:
         specifier: ^0.3.10
         version: 0.3.10(solid-start@0.3.10)(vite@4.5.0)
       solid-start-sst:
-        specifier: 2.39.10
-        version: 2.39.10(solid-start@0.3.10)(vite@4.5.0)
+        specifier: 2.39.13
+        version: 2.39.13(solid-start@0.3.10)(vite@4.5.0)
       tailwindcss:
         specifier: ^3.3.5
         version: 3.3.5
@@ -185,8 +185,8 @@ importers:
         specifier: 0.20.13
         version: 0.20.13
       sst:
-        specifier: 2.39.10
-        version: 2.39.10
+        specifier: 2.39.13
+        version: 2.39.13
       vitest:
         specifier: 0.34.6
         version: 0.34.6
@@ -276,8 +276,8 @@ importers:
         specifier: 0.3.10
         version: 0.3.10(solid-start@0.3.10)(vite@4.5.0)
       solid-start-sst:
-        specifier: 2.39.10
-        version: 2.39.10(solid-start@0.3.10)(vite@4.5.0)
+        specifier: 2.39.13
+        version: 2.39.13(solid-start@0.3.10)(vite@4.5.0)
       tailwindcss:
         specifier: 3.3.5
         version: 3.3.5
@@ -346,8 +346,8 @@ importers:
         specifier: 9.0.7
         version: 9.0.7
       sst:
-        specifier: 2.39.10
-        version: 2.39.10
+        specifier: 2.39.13
+        version: 2.39.13
       vitest:
         specifier: 0.34.6
         version: 0.34.6
@@ -382,8 +382,8 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(typescript@5.3.3)
       astro-sst:
-        specifier: ^2.39.10
-        version: 2.39.10
+        specifier: 2.39.13
+        version: 2.39.13
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
@@ -729,7 +729,7 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@aws-crypto/util': 5.2.0
-      '@aws-sdk/types': 3.449.0
+      '@aws-sdk/types': 3.496.0
       tslib: 2.6.2
     dev: true
 
@@ -748,8 +748,8 @@ packages:
   /@aws-crypto/util@5.2.0:
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
     dependencies:
-      '@aws-sdk/types': 3.449.0
-      '@smithy/util-utf8': 2.0.0
+      '@aws-sdk/types': 3.496.0
+      '@smithy/util-utf8': 2.1.1
       tslib: 2.6.2
     dev: true
 
@@ -2907,7 +2907,6 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
       jsesc: 2.5.2
-    dev: false
 
   /@babel/helper-annotate-as-pure@7.22.5:
     resolution: {integrity: sha512-LvBTxu8bQSQkcyKOU+a1btnNFQ1dMAd0R6PyW3arXes06F6QLWLIrd681bxRPIXlrMGR3XYnW9JyML7dP3qgxg==}
@@ -3078,7 +3077,6 @@ packages:
   /@babel/helper-string-parser@7.23.4:
     resolution: {integrity: sha512-803gmbQdqwdf4olxrX4AJyFBV/RTr3rSmOj0rKwesmzlfhYNDEs+/iOcznzpNWlJlIlTJC2QfPFcHB6DlzdVLQ==}
     engines: {node: '>=6.9.0'}
-    dev: false
 
   /@babel/helper-validator-identifier@7.22.20:
     resolution: {integrity: sha512-Y4OZ+ytlatR8AI+8KZfKuL5urKp7qey08ha31L8b3BwewJAoJamTzyvxPR/5D+KkdJCGPq/+8TukHBlY10FX9A==}
@@ -4007,7 +4005,6 @@ packages:
       '@babel/helper-string-parser': 7.23.4
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
-    dev: false
 
   /@cdklabs/tskb@0.0.3:
     resolution: {integrity: sha512-JR+MuD4awAXvutu7HArephXfZm09GPTaSAQUqNcJB5+ZENRm4kV+L6vJL6Tn1xHjCcHksO+HAqj3gYtm5K94vA==}
@@ -6053,6 +6050,7 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.6.2
+    dev: false
 
   /@smithy/is-array-buffer@2.1.1:
     resolution: {integrity: sha512-xozSQrcUinPpNPNPds4S7z/FakDTh1MZWtRP/2vQtYB/u3HYrX2UXuZs+VhaKBd6Vc7g2XPr2ZtwGBNDN6fNKQ==}
@@ -6512,6 +6510,7 @@ packages:
     dependencies:
       '@smithy/is-array-buffer': 2.0.0
       tslib: 2.6.2
+    dev: false
 
   /@smithy/util-buffer-from@2.1.1:
     resolution: {integrity: sha512-clhNjbyfqIv9Md2Mg6FffGVrJxw7bgK7s3Iax36xnfVj6cg0fUG7I4RH0XgXJF8bxi+saY5HR21g2UPKSxVCXg==}
@@ -6745,6 +6744,7 @@ packages:
     dependencies:
       '@smithy/util-buffer-from': 2.0.0
       tslib: 2.6.2
+    dev: false
 
   /@smithy/util-utf8@2.1.1:
     resolution: {integrity: sha512-BqTpzYEcUMDwAKr7/mVRUtHDhs6ZoXDi9NypMvMfOr/+u1NW7JgqodPDECiiLboEm6bobcPcECxzjtQh865e9A==}
@@ -7788,8 +7788,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /astro-sst@2.39.10:
-    resolution: {integrity: sha512-iEnTPIFqfIUAEyJBwKF7ovP7oYnfRCrSzPuqtYhWuGJoa1W8WCL6RTB3sl/gVHs4nKbBLPvQE0RjxgQ7vbZg3g==}
+  /astro-sst@2.39.13:
+    resolution: {integrity: sha512-SCm0mWfoHMICSg7/JqyBAKU+bn93WzZdvidk1I3Te+tYa8/89nSJCrh/vZo3oxkizzYUwlrrIQ1BgjH4lMs3NQ==}
     dependencies:
       '@astrojs/webapi': 3.0.0
       set-cookie-parser: 2.6.0
@@ -8244,6 +8244,7 @@ packages:
 
   /buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
+    requiresBuild: true
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
@@ -9780,6 +9781,7 @@ packages:
 
   /fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
+    requiresBuild: true
 
   /fs-extra@11.1.1:
     resolution: {integrity: sha512-MGIE4HOvQCeUCzmlHs0vXpih4ysz4wg9qiSAu6cd42lVwPbTM1TjV7RusoyQqMmk/95gdQZX72u+YW+c3eEpFQ==}
@@ -12757,7 +12759,6 @@ packages:
 
   /sax@1.3.0:
     resolution: {integrity: sha512-0s+oAmw9zLl1V1cS9BtZN7JAd0cW5e0QH4W3LWEK6a4LaLEA2OTpGYWDY+6XasBLtz6wkm3u1xRw95mRuJ59WA==}
-    dev: false
 
   /scheduler@0.23.0:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
@@ -13058,8 +13059,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /solid-start-sst@2.39.10(solid-start@0.3.10)(vite@4.5.0):
-    resolution: {integrity: sha512-ZTsU2R6O4u5cbW/OenfgcPJTemuq6qeHAoRqc0ekDx7dn65wQ/3t1v/oKszxIqBkdLu0FXXAM5U76qWre8W3Jw==}
+  /solid-start-sst@2.39.13(solid-start@0.3.10)(vite@4.5.0):
+    resolution: {integrity: sha512-EA1jNAxHtOKBZoNhcdbCFIdIUKjG7oEXaedUTsD7cROyQjazBq2k35/2F0/0ywnRq/PI9weS6Is37GQUIihtnA==}
     peerDependencies:
       solid-start: '*'
       vite: '*'
@@ -13222,8 +13223,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /sst@2.39.10:
-    resolution: {integrity: sha512-1r0M66VD4Ub4dkkT/BwEApRctFne+zDt+d1gJPWzaQJKakI5pgMuy4S4wbMaqaJy/unRJKLxUrN30bIwOsKcfQ==}
+  /sst@2.39.13:
+    resolution: {integrity: sha512-128h3zdZVeKPSgJBCpfjqKVvY5PoR1VebkbN10fiqNPNC/uXCLimfuMt/6NeZ+R6/w31WsfIG3NxXrOQ4mwMvg==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0
@@ -13256,7 +13257,7 @@ packages:
       '@aws-sdk/signature-v4-crt': 3.499.0
       '@aws-sdk/smithy-client': 3.374.0
       '@babel/core': 7.23.3
-      '@babel/generator': 7.23.3
+      '@babel/generator': 7.23.6
       '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.23.3)
       '@smithy/signature-v4': 2.1.1
       '@trpc/server': 9.16.0
@@ -14681,7 +14682,7 @@ packages:
     resolution: {integrity: sha512-T4rieHaC1EXcES0Kxxj4JWgaUQHDk+qwHcYOCFHfiwKz7tOVPLq7Hjq9dM1WCMhylqMEfP7hMcOIChvotiZegA==}
     engines: {node: '>=4.0.0'}
     dependencies:
-      sax: 1.2.1
+      sax: 1.3.0
       xmlbuilder: 11.0.1
     dev: true
 

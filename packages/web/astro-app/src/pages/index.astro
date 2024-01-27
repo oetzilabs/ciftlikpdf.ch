@@ -1,10 +1,10 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+import Card from "../components/Card.astro";
 ---
 
 <MainLayout>
-  <div class="flex flex-row">
-    <a href="/">Home</a>
-    <a href="/sponsors">Sponsors</a>
+  <div class="grid grid-cols-2 w-full gap-4">
+    <Card href="/sponsors">Sponsorlar</Card>
   </div>
 </MainLayout>
