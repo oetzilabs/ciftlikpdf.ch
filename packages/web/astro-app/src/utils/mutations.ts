@@ -1,6 +1,5 @@
 import { z } from "zod";
 import type { Sponsor } from "../../../../core/src/entities/sponsors";
-import type { SessionResult } from "../../../../functions/src/auth";
 import type { User } from "../../../../core/src/entities/users";
 export * as Mutations from "./mutations";
 
@@ -29,18 +28,23 @@ export const Donations = {
         z.custom<Omit<Parameters<typeof Sponsor.donate>[1], "createdByAdmin" | "deletedByAdmin" | "updatedByAdmin">>(),
       ])
     )
-    .implement((API_URL, id, data) =>
-      fetch(`${API_URL}/donations`, {
+    .implement(async (API_URL, id, data) => {
+      const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+      if (!session) return Promise.reject("No session found");
+
+      return fetch(`${API_URL}/sponsor/${id}/donate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.split("=")[1]}`,
         },
         body: JSON.stringify({
           ...data,
           id,
-        }),
-      }).then((res) => res.json() as ReturnType<typeof Sponsor.create>)
-    ),
+        })
+      }).then((res) => res.json() as ReturnType<typeof Sponsor.donate>);
+    }
+  ),
 };
 
 export const Authentication = {

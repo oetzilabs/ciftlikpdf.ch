@@ -1,5 +1,5 @@
 import { Select, Skeleton } from "@kobalte/core";
-import { For, Show, createEffect, createSignal } from "solid-js";
+import { For, Show, createSignal } from "solid-js";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -10,7 +10,7 @@ dayjs.extend(advancedFormat);
 dayjs.extend(localizedFormat);
 import { jsPDF } from "jspdf";
 import { sponsorAtom } from "../utils/stores";
-import type { Sponsor } from "../../../../core/src/entities/sponsors";
+import type { Sponsor as Sp } from "../../../../core/src/entities/sponsors";
 
 const translations = {
   yourDonoOurThank: {
@@ -26,15 +26,15 @@ const translations = {
   main: {
     de: `Sie haben unserer Stiftung in diesem Jahr eine Spende zukommen lassen - dafür möchten wir Ihnen herzlichst danken. Durch Ihre Unterstützung konnten wir in unserem Dorf "Ciftlik-Köyü" viele wertvolle Hilfe leisten und die Struktur unserer Stiftung stärken. Dank Ihnen und vielen weiteren Spendenden konnten wir zum Beispiel den Schulhof im Dorfkern errichten, mehreren ärmeren Familien einen Schulbesuch der Kinder ermöglichen und einen Aufseher für unser Dorf engagieren.`,
     fr: `Vous avez fait un don à notre fondation cette année - nous vous en remercions chaleureusement. Grâce à votre soutien, nous avons pu apporter une aide précieuse à notre village "Ciftlik-Köyü" et renforcer la structure de notre fondation. Grâce à vous et à de nombreux autres donateurs, nous avons pu construire la cour de récréation au centre du village, permettre à plusieurs familles pauvres de scolariser leurs enfants et engager un surveillant pour notre village.`,
-    tr: `Bu yil vakfimiza bagis yaptiginiz icin tesekkur ederiz. Desteginizle Ciftlik Koyu'nde bir cok faydali yardimlarda bulunduk ve vakfimizin yapisi guclendirdik. Sizin ve bircok bagiscinin yardimiyla, ornegin koy merkezindeki okul bahcesini insa ettik, bir cok fakir ailenin cocuklarinin okula gitmesini sagladik ve koyumuz icin bir bekci tuttuk.`,
+    tr: `Bu yil vakfimiza bagis yaptiginiz icin tesekkur ederiz. Desteginizle Ciftlik Köyü'nde bir cok faydali yardimlarda bulunduk ve vakfimizin yapisi guclendirdik. Sizin ve bircok bagiscinin yardimiyla, ornegin koy merkezindeki okul bahcesini insa ettik, bir cok fakir ailenin cocuklarinin okula gitmesini sagladik ve koyumuz icin bir bekci tuttuk.`,
   },
   receival: {
-    de: (value: string, currency: string) =>
-      `Gerne bestätigen wir hiermit Ihre Spende für das Jahr 2023 von Total: <strong>${value} ${currency}</strong>.`,
-    fr: (value: string, currency: string) =>
-      `Nous confirmons par la présente votre don pour l'année 2023 de Total: <strong>${value} ${currency}</strong>.`,
-    tr: (value: string, currency: string) =>
-      `2023 yili icin yaptiginiz toplam <strong>${value} ${currency}</strong> bagisinizi bu vesileyle onayliyoruz.`,
+    de: (value: string, currency: string, year: number) =>
+      `Gerne bestätigen wir hiermit Ihre Spende für das Jahr <strong>${year}</strong> von Total: <strong>${value} ${currency}</strong>.`,
+    fr: (value: string, currency: string, year: number) =>
+      `Nous confirmons par la présente votre don pour l'année <strong>${year}</strong> de Total: <strong>${value} ${currency}</strong>.`,
+    tr: (value: string, currency: string, year: number) =>
+      `<strong>${year}</strong> yili icin yaptiginiz toplam <strong>${value} ${currency}</strong> bagisinizi bu vesileyle onayliyoruz.`,
   },
   thanks: {
     de: `Im Namen unseres Dorfes und unserer Stiftung bedanken wir uns herzlichst für Ihre Spende und
@@ -56,7 +56,7 @@ interface LanguageOption {
 }
 
 export function Sponsor() {
-  const [sponsor, setSponsor] = createSignal<Sponsor.Frontend | undefined>();
+  const [sponsor, setSponsor] = createSignal<Sp.Frontend | undefined>();
   const [year, setYear] = createSignal<number | undefined>();
   sponsorAtom.subscribe((s) => {
     setSponsor(s?.[0]);
@@ -76,6 +76,7 @@ export function Sponsor() {
       orientation: "portrait",
       unit: "pt",
       format: "a3",
+      compress: true,
     });
     pdf.html(pdfRef, {
       callback: (doc) => {
@@ -173,8 +174,8 @@ export function Sponsor() {
       </div>
       <div class="flex flex-col gap-4 w-full">
         {/* here we are going to show a pdf preview with custom texts */}
-        <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto *:text-black shadow-sm font-[Arial]">
-          <div class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20" ref={pdfRef!}>
+        <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto shadow-sm font-[Arial]">
+          <div class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20 text-black" ref={pdfRef!}>
             <div class="absolute top-0 right-0 px-20 py-8">
               <img src="/ciftlik-logo.jpeg" width="150px"></img>
             </div>
@@ -245,7 +246,8 @@ export function Sponsor() {
                     <div
                       innerHTML={translations.receival[language().value](
                         d().amount.toLocaleString("de-CH", { minimumFractionDigits: 2 }),
-                        d().currency
+                        d().currency,
+                        year() ?? new Date().getFullYear()
                       )}
                     ></div>
                   )}

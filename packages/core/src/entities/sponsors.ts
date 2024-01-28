@@ -292,18 +292,18 @@ export const isCreateWithDonationValid = z.object({
 }).safeParseAsync;
 
 export const isDonateValid = z.object({
-  amount: z.string().transform((x) => Number(x)),
+  amount: z.number().or(z.string().transform((x) => Number(x))),
   currency: z.union([z.literal("CHF"), z.literal("EUR")]),
-  year: z.string().transform((x) => Number(x)),
+  year: z.number().or(z.string().transform((x) => Number(x))),
   createdByAdmin: z.string().uuid(),
 }).safeParseAsync;
 
 export const isUpdateDonationValid = z.object({
   id: z.string().uuid(),
   sponsorId: z.string().uuid(),
-  amount: z.string().transform((x) => Number(x)),
+  amount: z.number().or(z.string().transform((x) => Number(x))),
   currency: z.union([z.literal("CHF"), z.literal("EUR")]),
-  year: z.string().transform((x) => Number(x)),
+  year: z.number().or(z.string().transform((x) => Number(x))),
 }).safeParseAsync;
 
 export const remove = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {

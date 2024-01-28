@@ -1,0 +1,12 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+const { id } = Astro.params;
+import SponsorDonate from '../../../components/SponsorDonate.tsx';
+import { API_URL } from '../../../consts';
+if(!id) {
+  return Astro.redirect('/404', { status: 404 });
+}
+---
+<MainLayout>
+  <SponsorDonate id={id} client:load API_URL={API_URL}/>
+</MainLayout>
