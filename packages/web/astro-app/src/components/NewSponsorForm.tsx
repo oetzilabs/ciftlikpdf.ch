@@ -1,26 +1,17 @@
-import { QueryClient, QueryClientProvider, createMutation, useQueryClient } from "@tanstack/solid-query";
-import { TextField, Select } from "@kobalte/core";
+import { createMutation } from "@tanstack/solid-query";
+import { TextField } from "@kobalte/core";
 import { Mutations } from "../utils/mutations";
-import { Match, Show, Switch, createSignal } from "solid-js";
-import dayjs from "dayjs";
+import { Match, Switch, createSignal } from "solid-js";
+import { qC, API_URL } from "../utils/stores";
 
-export function NewSponsorFormWrapper(props: { API_URL: string; session: string }) {
-  const queryClient = new QueryClient();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <NewSponsorForm API_URL={props.API_URL} session={props.session} />
-    </QueryClientProvider>
-  );
-}
 
-function NewSponsorForm(props: { API_URL: string; session: string }) {
-  const queryClient = useQueryClient();
+export function NewSponsorForm(props: { API_URL: string }) {
   const createSponsor = createMutation(() => ({
     mutationKey: ["newSponsor"],
     mutationFn: async (sponsor: Parameters<typeof Mutations.Sponsors.create>[1]) => {
       return Mutations.Sponsors.create(props.API_URL, sponsor);
     },
-  }));
+  }), () => qC);
   const [newSponsor, setNewSponsor] = createSignal<Parameters<typeof Mutations.Sponsors.create>[1]>({
     name: "",
     address: "",
@@ -30,18 +21,17 @@ function NewSponsorForm(props: { API_URL: string; session: string }) {
     e.preventDefault();
     e.stopPropagation();
     const s = newSponsor();
-    if(!s.name) {
+    if (!s.name) {
       alert("Isim bos olamaz");
       return;
     };
-    if(!s.address) {
+    if (!s.address) {
       alert("Adress bos olamaz");
       return;
     }
     const sponsor = await createSponsor.mutateAsync(s);
     if (sponsor) {
-      console.log(sponsor);
-      await queryClient.invalidateQueries({queryKey: ["sponsors"]});
+      await qC.invalidateQueries({ queryKey: ["sponsors"] });
       window.location.href = `/sponsor/${sponsor.id}`;
     } else {
       console.error(sponsor, createSponsor.failureReason);
@@ -51,20 +41,30 @@ function NewSponsorForm(props: { API_URL: string; session: string }) {
   return (
     <form class="flex flex-col gap-4 items-start" onSubmit={handleSubmit}>
       <TextField.Root
+        class="w-full flex flex-col gap-2"
         required
-        class="max-w-[600px] min-w-full border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 px-3 bg-white dark:bg-black"
         value={newSponsor().name}
         onChange={(value) => setNewSponsor((x) => ({ ...x, name: value }))}
       >
-        <TextField.Input class="w-full bg-transparent px-1 py-2 outline-none" id="name" placeholder="Isim" />
+        <TextField.Label for="name" class="font-bold">
+          Isim
+        </TextField.Label>
+        <TextField.Input
+          class="w-full border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 bg-white dark:bg-black px-3 py-2"
+          id="name"
+          placeholder="Isim"
+        />
       </TextField.Root>
       <TextField.Root
-        class="min-w-full max-w-[600px] border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 px-3 bg-white dark:bg-black"
+        class="w-full flex flex-col gap-2"
         value={newSponsor().address}
         onChange={(value) => setNewSponsor((x) => ({ ...x, address: value }))}
       >
+        <TextField.Label for="address" class="font-bold">
+          Adress
+        </TextField.Label>
         <TextField.TextArea
-          class="w-full bg-transparent px-1 py-2 outline-none resize-none"
+          class="w-full border border-neutral-200 dark:border-neutral-800 rounded-md flex flex-row items-center gap-2 bg-white dark:bg-black px-3 py-2 resize-none"
           autoResize
           id="address"
           placeholder="Adress"

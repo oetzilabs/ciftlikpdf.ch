@@ -1,7 +1,5 @@
-import { Select } from "@kobalte/core";
-import { QueryClient, QueryClientProvider, createQuery } from "@tanstack/solid-query";
-import { Queries } from "../utils/queries";
-import { For, Match, Show, Switch, createSignal } from "solid-js";
+import { Select, Skeleton } from "@kobalte/core";
+import { For, Show, createEffect, createSignal } from "solid-js";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -11,35 +9,8 @@ import "dayjs/locale/fr";
 dayjs.extend(advancedFormat);
 dayjs.extend(localizedFormat);
 import { jsPDF } from "jspdf";
-
-export function SponsorWrapper(props: { id: string; API_URL: string }) {
-  const queryClient = new QueryClient();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Sponsor id={props.id} API_URL={props.API_URL} />
-    </QueryClientProvider>
-  );
-}
-
-function Sponsor(props: { id: string; API_URL: string }) {
-  const sponsor = createQuery(() => ({
-    queryKey: ["sponsor", props.id],
-    queryFn: () => Queries.Sponsors.get(props.API_URL, props.id),
-  }));
-
-  return (
-    <div class="w-full flex flex-col gap-4">
-      <Switch fallback={<div>Loading...</div>}>
-        <Match when={sponsor.isLoading}>Loading...</Match>
-        <Match when={sponsor.isError && sponsor.error}>{(e) => <div class="">{e().message}</div>}</Match>
-        <Match when={sponsor.isSuccess && sponsor.data && sponsor.data}>
-          {(data) => <SponsorView data={data()} />}
-        </Match>
-      </Switch>
-    </div>
-  );
-}
+import { sponsorAtom } from "../utils/stores";
+import type { Sponsor } from "../../../../core/src/entities/sponsors";
 
 const translations = {
   yourDonoOurThank: {
@@ -84,16 +55,23 @@ interface LanguageOption {
   disabled?: boolean;
 }
 
-function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Queries.Sponsors.get>>> }) {
+export function Sponsor() {
+  const [sponsor, setSponsor] = createSignal<Sponsor.Frontend | undefined>();
   const [year, setYear] = createSignal<number | undefined>();
+  sponsorAtom.subscribe((s) => {
+    setSponsor(s?.[0]);
+    setYear(s?.[1]);
+  });
   const [language, setLanguage] = createSignal<LanguageOption>({
     label: "Türkçe",
     value: "tr",
     disabled: false,
   });
   let pdfRef: HTMLDivElement;
-  const createPdf = (sponsorName: string) => {
-    const cleanName = sponsorName.replace(/[^a-zA-Z0-9]/g, "-");
+  const createPdf = (sponsorName?: string) => {
+    if (!sponsorName) return;
+    if (!pdfRef) return;
+    const cleanName = sponsorName?.replace(/[^a-zA-Z0-9]/g, "-") ?? "sponsor";
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "pt",
@@ -106,7 +84,7 @@ function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Querie
     });
   };
   const theDonation = () => {
-    return props.data.donations.find((d) => d.year === year());
+    return sponsor()?.donations.find((d) => d.year === year());
   };
 
   const languageOptions: LanguageOption[] = [
@@ -116,99 +94,10 @@ function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Querie
   ];
 
   return (
-    <div class="w-full flex flex-col gap-10">
+    <div class="w-full flex flex-col gap-2">
       <div class="flex flex-row gap-4 items-center justify-between">
-        <div class="text-2xl font-bold">{props.data.name}</div>
         <div class="flex flex-row gap-4 w-max">
           <div class="flex flex-row gap-4 w-max items-center">
-            <span class="text-xl font-bold">
-              Total:{" "}
-              {year()
-                ? Object.entries(
-                    props.data.donations
-                      .filter((donation) => donation.year === year())
-                      .reduce((acc, donation) => {
-                        const currency = donation.currency;
-                        if (!acc[currency]) {
-                          acc[currency] = 0;
-                        }
-                        acc[currency] += donation.amount;
-                        return acc;
-                      }, {} as Record<string, number>)
-                  )
-                    .map(([currency, total]) => `${total} ${currency}`)
-                    .join(", ")
-                : Object.entries(
-                    props.data.donations.reduce((acc, donation) => {
-                      const currency = donation.currency;
-                      if (!acc[currency]) {
-                        acc[currency] = 0;
-                      }
-                      acc[currency] += donation.amount;
-                      return acc;
-                    }, {} as Record<string, number>)
-                  )
-                    .map(([currency, total]) => `${total} ${currency}`)
-                    .join(", ")}
-            </span>
-            <Select.Root
-              placeholder="Sene secin"
-              placement="bottom-start"
-              required
-              options={Array.from(new Set(props.data.donations.map((donation) => donation.year)))}
-              value={year()}
-              onChange={(value) => setYear(value)}
-              disallowEmptySelection={false}
-              itemComponent={(props) => (
-                <Select.Item
-                  item={props.item}
-                  class="flex flex-row gap-2.5 p-2 py-1.5 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-900 active:bg-neutral-100 dark:active:bg-neutral-800 font-medium select-none min-w-[150px] items-center justify-between"
-                >
-                  <Select.ItemLabel class="capitalize">{props.item.rawValue}</Select.ItemLabel>
-                  <Select.ItemIndicator class="">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </Select.ItemIndicator>
-                </Select.Item>
-              )}
-            >
-              <Select.Trigger>
-                <div class="p-2 py-1 w-full bg-neutral-50 dark:bg-neutral-950 rounded-md border border-neutral-200 dark:border-neutral-800 flex flex-row gap-2 items-center justify-center">
-                  <Select.Value<string> class="font-bold select-none capitalize">
-                    {(state) => state.selectedOption()}
-                  </Select.Value>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </div>
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Content class="z-50 self-end w-fit bg-white dark:bg-black rounded-sm border border-neutral-200 dark:border-neutral-800 shadow-md overflow-clip">
-                  <Select.Listbox />
-                </Select.Content>
-              </Select.Portal>
-            </Select.Root>
             <Select.Root<LanguageOption>
               placeholder="Dil Secin"
               placement="bottom-start"
@@ -244,7 +133,7 @@ function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Querie
               )}
             >
               <Select.Trigger>
-                <div class="p-2 py-1 w-full bg-neutral-50 dark:bg-neutral-950 rounded-md border border-neutral-200 dark:border-neutral-800 flex flex-row gap-2 items-center justify-center">
+                <div class="p-2 py-1 w-full rounded-md border border-neutral-200 dark:border-neutral-800 flex flex-row gap-2 items-center justify-center bg-white dark:bg-black shadow-sm">
                   <Select.Value<LanguageOption> class="font-bold select-none capitalize">
                     {(state) => state.selectedOption().label}
                   </Select.Value>
@@ -271,20 +160,20 @@ function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Querie
             </Select.Root>
           </div>
         </div>
-      </div>
-      <div class="flex flex-col gap-4 w-full">
         <div class="flex flex-row items-center justify-center">
           <button
             class="border border-gray-300 rounded-md px-3 py-1 bg-black dark:bg-white dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none"
             onClick={() => {
-              createPdf(props.data.name);
+              createPdf(sponsor()?.name);
             }}
           >
             <span>PDF Olustur</span>
           </button>
         </div>
+      </div>
+      <div class="flex flex-col gap-4 w-full">
         {/* here we are going to show a pdf preview with custom texts */}
-        <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto text-black shadow-sm font-[Arial]">
+        <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto *:text-black shadow-sm font-[Arial]">
           <div class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20" ref={pdfRef!}>
             <div class="absolute top-0 right-0 px-20 py-8">
               <img src="/ciftlik-logo.jpeg" width="150px"></img>
@@ -296,10 +185,21 @@ function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Querie
               <span>www.ciftlik.ch</span>
             </div>
             <div class="flex flex-row gap-4 items-center justify-between">
-              <div class="flex flex-col">
-                <div class="text-[11pt]">{props.data.name}</div>
-                <For each={props.data.address.split("\n")}>{(a) => <div class="text-[10pt]">{a}</div>}</For>
-              </div>
+              <Show when={sponsor() && sponsor()} fallback={
+                <Skeleton.Root class="flex flex-col gap-1">
+                  <div class="w-[120px] h-[16px] bg-neutral-300 rounded-md"></div>
+                  <div class="w-[200px] h-[16px] bg-neutral-300 rounded-md"></div>
+                  <div class="w-[80px] h-[16px] bg-neutral-300 rounded-md"></div>
+                  <div class="w-[100px] h-[16px] bg-neutral-300 rounded-md"></div>
+                </Skeleton.Root>
+              }>
+                {(s) => (
+                  <div class="flex flex-col">
+                    <div class="text-[11pt] font-bold">{s().name}</div>
+                    <For each={s().address.split("\n")}>{(a) => <div class="text-[10pt]">{a}</div>}</For>
+                  </div>
+                )}
+              </Show>
               <div></div>
             </div>
             <div class="flex flex-row gap-4 items-center justify-between">
@@ -311,8 +211,8 @@ function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Querie
                     language().value === "tr"
                       ? "D. MMMM YYYY"
                       : language().value === "de"
-                      ? "D. MMMM YYYY"
-                      : "D MMMM YYYY"
+                        ? "D. MMMM YYYY"
+                        : "D MMMM YYYY"
                   )}
               </div>
             </div>
@@ -321,13 +221,26 @@ function SponsorView(props: { data: NonNullable<Awaited<ReturnType<typeof Querie
               <div></div>
             </div>
             <div class="flex flex-col gap-2">
-              <div class="text-[11pt]">{translations.greetings[language().value](props.data.name)}</div>
+              <Show when={sponsor() && sponsor()} fallback={
+                <Skeleton.Root class="flex flex-col gap-1">
+                  <div class="w-[80px] h-[16px] bg-neutral-300 rounded-md"></div>
+                </Skeleton.Root>
+              }>
+                {(s) => (
+                  <div class="text-[11pt]">{translations.greetings[language().value](s().name)}</div>
+                )}
+              </Show>
+
               <div class="text-[11pt] text-justify">{translations.main[language().value]}</div>
               <div class="text-[11pt]"></div>
               <div class="text-[11pt]"></div>
 
               <div class="text-[11pt]">
-                <Show when={theDonation() && theDonation()}>
+                <Show when={theDonation() && theDonation()} fallback={
+                  <Skeleton.Root class="flex flex-col gap-1">
+                    <div class="w-full h-[16px] bg-neutral-300 rounded-md"></div>
+                  </Skeleton.Root>
+                }>
                   {(d) => (
                     <div
                       innerHTML={translations.receival[language().value](

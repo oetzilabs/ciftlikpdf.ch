@@ -1,26 +1,18 @@
-import { QueryClient, QueryClientProvider, createMutation, useQueryClient } from "@tanstack/solid-query";
+import { createMutation} from "@tanstack/solid-query";
 import { TextField, Select } from "@kobalte/core";
 import { Mutations, Donations } from "../utils/mutations";
 import { Match, Show, Switch, createSignal } from "solid-js";
 import dayjs from "dayjs";
+import { qC } from "../utils/stores";
 
-export function NewSponsorFormWrapper(props: { API_URL: string; session: string; sponsorId: string }) {
-  const queryClient = new QueryClient();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <NewSponsorForm API_URL={props.API_URL} session={props.session} sponsorId={props.sponsorId} />
-    </QueryClientProvider>
-  );
-}
 
-function NewSponsorForm(props: { API_URL: string; session: string; sponsorId: string }) {
-  const queryClient = useQueryClient();
+export function NewSponsorForm(props: { API_URL: string; session: string; sponsorId: string }) {
   const createDonation = createMutation(() => ({
     mutationKey: ["newSponsor"],
     mutationFn: async (donation: Parameters<typeof Mutations.Donations.create>[2]) => {
       return Mutations.Donations.create(props.API_URL, props.sponsorId, donation);
     },
-  }));
+  }), () => qC);
   const [newDonation, setNewDonation] = createSignal<Parameters<typeof Mutations.Donations.create>[2]>({
     amount: 0,
     year: dayjs().year(),
@@ -45,8 +37,7 @@ function NewSponsorForm(props: { API_URL: string; session: string; sponsorId: st
     }
     const donation = await createDonation.mutateAsync(s);
     if (donation) {
-      console.log(donation);
-      await queryClient.invalidateQueries({ queryKey: ["sponsors"] });
+      await qC.invalidateQueries({ queryKey: ["sponsors"] });
       window.location.href = `/sponsor/${donation.id}`;
     } else {
       console.error(donation, createDonation.failureReason);
