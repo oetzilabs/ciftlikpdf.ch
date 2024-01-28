@@ -26,5 +26,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "prettier-plugin-astro": "^0.13.0"
+  }
 }

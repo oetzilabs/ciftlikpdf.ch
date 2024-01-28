@@ -1,6 +1,6 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
-import { SponsorWrapper } from '../../components/Sponsor';
+import { Sponsor } from '../../components/Sponsor';
 import { API_URL } from '../../consts.ts';
 
 const params = Astro.params;
@@ -14,7 +14,7 @@ if(!params.id) {
 
 <MainLayout>
   <div class="w-full">
-    <SponsorWrapper API_URL={API_URL} id={params.id} client:load />
+    <Sponsor API_URL={API_URL} id={params.id} client:load />
   </div>
 </MainLayout>
 
