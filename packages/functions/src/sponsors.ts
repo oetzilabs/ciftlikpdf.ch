@@ -63,19 +63,18 @@ export const donate = ApiHandler(async () => {
   if (!id) {
     return error("No sponsor id");
   }
-  const body = useFormData();
+  const body = useJsonBody();
   if (!body) {
     return error("No body");
   }
-  const data = Object.fromEntries(body.entries());
 
   const validation = await Sponsor.isDonateValid({
-    ...data,
+    ...body,
     createdByAdmin: user.id,
   });
   if (!validation.success) {
     console.error(validation.error);
-    return error(validation.error.message);
+    return error(validation.error);
   }
 
   const sponsor = await Sponsor.donate(id, validation.data);
