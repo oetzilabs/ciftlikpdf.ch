@@ -99,6 +99,7 @@ function SponsorView(props: {
         format: "a3",
         compress: true,
       });
+      pdf.setFontSize(10);
       await pdf.html(pdfRef, {
         callback: (doc) => {
           doc.save(`${cleanName}-${year()}.pdf`);
@@ -213,7 +214,7 @@ function SponsorView(props: {
         </div>
         <div class="flex flex-row gap-4 w-max">
           <button
-            class={cn("border border-gray-300 rounded-md px-3 py-1 bg-black dark:bg-white dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none", {
+            class={cn("border border-red-300 rounded-md px-3 py-1 bg-red-500 text-white w-max text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none", {
               "opacity-50 cursor-not-allowed": !sponsor() || !year(),
             })}
             disabled={!sponsor() || !year() || removeDonation.isPending}
@@ -242,8 +243,8 @@ function SponsorView(props: {
       </div>
       <div class="flex flex-col gap-4 w-full">
         {/* here we are going to show a pdf preview with custom texts */}
-        <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto shadow-sm font-[Arial]">
-          <div class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20 text-black" ref={pdfRef!}>
+        <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto shadow-sm ">
+          <div class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20 text-black font-[Helvetica]" ref={pdfRef!}>
             <div class="absolute top-0 right-0 px-20 py-8">
               <img src="/ciftlik-logo.jpeg" width="150px"></img>
             </div>
@@ -323,7 +324,7 @@ function SponsorView(props: {
               </div>
               <div class="text-[11pt]"></div>
               <div class="text-[11pt]"></div>
-              <div class="text-[11pt]">{translations.thanks[language().value]}</div>
+              <div class="text-[11pt] text-justify">{translations.thanks[language().value]}</div>
               <div class="text-[11pt]"></div>
               <div class="text-[11pt]"></div>
               <div class="text-[11pt]">{translations.goodbye[language().value]}</div>
