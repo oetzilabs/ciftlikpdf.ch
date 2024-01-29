@@ -18,6 +18,20 @@ export const Sponsors = {
         body: JSON.stringify(data),
       }).then((res) => res.json() as ReturnType<typeof Sponsor.create>);
     }),
+  remove: z.function(z.tuple([z.string(), z.string()])).implement(async (API_URL, id) => {
+    const session = document.cookie.split("; ").find((row) => row.startsWith("session="));
+    if (!session) {
+      throw new Error("No session found");
+    }
+    const result = await fetch(`${API_URL}/sponsors/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.split("=")[1]}`,
+      }
+    }).then((res) => res.json() as ReturnType<typeof Sponsor.remove>);
+    return result;
+  }),
 };
 export const Donations = {
   create: z
@@ -44,7 +58,19 @@ export const Donations = {
         })
       }).then((res) => res.json() as ReturnType<typeof Sponsor.donate>);
     }
-  ),
+    ),
+  remove: z.function(z.tuple([z.string(), z.string().uuid(), z.string().uuid()])).implement(async (API_URL, id, donationId) => {
+    const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+    if (!session) return Promise.reject("No session found");
+
+    return fetch(`${API_URL}/sponsor/${id}/donate/${donationId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.split("=")[1]}`,
+      },
+    }).then((res) => res.json() as ReturnType<typeof Sponsor.donate>);
+  }),
 };
 
 export const Authentication = {

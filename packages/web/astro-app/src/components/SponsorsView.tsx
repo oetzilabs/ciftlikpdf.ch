@@ -1,17 +1,36 @@
 import { TextField } from "@kobalte/core";
-import "solid-js";
 import { For, Match, Switch, createSignal } from "solid-js";
 import { Queries } from "../utils/queries";
-import { createQuery } from "@tanstack/solid-query";
-import { API_URL, qC } from "../utils/stores";
+import { QueryClientProvider, createQuery, useQueryClient } from "@tanstack/solid-query";
+import { qC } from "../utils/stores";
 import { SelectSponsor } from "../components/SelectSponsor";
 import { cn } from "../utils/cn";
 
-export function SponsorsView() {
+export function SponsorsView(props: {
+  initial: Awaited<ReturnType<typeof Queries.Sponsors.all>>;
+  API_URL: string;
+  refetchInterval?: number;
+}) {
+  return (
+    <QueryClientProvider client={qC}>
+      <Sponsors initial={props.initial} API_URL={props.API_URL} refetchInterval={props.refetchInterval} />
+    </QueryClientProvider>
+  );
+}
+
+export function Sponsors(props: {
+  initial: Awaited<ReturnType<typeof Queries.Sponsors.all>>;
+  API_URL: string;
+  refetchInterval?: number;
+}) {
+  const qC = useQueryClient();
+
   const sponsors = createQuery(() => ({
     queryKey: ["sponsors"],
-    queryFn: () => Queries.Sponsors.all(API_URL.get()),
-  }), () => qC);
+    queryFn: () => Queries.Sponsors.all(props.API_URL),
+    initialData: props.initial,
+    refetchInterval: props.refetchInterval ?? 20000,
+  }));
 
   const [search, setSearch] = createSignal("");
 
@@ -29,7 +48,7 @@ export function SponsorsView() {
     <div class="w-full">
       <div class="flex flex-row items-center justify-between gap-2">
         <TextField.Root
-          class="w-full border border-neutral-300 dark:border-neutral-700 rounded-md overflow-clip flex flex-row items-center bg-white dark:bg-black"
+          class="w-full border border-neutral-300 dark:border-neutral-700 rounded-full overflow-clip flex flex-row items-center bg-white dark:bg-black"
           value={search()}
           onChange={(value) => setSearch(value)}
         >
@@ -52,12 +71,14 @@ export function SponsorsView() {
           <TextField.Input
             id="search"
             class="w-full px-3 py-2 bg-transparent text-sm outline-none"
-            placeholder="Search"
+            placeholder="Ara..."
           />
         </TextField.Root>
-        <button class="w-max border border-neutral-300 dark:border-neutral-700 rounded-md overflow-clip flex flex-row items-center bg-black dark:bg-white text-white dark:text-black p-2.5 text-xl" onClick={async () => {
-          window.location.reload();
-        }}>
+        <button class="shadow-sm w-max border border-neutral-300 dark:border-neutral-700 rounded-full overflow-clip flex flex-row items-center bg-black dark:bg-white text-white dark:text-black p-2.5 text-xl"
+          onClick={async () => {
+            await qC.invalidateQueries({ queryKey: ["sponsors"] });
+          }}
+        >
           <span class="sr-only">Refresh</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +116,7 @@ export function SponsorsView() {
             <div class="flex flex-col gap-4">
               <div class="grid grid-cols-2 gap-4 py-2">
                 <For each={filtered(data())}>
-                  {(item) => (<SelectSponsor sponsor={item} />)}
+                  {(item) => (<SelectSponsor sponsor={item} API_URL={props.API_URL} />)}
                 </For>
               </div>
             </div>

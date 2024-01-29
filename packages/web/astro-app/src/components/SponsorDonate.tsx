@@ -42,7 +42,7 @@ export default function SponsorDonate(props: { id: string, API_URL: string}) {
       </TextField.Root>
       <div class="flex flex-col gap-4">
         <div class="flex flex-row gap-4">
-          <For each={["CHF", "EUR", "USD"] as ReturnType<typeof newDonation>["currency"][]}>
+          <For each={["CHF", "EUR"] as ReturnType<typeof newDonation>["currency"][]}>
             {(currency) => (
               <button
                 class={cn("w-full border border-neutral-300 dark:border-neutral-700 rounded-md overflow-clip flex flex-row items-center bg-white dark:bg-black p-4 text-xl", {

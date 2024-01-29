@@ -5,7 +5,7 @@ export default function ThemeButton(props: { theme: "light" | "dark" }) {
   const [t, setT] = createSignal(props.theme);
   const toggle = () => {
     setT((t) => (t === "light" ? "dark" : "light"));
-    document.cookie = `theme=${props.theme === "light" ? "dark" : "light"}`;
+    document.cookie = `theme=${props.theme === "light" ? "dark" : "light"}; path=/`;
     // get the html element
     const html = document.querySelector("html")!;
     // set the theme
