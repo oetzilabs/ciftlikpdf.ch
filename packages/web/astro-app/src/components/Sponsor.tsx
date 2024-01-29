@@ -9,8 +9,11 @@ import "dayjs/locale/fr";
 dayjs.extend(advancedFormat);
 dayjs.extend(localizedFormat);
 import { jsPDF } from "jspdf";
-import { sponsorAtom } from "../utils/stores";
+import { qC, sponsorAtom } from "../utils/stores";
 import type { Sponsor as Sp } from "../../../../core/src/entities/sponsors";
+import { QueryClientProvider, createMutation } from "@tanstack/solid-query";
+import { cn } from "../utils/cn";
+import { Mutations } from "../utils/mutations";
 
 const translations = {
   yourDonoOurThank: {
@@ -55,35 +58,79 @@ interface LanguageOption {
   disabled?: boolean;
 }
 
-export function Sponsor() {
+export function Sponsor(props: {
+  language?: string;
+  API_URL: string;
+}) {
+  return (
+    <QueryClientProvider client={qC}>
+      <SponsorView language={props.language} API_URL={props.API_URL} />
+    </QueryClientProvider>
+  );
+}
+
+const languages: LanguageOption[] = [
+  { value: "tr", label: "Türkçe" },
+  { value: "de", label: "Deutsch" },
+  { value: "fr", label: "Français" },
+];
+
+function SponsorView(props: {
+  language?: string;
+  API_URL: string;
+}) {
   const [sponsor, setSponsor] = createSignal<Sp.Frontend | undefined>();
   const [year, setYear] = createSignal<number | undefined>();
   sponsorAtom.subscribe((s) => {
     setSponsor(s?.[0]);
     setYear(s?.[1]);
   });
-  const [language, setLanguage] = createSignal<LanguageOption>({
-    label: "Türkçe",
-    value: "tr",
-    disabled: false,
-  });
+  const [language, setLanguage] = createSignal<LanguageOption>(props.language ? languages.find((l) => l.value === props.language) ?? languages[0] : languages[0]);
   let pdfRef: HTMLDivElement;
-  const createPdf = (sponsorName?: string) => {
-    if (!sponsorName) return;
-    if (!pdfRef) return;
-    const cleanName = sponsorName?.replace(/[^a-zA-Z0-9]/g, "-") ?? "sponsor";
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "pt",
-      format: "a3",
-      compress: true,
-    });
-    pdf.html(pdfRef, {
-      callback: (doc) => {
-        doc.save(`${cleanName}-${year()}.pdf`);
-      },
-    });
-  };
+
+  const createPdf = createMutation(() => ({
+    mutationFn: async (sponsorName?: string) => {
+      if (!sponsorName) return;
+      if (!pdfRef) return;
+      const cleanName = sponsorName?.replace(/[^a-zA-Z0-9]/g, "-") ?? "sponsor";
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "pt",
+        format: "a3",
+        compress: true,
+      });
+      await pdf.html(pdfRef, {
+        callback: (doc) => {
+          doc.save(`${cleanName}-${year()}.pdf`);
+        },
+      });
+    },
+    mutationKey: ["createPdf"],
+  }));
+
+  const removeDonation = createMutation(() => ({
+    mutationFn: async () => {
+      const spo = sponsor();
+      const yea = year();
+      if (!spo || !yea) return;
+      const donation = spo.donations.find((d) => d.year === year());
+      if (!donation) return;
+      return Mutations.Donations.remove(props.API_URL, spo.id, donation.id);
+    },
+    mutationKey: ["removeDonation"],
+    onSuccess: () => {
+      qC.invalidateQueries({
+        queryKey: ["sponsors"],
+      });
+      sponsorAtom.set(undefined);
+    },
+    onError: () => {
+      setTimeout(() => {
+        removeDonation.reset();
+      }, 5000);
+    }
+  }));
+
   const theDonation = () => {
     return sponsor()?.donations.find((d) => d.year === year());
   };
@@ -104,11 +151,14 @@ export function Sponsor() {
               placement="bottom-start"
               required
               options={languageOptions}
+              disallowEmptySelection
               value={language()}
               optionValue="value"
               optionTextValue="label"
-              onChange={(value) => setLanguage(value)}
-              disallowEmptySelection={false}
+              onChange={(value) => {
+                setLanguage(value);
+                document.cookie = `language=${value.value}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+              }}
               itemComponent={(props) => (
                 <Select.Item
                   item={props.item}
@@ -161,11 +211,29 @@ export function Sponsor() {
             </Select.Root>
           </div>
         </div>
+        <div class="flex flex-row gap-4 w-max">
+          <button
+            class={cn("border border-gray-300 rounded-md px-3 py-1 bg-black dark:bg-white dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none", {
+              "opacity-50 cursor-not-allowed": !sponsor() || !year(),
+            })}
+            disabled={!sponsor() || !year() || removeDonation.isPending}
+            onClick={async () => {
+              const confirmed = confirm("Are you sure you want to remove this donation?");
+              if (!confirmed) return;
+              await removeDonation.mutateAsync();
+            }}
+          >
+            <span>Bagis Sil</span>
+          </button>
+        </div>
         <div class="flex flex-row items-center justify-center">
           <button
-            class="border border-gray-300 rounded-md px-3 py-1 bg-black dark:bg-white dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none"
-            onClick={() => {
-              createPdf(sponsor()?.name);
+            class={cn("border border-gray-300 rounded-md px-3 py-1 bg-black dark:bg-white dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none", {
+              "opacity-50 cursor-not-allowed": !sponsor() || !year(),
+            })}
+            disabled={!sponsor() || !year() || createPdf.isPending || removeDonation.isPending}
+            onClick={async () => {
+              await createPdf.mutateAsync(sponsor()?.name);
             }}
           >
             <span>PDF Olustur</span>
@@ -181,7 +249,7 @@ export function Sponsor() {
             </div>
             <div class="flex flex-col items-center justify-center text-[9pt]">
               <span>Ciftlik Köyü Sosyal Dayanisma Vakfi</span>
-              <span>Stiftung für Unterstützung von Ciftlik- Dorf</span>
+              <span>Stiftung für Unterstützung von Ciftlik Dorf</span>
               <span>Längistrasse 11 - 4133 Pratteln</span>
               <span>www.ciftlik.ch</span>
             </div>
@@ -205,15 +273,15 @@ export function Sponsor() {
             </div>
             <div class="flex flex-row gap-4 items-center justify-between">
               <div></div>
-              <div>
+              <div class="w-max text-[11pt]">
                 {dayjs()
                   .locale(language().value)
                   .format(
                     language().value === "tr"
-                      ? "D. MMMM YYYY"
+                      ? "Do MMMM YYYY"
                       : language().value === "de"
-                        ? "D. MMMM YYYY"
-                        : "D MMMM YYYY"
+                        ? "Do MMMM YYYY"
+                        : "Do MMMM YYYY"
                   )}
               </div>
             </div>
@@ -247,7 +315,7 @@ export function Sponsor() {
                       innerHTML={translations.receival[language().value](
                         d().amount.toLocaleString("de-CH", { minimumFractionDigits: 2 }),
                         d().currency,
-                        year() ?? new Date().getFullYear()
+                        d().year
                       )}
                     ></div>
                   )}
