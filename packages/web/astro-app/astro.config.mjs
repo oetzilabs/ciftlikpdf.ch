@@ -7,5 +7,5 @@ import aws from "astro-sst";
 export default defineConfig({
   integrations: [tailwind(), solidJs(), sitemap()],
   output: "server",
-  adapters: aws(),
+  adapter: aws(),
 });
