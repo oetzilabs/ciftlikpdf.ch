@@ -3,12 +3,12 @@ import { ApiStack } from "./ApiStack";
 // import { DatabaseStack } from "./DatabaseStack";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
-import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
+// import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
 
 export function DashboardSolidStartStack({ stack, app }: StackContext) {
   const dns = use(DNSStack);
   const { api, DATABASE_AUTH_TOKEN, DATABASE_URL } = use(ApiStack);
-  const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
+  // const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
   // const { db } = use(DatabaseStack);
   const { bucket } = use(StorageStack);
   const apiUrl = api.customDomainUrl || api.url;
@@ -21,7 +21,7 @@ export function DashboardSolidStartStack({ stack, app }: StackContext) {
       VITE_AUTH_URL: apiUrl + "/auth",
     },
     customDomain: {
-      domainName: "dashboard." + dns.domain,
+      domainName: "old-dashboard." + dns.domain,
       hostedZone: dns.zone.zoneName,
     },
   });
