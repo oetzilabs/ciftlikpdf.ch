@@ -6,7 +6,6 @@ import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   adapters: aws({ deploymentStrategy: "regional" }),
-  output: "server",
   integrations: [tailwind(), solidJs(), sitemap()],
   site: "https://ciftlikpdf.ch",
 });

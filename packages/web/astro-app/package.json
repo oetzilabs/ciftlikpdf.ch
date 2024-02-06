@@ -6,7 +6,8 @@
     "dev": "sst bind astro dev",
     "local": "astro dev",
     "start": "astro dev",
-    "build": "astro check && sst bind astro build",
+    "check": "astro check",
+    "build": "sst bind astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
