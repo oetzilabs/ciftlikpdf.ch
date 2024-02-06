@@ -5,7 +5,8 @@ import aws from "astro-sst";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  adapters: aws({ deploymentStrategy: "regional" }),
+  adapters: aws(),
+  output: "server",
   integrations: [tailwind(), solidJs(), sitemap()],
   site: "https://ciftlikpdf.ch",
 });

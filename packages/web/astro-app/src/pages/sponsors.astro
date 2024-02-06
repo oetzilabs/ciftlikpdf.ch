@@ -1,7 +1,8 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import { Sponsor } from "../../../../core/src/entities/sponsors";
-const allSponsors = await Sponsor.allWithoutDeleted();
+import { Queries } from "../utils/queries";
+import { API_URL } from "../consts";
+const allSponsors = await Queries.Sponsors.all(API_URL);
 ---
 
 <MainLayout>

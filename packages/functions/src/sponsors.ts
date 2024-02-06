@@ -2,6 +2,7 @@ import { Sponsor } from "@ciftlikpdf/core/entities/sponsors";
 import { StatusCodes } from "http-status-codes";
 import { ApiHandler, useFormData, useJsonBody, usePathParam, useQueryParam } from "sst/node/api";
 import { error, getUser, json, text } from "./utils";
+import { Donation } from "@ciftlikpdf/core/entities/donations";
 
 export const get = ApiHandler(async () => {
   const id = usePathParam("id");
@@ -231,4 +232,13 @@ export const donationPdf = ApiHandler(async () => {
   }
 
   return error("Unexpected error");
+});
+
+export const donations = ApiHandler(async () => {
+  const sponsorId = usePathParam("id");
+  if (!sponsorId) {
+    return error("No sponsor id");
+  }
+  const donations = await Donation.findBySponsorId(sponsorId);
+  return json(donations);
 });

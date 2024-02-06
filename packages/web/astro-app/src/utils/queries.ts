@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Sponsor } from "../../../../core/src/entities/sponsors";
 import type { User } from "@ciftlikpdf/core/src/entities/users";
+import type { Donation } from "@ciftlikpdf/core/src/entities/donations";
 export * as Queries from "./queries";
 
 export const Sponsors = {
@@ -15,6 +16,16 @@ export const Sponsors = {
     .function(z.tuple([z.string(), z.string()]))
     .implement((API_URL, id) =>
       fetch(`${API_URL}/sponsors/${id}`, {}).then((res) => res.json() as ReturnType<typeof Sponsor.findById>),
+    ),
+};
+
+export const Donations = {
+  findBySponsorId: z
+    .function(z.tuple([z.string(), z.string()]))
+    .implement((API_URL, sponsorId) =>
+      fetch(`${API_URL}/sponsor/${sponsorId}/donations`, {}).then(
+        (res) => res.json() as ReturnType<typeof Donation.findBySponsorId>,
+      ),
     ),
 };
 

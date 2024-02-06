@@ -87,6 +87,12 @@ export function ApiStack({ stack }: StackContext) {
           description: "This is the sponsors create function",
         },
       },
+      "GET /sponsor/{id}/donations": {
+        function: {
+          handler: "packages/functions/src/sponsors.donations",
+          description: "This is the sponsors donations function",
+        },
+      },
       "POST /sponsor/{id}/donate": {
         function: {
           handler: "packages/functions/src/sponsors.donate",
@@ -105,15 +111,6 @@ export function ApiStack({ stack }: StackContext) {
           description: "This is the sponsors removeDonation function",
         },
       },
-      "POST /sponsor/{id}/pdf/{did}": {
-        function: {
-          handler: "packages/functions/src/sponsors.donationPdf",
-          description: "This is the sponsors donationPdf function",
-          environment: {
-            // DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
-          },
-        },
-      },
       "GET /sponsors/all": {
         function: {
           handler: "packages/functions/src/sponsors.all",
@@ -124,72 +121,6 @@ export function ApiStack({ stack }: StackContext) {
         function: {
           handler: "packages/functions/src/sponsors.count",
           description: "This is the sponsors count function",
-        },
-      },
-      "GET /templates/all": {
-        function: {
-          handler: "packages/functions/src/templates.all",
-          description: "This is the templates all function",
-        },
-      },
-      "GET /templates/default": {
-        function: {
-          handler: "packages/functions/src/templates.getDefault",
-          description: "This is the templates getDefault function",
-        },
-      },
-      "POST /templates/sync-old": {
-        function: {
-          handler: "packages/functions/src/templates.syncOld",
-          description: "This is the templates syncOld function",
-        },
-      },
-      "POST /templates/presigned-url": {
-        function: {
-          handler: "packages/functions/src/templates.presignedUrl",
-          description: "This is the templates presignedUrl function",
-        },
-      },
-      "DELETE /templates/{id}": {
-        function: {
-          handler: "packages/functions/src/templates.remove",
-          description: "This is the templates remove function",
-        },
-      },
-      "POST /templates/{id}/set-default": {
-        function: {
-          handler: "packages/functions/src/templates.setAsDefault",
-          description: "This is the templates setAsDefault function",
-        },
-      },
-      "GET /pdfs/all": {
-        function: {
-          handler: "packages/functions/src/pdfs.all",
-          description: "This is the pdfs all function",
-        },
-      },
-      "POST /pdfs/download-url": {
-        function: {
-          handler: "packages/functions/src/pdfs.downloadUrl",
-          description: "This is the pdfs downloadUrl function",
-        },
-      },
-      "POST /pdfs/public/download-url/{did}": {
-        function: {
-          handler: "packages/functions/src/pdfs.publicDownloadUrl",
-          description: "This is the pdfs publicDownloadUrl function",
-        },
-      },
-      "DELETE /pdfs/{id}": {
-        function: {
-          handler: "packages/functions/src/pdfs.remove",
-          description: "This is the pdfs remove function",
-        },
-      },
-      "DELETE /pdfs/by-key": {
-        function: {
-          handler: "packages/functions/src/pdfs.removeByKey",
-          description: "This is the pdfs removeByKey function",
         },
       },
       "GET /superadmin/users/all": {
@@ -220,12 +151,6 @@ export function ApiStack({ stack }: StackContext) {
         function: {
           handler: "packages/functions/src/superadmin.makeSuperadmin",
           description: "This is the superadmin makeSuperadmin function",
-        },
-      },
-      "GET /search/pdf": {
-        function: {
-          handler: "packages/functions/src/searchs.pdfs",
-          description: "This is the search pdfs function",
         },
       },
     },

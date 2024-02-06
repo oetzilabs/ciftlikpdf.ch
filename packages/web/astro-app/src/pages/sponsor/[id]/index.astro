@@ -1,12 +1,13 @@
 ---
+import { API_URL } from "../../../consts";
 import MainLayout from "../../../layouts/MainLayout.astro";
-import { Sponsor } from "../../../../../../core/src/entities/sponsors";
+import { Queries } from "../../../utils/queries";
 
 const params = Astro.params;
 if (!params.id) {
   return Astro.redirect("/404", 404);
 }
-const sponsor = await Sponsor.findById(params.id);
+const sponsor = await Queries.Sponsors.get(API_URL, params.id);
 if (!sponsor) {
   return Astro.redirect("/404", 404);
 }

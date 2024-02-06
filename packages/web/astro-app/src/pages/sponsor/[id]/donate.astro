@@ -3,7 +3,7 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 const { id } = Astro.params;
 import SponsorDonate from "../../../components/SponsorDonate";
 import { API_URL } from "../../../consts";
-import { Donation } from "../../../../../../core/src/entities/donations";
+import { Queries } from "../../../utils/queries";
 
 const session = Astro.cookies.get("session")?.value;
 if (!session) {
@@ -13,8 +13,7 @@ if (!session) {
 if (!id) {
   return Astro.redirect("/404", 404);
 }
-const donations =
-  (await Donation.findBySponsorId(id)) ?? ([] as NonNullable<Awaited<ReturnType<typeof Donation.findBySponsorId>>>);
+const donations = await Queries.Donations.findBySponsorId(API_URL, id);
 ---
 
 <MainLayout>
