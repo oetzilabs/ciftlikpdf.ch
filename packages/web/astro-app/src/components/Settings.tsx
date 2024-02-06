@@ -47,7 +47,7 @@ const SettingsPage = (props: {
         },
       })
         .then((r) => r.json() as Promise<{ jwtToken: string }>)
-        .catch((e) => {
+        .catch(() => {
           // console.log(e.message);
           return {
             jwtToken: null,
@@ -68,7 +68,7 @@ const SettingsPage = (props: {
     mutationFn: async (id: string) => {
       return Mutations.Superadmins.makeAdmin(props.API_URL, id);
     },
-    async onSuccess(data) {
+    async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   }));
@@ -78,7 +78,7 @@ const SettingsPage = (props: {
     mutationFn: async (id: string) => {
       return Mutations.Superadmins.makeViewer(props.API_URL, id);
     },
-    async onSuccess(data) {
+    async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   }));
@@ -88,7 +88,7 @@ const SettingsPage = (props: {
     mutationFn: async (id: string) => {
       return Mutations.Superadmins.makeSuperAdmin(props.API_URL, id);
     },
-    async onSuccess(data) {
+    async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   }));

@@ -1,8 +1,8 @@
-import { createMutation } from "@tanstack/solid-query";
 import { TextField } from "@kobalte/core";
-import { Mutations } from "../utils/mutations";
+import { createMutation } from "@tanstack/solid-query";
 import { Match, Switch, createSignal } from "solid-js";
-import { qC, API_URL } from "../utils/stores";
+import { Mutations } from "../utils/mutations";
+import { qC } from "../utils/stores";
 
 export function NewSponsorForm(props: { API_URL: string }) {
   const createSponsor = createMutation(

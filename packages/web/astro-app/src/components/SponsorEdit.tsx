@@ -20,7 +20,7 @@ function SponsorEdit(props: { sponsor: Sponsor.Frontend; API_URL: string }) {
     mutationFn: (sponsor: Sponsor.Frontend) => {
       return Mutations.Sponsors.update(props.API_URL, sponsor.id, sponsor);
     },
-    async onSuccess(data, variables, context) {
+    async onSuccess() {
       await qC.invalidateQueries({ queryKey: ["sponsors"] });
     },
   }));
@@ -72,7 +72,7 @@ function SponsorEdit(props: { sponsor: Sponsor.Frontend; API_URL: string }) {
               alert("Adress bos olamaz");
               return;
             }
-            const updatedSponsor = await saveSponsor.mutateAsync(s);
+            await saveSponsor.mutateAsync(s);
           }}
           class="w-max px-3 py-1 bg-black text-white bg-primary-500 rounded-md flex flex-row items-center justify-center gap-2"
         >

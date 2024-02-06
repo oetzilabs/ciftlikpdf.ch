@@ -1,10 +1,7 @@
 ---
-import MainLayout from "../../layouts/MainLayout.astro";
-import { SponsorsView } from "../../components/SponsorsView";
-import { Sponsor as Sp } from "../../components/Sponsor";
-import { API_URL } from "../../consts";
-import { User } from "../../../../../core/src/entities/users";
 import SettingsPage from "../../components/Settings";
+import { API_URL } from "../../consts";
+import MainLayout from "../../layouts/MainLayout.astro";
 
 const session = Astro.cookies.get("session")?.value;
 if (!session) {
