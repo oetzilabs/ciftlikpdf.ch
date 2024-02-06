@@ -2,11 +2,12 @@ import { Api, Config, StackContext, use } from "sst/constructs";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
 import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
+import { SecretsStack } from "./SecretsStack";
 
 export function ApiStack({ stack }: StackContext) {
   const dns = use(DNSStack);
   const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
-  const secrets = Config.Secret.create(stack, "DATABASE_URL", "DATABASE_AUTH_TOKEN", "JWT_SECRET");
+  const secrets = use(SecretsStack);
 
   const { bucket } = use(StorageStack);
 

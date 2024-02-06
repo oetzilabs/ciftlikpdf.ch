@@ -11,81 +11,29 @@ dayjs.extend(localizedFormat);
 import { jsPDF } from "jspdf";
 import { qC, sponsorAtom } from "../utils/stores";
 import type { Sponsor as Sp } from "../../../../core/src/entities/sponsors";
-import { QueryClientProvider, createMutation } from "@tanstack/solid-query";
+import { createMutation } from "@tanstack/solid-query";
 import { cn } from "../utils/cn";
 import { Mutations } from "../utils/mutations";
+import { languages, translations } from "../utils/translations";
+import type { LanguageOption } from "../utils/translations";
+import { Tanstack } from "../utils/providers";
 
-const translations = {
-  yourDonoOurThank: {
-    de: "Ihre Spende - unser Dank!",
-    fr: "Votre don - notre remerciement!",
-    tr: "Bagisiniz - tesekkurumuz!",
-  },
-  greetings: {
-    de: (name: string) => `Sehr geehrte/r ${name},`,
-    fr: (name: string) => `Cher ${name},`,
-    tr: (name: string) => `Sayin ${name},`,
-  },
-  main: {
-    de: `Sie haben unserer Stiftung in diesem Jahr eine Spende zukommen lassen - dafür möchten wir Ihnen herzlichst danken. Durch Ihre Unterstützung konnten wir in unserem Dorf "Ciftlik-Köyü" viele wertvolle Hilfe leisten und die Struktur unserer Stiftung stärken. Dank Ihnen und vielen weiteren Spendenden konnten wir zum Beispiel den Schulhof im Dorfkern errichten, mehreren ärmeren Familien einen Schulbesuch der Kinder ermöglichen und einen Aufseher für unser Dorf engagieren.`,
-    fr: `Vous avez fait un don à notre fondation cette année - nous vous en remercions chaleureusement. Grâce à votre soutien, nous avons pu apporter une aide précieuse à notre village "Ciftlik-Köyü" et renforcer la structure de notre fondation. Grâce à vous et à de nombreux autres donateurs, nous avons pu construire la cour de récréation au centre du village, permettre à plusieurs familles pauvres de scolariser leurs enfants et engager un surveillant pour notre village.`,
-    tr: `Bu yil vakfimiza bagis yaptiginiz icin tesekkur ederiz. Desteginizle Ciftlik Köyü'nde bir cok faydali yardimlarda bulunduk ve vakfimizin yapisi guclendirdik. Sizin ve bircok bagiscinin yardimiyla, ornegin koy merkezindeki okul bahcesini insa ettik, bir cok fakir ailenin cocuklarinin okula gitmesini sagladik ve koyumuz icin bir bekci tuttuk.`,
-  },
-  receival: {
-    de: (value: string, currency: string, year: number) =>
-      `Gerne bestätigen wir hiermit Ihre Spende für das Jahr <strong>${year}</strong> von Total: <strong>${value} ${currency}</strong>.`,
-    fr: (value: string, currency: string, year: number) =>
-      `Nous confirmons par la présente votre don pour l'année <strong>${year}</strong> de Total: <strong>${value} ${currency}</strong>.`,
-    tr: (value: string, currency: string, year: number) =>
-      `<strong>${year}</strong> yili icin yaptiginiz toplam <strong>${value} ${currency}</strong> bagisinizi bu vesileyle onayliyoruz.`,
-  },
-  thanks: {
-    de: `Im Namen unseres Dorfes und unserer Stiftung bedanken wir uns herzlichst für Ihre Spende und
-    freuen uns weiterhin auf Ihre wertvolle Unterstützung.`,
-    fr: `Au nom de notre village et de notre fondation, nous vous remercions chaleureusement pour votre don et nous réjouissons de votre précieux soutien.`,
-    tr: `Koyumuz ve vakfimiz adina bagisiniz icin tesekkur eder, degerli desteginizi bekleriz.`,
-  },
-  goodbye: {
-    de: `Mit freundlichen Grüssen`,
-    fr: `Avec nos meilleures salutations`,
-    tr: `Saygilarimizla`,
-  },
-};
+export const Sponsor = (props: { language?: string; API_URL: string }) => (
+  <Tanstack>
+    <SponsorView language={props.language} API_URL={props.API_URL} />
+  </Tanstack>
+);
 
-interface LanguageOption {
-  value: "tr" | "fr" | "de";
-  label: string;
-  disabled?: boolean;
-}
-
-export function Sponsor(props: {
-  language?: string;
-  API_URL: string;
-}) {
-  return (
-    <QueryClientProvider client={qC}>
-      <SponsorView language={props.language} API_URL={props.API_URL} />
-    </QueryClientProvider>
-  );
-}
-
-const languages: LanguageOption[] = [
-  { value: "tr", label: "Türkçe" },
-  { value: "de", label: "Deutsch" },
-  { value: "fr", label: "Français" },
-];
-
-function SponsorView(props: {
-  language?: string;
-  API_URL: string;
-}) {
+function SponsorView(props: { language?: string; API_URL: string }) {
   const [sponsor, setSponsor] = createSignal<Sp.Frontend | undefined>();
   const [year, setYear] = createSignal<number | undefined>();
   sponsorAtom.subscribe((s) => {
     setSponsor(s?.[0]);
     setYear(s?.[1]);
   });
-  const [language, setLanguage] = createSignal<LanguageOption>(props.language ? languages.find((l) => l.value === props.language) ?? languages[0] : languages[0]);
+  const [language, setLanguage] = createSignal<LanguageOption>(
+    props.language ? languages.find((l) => l.value === props.language) ?? languages[0] : languages[0],
+  );
   let pdfRef: HTMLDivElement;
 
   const createPdf = createMutation(() => ({
@@ -129,7 +77,7 @@ function SponsorView(props: {
       setTimeout(() => {
         removeDonation.reset();
       }, 5000);
-    }
+    },
   }));
 
   const theDonation = () => {
@@ -143,7 +91,7 @@ function SponsorView(props: {
   ];
 
   return (
-    <div class="w-full flex flex-col gap-2">
+    <div class="w-full flex-col gap-2 flex">
       <div class="flex flex-row gap-4 items-center justify-between">
         <div class="flex flex-row gap-4 w-max">
           <div class="flex flex-row gap-4 w-max items-center">
@@ -214,9 +162,12 @@ function SponsorView(props: {
         </div>
         <div class="flex flex-row gap-4 w-max">
           <button
-            class={cn("border border-red-300 rounded-md px-3 py-1 bg-red-500 text-white w-max text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none", {
-              "opacity-50 cursor-not-allowed": !sponsor() || !year(),
-            })}
+            class={cn(
+              "border border-red-300 rounded-md px-3 py-1 bg-red-500 text-white w-max text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none",
+              {
+                "opacity-50 cursor-not-allowed": !sponsor() || !year(),
+              },
+            )}
             disabled={!sponsor() || !year() || removeDonation.isPending}
             onClick={async () => {
               const confirmed = confirm("Are you sure you want to remove this donation?");
@@ -229,9 +180,12 @@ function SponsorView(props: {
         </div>
         <div class="flex flex-row items-center justify-center">
           <button
-            class={cn("border border-gray-300 rounded-md px-3 py-1 bg-black dark:bg-white dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none", {
-              "opacity-50 cursor-not-allowed": !sponsor() || !year(),
-            })}
+            class={cn(
+              "border border-gray-300 rounded-md px-3 py-1 bg-black dark:bg-white dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2 print:border-0 print:shadow-none",
+              {
+                "opacity-50 cursor-not-allowed": !sponsor() || !year(),
+              },
+            )}
             disabled={!sponsor() || !year() || createPdf.isPending || removeDonation.isPending}
             onClick={async () => {
               await createPdf.mutateAsync(sponsor()?.name);
@@ -241,10 +195,13 @@ function SponsorView(props: {
           </button>
         </div>
       </div>
-      <div class="flex flex-col gap-4 w-full">
+      <div class=" flex-col gap-4 w-full hidden md:flex">
         {/* here we are going to show a pdf preview with custom texts */}
         <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto shadow-sm ">
-          <div class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20 text-black font-[Helvetica]" ref={pdfRef!}>
+          <div
+            class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20 text-black font-[Helvetica]"
+            ref={pdfRef!}
+          >
             <div class="absolute top-0 right-0 px-20 py-8">
               <img src="/ciftlik-logo.jpeg" width="150px"></img>
             </div>
@@ -255,14 +212,17 @@ function SponsorView(props: {
               <span>www.ciftlik.ch</span>
             </div>
             <div class="flex flex-row gap-4 items-center justify-between">
-              <Show when={sponsor() && sponsor()} fallback={
-                <Skeleton.Root class="flex flex-col gap-1">
-                  <div class="w-[120px] h-[16px] bg-neutral-300 rounded-md"></div>
-                  <div class="w-[200px] h-[16px] bg-neutral-300 rounded-md"></div>
-                  <div class="w-[80px] h-[16px] bg-neutral-300 rounded-md"></div>
-                  <div class="w-[100px] h-[16px] bg-neutral-300 rounded-md"></div>
-                </Skeleton.Root>
-              }>
+              <Show
+                when={sponsor() && sponsor()}
+                fallback={
+                  <Skeleton.Root class="flex flex-col gap-1">
+                    <div class="w-[120px] h-[16px] bg-neutral-300 rounded-md"></div>
+                    <div class="w-[200px] h-[16px] bg-neutral-300 rounded-md"></div>
+                    <div class="w-[80px] h-[16px] bg-neutral-300 rounded-md"></div>
+                    <div class="w-[100px] h-[16px] bg-neutral-300 rounded-md"></div>
+                  </Skeleton.Root>
+                }
+              >
                 {(s) => (
                   <div class="flex flex-col">
                     <div class="text-[11pt] font-bold">{s().name}</div>
@@ -282,7 +242,7 @@ function SponsorView(props: {
                       ? "Do MMMM YYYY"
                       : language().value === "de"
                         ? "Do MMMM YYYY"
-                        : "Do MMMM YYYY"
+                        : "Do MMMM YYYY",
                   )}
               </div>
             </div>
@@ -291,14 +251,15 @@ function SponsorView(props: {
               <div></div>
             </div>
             <div class="flex flex-col gap-2">
-              <Show when={sponsor() && sponsor()} fallback={
-                <Skeleton.Root class="flex flex-col gap-1">
-                  <div class="w-[80px] h-[16px] bg-neutral-300 rounded-md"></div>
-                </Skeleton.Root>
-              }>
-                {(s) => (
-                  <div class="text-[11pt]">{translations.greetings[language().value](s().name)}</div>
-                )}
+              <Show
+                when={sponsor() && sponsor()}
+                fallback={
+                  <Skeleton.Root class="flex flex-col gap-1">
+                    <div class="w-[80px] h-[16px] bg-neutral-300 rounded-md"></div>
+                  </Skeleton.Root>
+                }
+              >
+                {(s) => <div class="text-[11pt]">{translations.greetings[language().value](s().name)}</div>}
               </Show>
 
               <div class="text-[11pt] text-justify">{translations.main[language().value]}</div>
@@ -306,17 +267,20 @@ function SponsorView(props: {
               <div class="text-[11pt]"></div>
 
               <div class="text-[11pt]">
-                <Show when={theDonation() && theDonation()} fallback={
-                  <Skeleton.Root class="flex flex-col gap-1">
-                    <div class="w-full h-[16px] bg-neutral-300 rounded-md"></div>
-                  </Skeleton.Root>
-                }>
+                <Show
+                  when={theDonation() && theDonation()}
+                  fallback={
+                    <Skeleton.Root class="flex flex-col gap-1">
+                      <div class="w-full h-[16px] bg-neutral-300 rounded-md"></div>
+                    </Skeleton.Root>
+                  }
+                >
                   {(d) => (
                     <div
                       innerHTML={translations.receival[language().value](
                         d().amount.toLocaleString("de-CH", { minimumFractionDigits: 2 }),
                         d().currency,
-                        d().year
+                        d().year,
                       )}
                     ></div>
                   )}

@@ -30,13 +30,13 @@ const { small } = Astro.props;
     <main class="py-10 bg-neutral-50 dark:bg-neutral-950 flex-grow">
       <div
         class:list={[
-          "container mx-auto flex flex-col px-4 pt-10",
+          "sm:container w-screen mx-auto flex flex-col px-4 pt-10",
           {
             [`max-w-[800px]`]: !!small,
           },
         ]}
-          >
-        <Providers API_URL={API_URL}/>
+      >
+        <Providers API_URL={API_URL} client:load />
         <slot />
       </div>
     </main>

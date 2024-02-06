@@ -18,6 +18,20 @@ export const Sponsors = {
         body: JSON.stringify(data),
       }).then((res) => res.json() as ReturnType<typeof Sponsor.create>);
     }),
+  update: z
+    .function(z.tuple([z.string(), z.string(), z.custom<Parameters<typeof Sponsor.update>[0]>()]))
+    .implement(async (API_URL, id, data) => {
+      const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+      if (!session) return Promise.reject("No session found");
+      return fetch(`${API_URL}/sponsors/${id}/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.split("=")[1]}`,
+        },
+        body: JSON.stringify(data),
+      }).then((res) => res.json() as ReturnType<typeof Sponsor.update>);
+    }),
   remove: z.function(z.tuple([z.string(), z.string()])).implement(async (API_URL, id) => {
     const session = document.cookie.split("; ").find((row) => row.startsWith("session="));
     if (!session) {
@@ -27,8 +41,8 @@ export const Sponsors = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.split("=")[1]}`,
-      }
+        Authorization: `Bearer ${session.split("=")[1]}`,
+      },
     }).then((res) => res.json() as ReturnType<typeof Sponsor.remove>);
     return result;
   }),
@@ -40,7 +54,7 @@ export const Donations = {
         z.string(),
         z.custom<Parameters<typeof Sponsor.donate>[0]>(),
         z.custom<Omit<Parameters<typeof Sponsor.donate>[1], "createdByAdmin" | "deletedByAdmin" | "updatedByAdmin">>(),
-      ])
+      ]),
     )
     .implement(async (API_URL, id, data) => {
       const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
@@ -50,27 +64,28 @@ export const Donations = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.split("=")[1]}`,
+          Authorization: `Bearer ${session.split("=")[1]}`,
         },
         body: JSON.stringify({
           ...data,
           id,
-        })
+        }),
       }).then((res) => res.json() as ReturnType<typeof Sponsor.donate>);
-    }
-    ),
-  remove: z.function(z.tuple([z.string(), z.string().uuid(), z.string().uuid()])).implement(async (API_URL, id, donationId) => {
-    const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
-    if (!session) return Promise.reject("No session found");
+    }),
+  remove: z
+    .function(z.tuple([z.string(), z.string().uuid(), z.string().uuid()]))
+    .implement(async (API_URL, id, donationId) => {
+      const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+      if (!session) return Promise.reject("No session found");
 
-    return fetch(`${API_URL}/sponsor/${id}/donate/${donationId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.split("=")[1]}`,
-      },
-    }).then((res) => res.json() as ReturnType<typeof Sponsor.donate>);
-  }),
+      return fetch(`${API_URL}/sponsor/${id}/donate/${donationId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.split("=")[1]}`,
+        },
+      }).then((res) => res.json() as ReturnType<typeof Sponsor.donate>);
+    }),
 };
 
 export const Authentication = {
@@ -82,7 +97,7 @@ export const Authentication = {
           name: z.string(),
           password: z.string(),
         }),
-      ])
+      ]),
     )
     .implement((API_URL, data) =>
       fetch(`${API_URL}/auth`, {
@@ -96,7 +111,7 @@ export const Authentication = {
         .then((res) => ({
           ...res,
           expiresAt: new Date(res.expiresAt),
-        }))
+        })),
     ),
   register: z
     .function(
@@ -107,7 +122,7 @@ export const Authentication = {
           password: z.string(),
           passwordConfirm: z.string(),
         }),
-      ])
+      ]),
     )
     .implement((API_URL, data) =>
       fetch(`${API_URL}/register`, {
@@ -121,6 +136,6 @@ export const Authentication = {
         .then((res) => ({
           ...res,
           expiresAt: new Date(res.expiresAt),
-        }))
+        })),
     ),
 };

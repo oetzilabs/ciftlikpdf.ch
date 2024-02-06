@@ -6,6 +6,7 @@ import { DNSStack } from "./stacks/DNSStack";
 import { SolidStartStack } from "./stacks/PublicSolidStartStack";
 import { DocXToPDFStackV2 } from "./stacks/DocXToPDFStackV2";
 import { AstroStack } from "./stacks/AstroStack";
+import { SecretsStack } from "./stacks/SecretsStack";
 
 export default {
   config(_input) {
@@ -19,6 +20,7 @@ export default {
     app
       //
       .stack(DNSStack)
+      .stack(SecretsStack)
       .stack(StorageStack)
       .stack(DocXToPDFStackV2)
       .stack(ApiStack)

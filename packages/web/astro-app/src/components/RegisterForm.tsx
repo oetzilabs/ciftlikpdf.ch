@@ -82,7 +82,14 @@ function RegisterForm(props: { API_URL: string; session?: string }) {
           {(e) => <TextField.ErrorMessage class="text-red-500">{e().message}</TextField.ErrorMessage>}
         </Show>
         <div class="flex w-full flex-row gap-2 items-center justify-between">
-          <div></div>
+          <div>
+            <a
+              href="/login"
+              class="border border-blue-300 rounded-md px-3 py-1 bg-blue-500 dark:bg-blue-600 dark:text-black text-white w-max outline-none text-sm font-medium flex flex-row items-center gap-2"
+            >
+              Login instead
+            </a>
+          </div>
           <div>
             <button
               type="submit"
