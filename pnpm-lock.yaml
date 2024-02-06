@@ -183,7 +183,7 @@ importers:
         specifier: 5.18.1
         version: 5.18.1(solid-js@1.8.14)
       astro:
-        specifier: ^4.2.8
+        specifier: ^4.3.2
         version: 4.3.2(typescript@5.3.3)
       astro-sst:
         specifier: 2.40.1
