@@ -8,6 +8,7 @@ const params = Astro.params;
 if (!params.id) {
   return Astro.redirect("/404", 404);
 }
+export const prerender = false;
 const sponsor = await Queries.Sponsors.get(API_URL, params.id);
 if (!sponsor) {
   return Astro.redirect("/404", 404);

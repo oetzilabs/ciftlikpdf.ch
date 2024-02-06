@@ -4,7 +4,7 @@ const { id } = Astro.params;
 import SponsorDonate from "../../../components/SponsorDonate";
 import { API_URL } from "../../../consts";
 import { Queries } from "../../../utils/queries";
-
+export const prerender = false;
 const session = Astro.cookies.get("session")?.value;
 if (!session) {
   return Astro.redirect("/login");
