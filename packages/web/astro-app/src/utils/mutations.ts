@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Sponsor } from "../../../../core/src/entities/sponsors";
 import type { User } from "../../../../core/src/entities/users";
+import type { Superuser } from "../../../../core/src/entities/superadmins";
 export * as Mutations from "./mutations";
 
 export const Sponsors = {
@@ -138,4 +139,59 @@ export const Authentication = {
           expiresAt: new Date(res.expiresAt),
         })),
     ),
+};
+
+export const Superadmins = {
+  updateUser: z
+    .function(
+      z.tuple([
+        z.string(),
+        z.object({
+          id: z.string().uuid(),
+          name: z.string(),
+          password: z.string(),
+        }),
+      ]),
+    )
+    .implement(async (API_URL, data) => {
+      const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+      if (!session) return Promise.reject("No session found");
+      return fetch(`${API_URL}/superadmin/update-user`, {
+        method: "PUT",
+        headers: {
+          authorization: `Bearer ${session.split("=")[1]}`,
+        },
+        body: new URLSearchParams(data),
+      }).then((res) => res.json() as ReturnType<typeof Superuser.updateUser>);
+    }),
+  makeAdmin: z.function(z.tuple([z.string(), z.string().uuid()])).implement(async (API_URL, id) => {
+    const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+    if (!session) return Promise.reject("No session found");
+    return fetch(`${API_URL}/superadmin/user/${id}/make-admin`, {
+      method: "PUT",
+      headers: {
+        authorization: `Bearer ${session.split("=")[1]}`,
+      },
+    }).then((res) => res.json() as ReturnType<typeof Superuser.makeAdmin>);
+  }),
+  makeViewer: z.function(z.tuple([z.string(), z.string().uuid()])).implement(async (API_URL, id) => {
+    const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+    if (!session) return Promise.reject("No session found");
+    return fetch(`${API_URL}/superadmin/user/${id}/make-viewer`, {
+      method: "PUT",
+      headers: {
+        authorization: `Bearer ${session.split("=")[1]}`,
+      },
+    }).then((res) => res.json() as ReturnType<typeof Superuser.makeViewer>);
+  }),
+  makeSuperAdmin: z.function(z.tuple([z.string(), z.string().uuid()])).implement(async (API_URL, id) => {
+    const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+    if (!session) return Promise.reject("No session found");
+    return fetch(`${API_URL}/superadmin/user/${id}/make-superadmin`, {
+      method: "PUT",
+      headers: {
+        authorization: `Bearer ${session.split("=")[1]}`,
+      },
+    }).then((res) => res.json() as ReturnType<typeof Superuser.makeSuperadmin>);
+  }),
 };
