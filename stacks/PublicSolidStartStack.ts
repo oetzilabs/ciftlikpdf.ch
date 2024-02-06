@@ -3,14 +3,14 @@ import { ApiStack } from "./ApiStack";
 // import { DatabaseStack } from "./DatabaseStack";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
-import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
+// import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
 
 export function SolidStartStack({ stack, app }: StackContext) {
   const dns = use(DNSStack);
   const { api } = use(ApiStack);
   // const { db } = use(DatabaseStack);
   const { bucket } = use(StorageStack);
-  const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
+  // const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
 
   const publicSolidStartApp = new SolidStartSite(stack, `${app.name}-app`, {
     bind: [bucket, api],
@@ -20,7 +20,7 @@ export function SolidStartStack({ stack, app }: StackContext) {
       VITE_API_URL: api.customDomainUrl || api.url,
     },
     customDomain: {
-      domainName: dns.domain,
+      domainName: `old.${dns.domain}`,
       hostedZone: dns.zone.zoneName,
     },
   });

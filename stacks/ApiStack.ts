@@ -1,12 +1,12 @@
 import { Api, Config, StackContext, use } from "sst/constructs";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
-import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
+// import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
 import { SecretsStack } from "./SecretsStack";
 
 export function ApiStack({ stack }: StackContext) {
   const dns = use(DNSStack);
-  const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
+  // const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
   const secrets = use(SecretsStack);
 
   const { bucket } = use(StorageStack);
@@ -110,7 +110,7 @@ export function ApiStack({ stack }: StackContext) {
           handler: "packages/functions/src/sponsors.donationPdf",
           description: "This is the sponsors donationPdf function",
           environment: {
-            DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
+            // DOCX_TO_PDF_URL: DOCX_TO_PDF_URL!,
           },
         },
       },
