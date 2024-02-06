@@ -2,5 +2,9 @@
   "hosted-zone:account=836832476545:domainName=dev.ciftlikpdf.ch:region=eu-central-1": {
     "Id": "/hostedzone/Z01738983M7GBFXS8V76R",
     "Name": "dev.ciftlikpdf.ch."
+  },
+  "hosted-zone:account=836832476545:domainName=ciftlikpdf.ch:region=eu-central-1": {
+    "Id": "/hostedzone/Z04073291Y5T44FZS2QBH",
+    "Name": "ciftlikpdf.ch."
   }
 }
