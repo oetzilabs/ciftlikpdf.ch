@@ -1,12 +1,27 @@
 ---
-import MainLayout from '../../../layouts/MainLayout.astro';
+import MainLayout from "../../../layouts/MainLayout.astro";
 const { id } = Astro.params;
-import SponsorDonate from '../../../components/SponsorDonate.tsx';
-import { API_URL } from '../../../consts';
-if(!id) {
-  return Astro.redirect('/404', { status: 404 });
+import SponsorDonate from "../../../components/SponsorDonate";
+import { API_URL } from "../../../consts";
+import { Donation } from "../../../../../../core/src/entities/donations";
+
+const session = Astro.cookies.get("session")?.value;
+if (!session) {
+  return Astro.redirect("/login");
 }
+
+if (!id) {
+  return Astro.redirect("/404", 404);
+}
+const donations =
+  (await Donation.findBySponsorId(id)) ?? ([] as NonNullable<Awaited<ReturnType<typeof Donation.findBySponsorId>>>);
 ---
+
 <MainLayout>
-  <SponsorDonate id={id} client:load API_URL={API_URL}/>
+  <SponsorDonate
+    id={id}
+    client:load
+    API_URL={API_URL}
+    alreadyDonated={donations.map((d) => ({ year: d.year, amount: d.amount, currency: d.currency }))}
+  />
 </MainLayout>

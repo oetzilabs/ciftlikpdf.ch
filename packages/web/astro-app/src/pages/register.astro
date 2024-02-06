@@ -10,6 +10,5 @@ const session = Astro.cookies.get("session")?.value;
   <div class="w-full">
     <h1 class="text-4xl font-bold">Login</h1>
     <RegisterFormWrapper API_URL={API_URL} session={session} client:load />
-    <a href="/login" class="hover:underline">Login instead</a>
   </div>
 </MainLayout>

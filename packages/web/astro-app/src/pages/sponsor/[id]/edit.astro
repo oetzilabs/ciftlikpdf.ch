@@ -1,0 +1,19 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import SponsorEdit from "../../../components/SponsorEdit";
+import { Sponsor } from "../../../../../../core/src/entities/sponsors";
+import { API_URL } from "../../../consts";
+
+const params = Astro.params;
+if (!params.id) {
+  return Astro.redirect("/404", 404);
+}
+const sponsor = await Sponsor.findById(params.id);
+if (!sponsor) {
+  return Astro.redirect("/404", 404);
+}
+---
+
+<MainLayout>
+  <SponsorEdit sponsor={sponsor} API_URL={API_URL} client:load />
+</MainLayout>

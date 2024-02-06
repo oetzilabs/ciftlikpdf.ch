@@ -112,11 +112,10 @@ export const update = ApiHandler(async () => {
   if (!sponsor) {
     return error("Sponsor not found", StatusCodes.NOT_FOUND);
   }
-  const body = useFormData();
-  if (!body) {
-    return error("No body");
+  const data = useJsonBody();
+  if (!data) {
+    return error("No data");
   }
-  const data = Object.fromEntries(body.entries());
   const validation = await Sponsor.isUpdateValid({ ...data, id });
   if (!validation.success) {
     return error(validation.error.message);

@@ -34,7 +34,8 @@ export function Sponsors(props: {
 
   const [search, setSearch] = createSignal("");
 
-  const filtered = (data: NonNullable<typeof sponsors.data>) => data.filter((item) => stringify(item).toLowerCase().includes(search()));
+  const filtered = (data: NonNullable<typeof sponsors.data>) =>
+    data.filter((item) => stringify(item).toLowerCase().includes(search()));
 
   const stringify = (item: unknown) => {
     if (typeof item === "string") return item;
@@ -46,7 +47,7 @@ export function Sponsors(props: {
 
   return (
     <div class="w-full">
-      <div class="flex flex-row items-center justify-between gap-2">
+      <div class="w-full flex flex-row items-center justify-between gap-2">
         <TextField.Root
           class="w-full border border-neutral-300 dark:border-neutral-700 rounded-full overflow-clip flex flex-row items-center bg-white dark:bg-black"
           value={search()}
@@ -74,9 +75,11 @@ export function Sponsors(props: {
             placeholder="Ara..."
           />
         </TextField.Root>
-        <button class="shadow-sm w-max border border-neutral-300 dark:border-neutral-700 rounded-full overflow-clip flex flex-row items-center bg-black dark:bg-white text-white dark:text-black p-2.5 text-xl"
+        <button
+          class="shadow-sm w-max border border-neutral-300 dark:border-neutral-700 rounded-full overflow-clip flex flex-row items-center bg-black dark:bg-white text-white dark:text-black p-2.5 text-xl"
           onClick={async () => {
             await qC.invalidateQueries({ queryKey: ["sponsors"] });
+            await sponsors.refetch();
           }}
         >
           <span class="sr-only">Refresh</span>
@@ -114,10 +117,8 @@ export function Sponsors(props: {
         <Match when={sponsors.isSuccess && sponsors.data.length >= 1 && sponsors.data}>
           {(data) => (
             <div class="flex flex-col gap-4">
-              <div class="grid grid-cols-2 gap-4 py-2">
-                <For each={filtered(data())}>
-                  {(item) => (<SelectSponsor sponsor={item} API_URL={props.API_URL} />)}
-                </For>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                <For each={filtered(data())}>{(item) => <SelectSponsor sponsor={item} API_URL={props.API_URL} />}</For>
               </div>
             </div>
           )}

@@ -55,8 +55,9 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
 });
 
 export const findBySponsorId = z.function(z.tuple([z.string()])).implement(async (input) => {
-  return db.query.sponsors_donations.findFirst({
-    where: (fields, operations) => operations.eq(fields.sponsorId, input),
+  return db.query.sponsors_donations.findMany({
+    where: (fields, operations) =>
+      operations.and(operations.eq(fields.sponsorId, input), operations.isNull(fields.deletedAt)),
     with: {
       sponsor: true,
       createdBy: {
@@ -108,7 +109,7 @@ const update = z
         .partial()
         .omit({ createdAt: true, updatedAt: true })
         .merge(z.object({ id: z.string().uuid() })),
-    ])
+    ]),
   )
   .implement(async (input) => {
     await db
@@ -140,7 +141,7 @@ export const createPDFFromTemplate = z
         sponsorId: z.string().uuid(),
         donationId: z.string().uuid(),
       }),
-    ])
+    ]),
   )
   .implement(async (input) => {
     const donation = await findById(input.donationId);
