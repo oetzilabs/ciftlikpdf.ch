@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Sponsor } from "../../../../core/src/entities/sponsors";
+import type { User } from "@ciftlikpdf/core/src/entities/users";
 export * as Queries from "./queries";
 
 export const Sponsors = {
@@ -15,4 +16,17 @@ export const Sponsors = {
     .implement((API_URL, id) =>
       fetch(`${API_URL}/sponsors/${id}`, {}).then((res) => res.json() as ReturnType<typeof Sponsor.findById>),
     ),
+};
+
+export const Superadmins = {
+  users: z.function(z.tuple([z.string()])).implement(async (API_BASE) => {
+    const session = document.cookie.split("; ").find((x) => x.startsWith("session="));
+    if (!session) return Promise.reject("No session found");
+    return fetch(`${API_BASE}/superadmin/users/all`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${session.split("=")[1]}`,
+      },
+    }).then((res) => res.json() as ReturnType<typeof User.all>);
+  }),
 };

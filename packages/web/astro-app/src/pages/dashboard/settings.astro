@@ -1,0 +1,37 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { SponsorsView } from "../../components/SponsorsView";
+import { Sponsor as Sp } from "../../components/Sponsor";
+import { API_URL } from "../../consts";
+import { User } from "../../../../../core/src/entities/users";
+import SettingsPage from "../../components/Settings";
+
+const session = Astro.cookies.get("session")?.value;
+if (!session) {
+  return Astro.redirect("/login");
+}
+const sessionUser = await fetch(API_URL + "/session", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + session,
+  },
+})
+  .then((res) => res.json())
+  .then((data) => data.user);
+
+const searchParams = new URLSearchParams(Astro.request.url);
+---
+
+<MainLayout>
+  <div class="flex flex-col gap-4">
+    <SettingsPage
+      client:load
+      searchParams={searchParams}
+      sessionId={sessionUser.id}
+      username={sessionUser.name}
+      session={session}
+      API_URL={API_URL}
+    />
+  </div>
+</MainLayout>
