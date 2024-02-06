@@ -1,10 +1,7 @@
-import { AstroSite, SolidStartSite, StackContext, use } from "sst/constructs";
+import { AstroSite, StackContext, use } from "sst/constructs";
 import { ApiStack } from "./ApiStack";
-// import { DatabaseStack } from "./DatabaseStack";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
-import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
-import { Secret } from "sst/constructs/Secret";
 import { SecretsStack } from "./SecretsStack";
 
 export function AstroStack({ stack, app }: StackContext) {
