@@ -8,4 +8,5 @@ export default defineConfig({
   integrations: [tailwind(), solidJs(), sitemap()],
   output: "server",
   adapter: aws(),
+  site: "https://ciftlikpdf.ch",
 });
