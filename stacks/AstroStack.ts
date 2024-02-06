@@ -22,6 +22,16 @@ export function AstroStack({ stack, app }: StackContext) {
       domainName: dns.domain,
       hostedZone: dns.zone.zoneName,
     },
+    runtime: "nodejs20.x",
+    nodejs: {
+      format: "esm",
+      esbuild: {
+        format: "esm",
+        platform: "node",
+        target: ["es2022", "node20"],
+        supported: { "top-level-await": true },
+      },
+    },
   });
 
   stack.addOutputs({
