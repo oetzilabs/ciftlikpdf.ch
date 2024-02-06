@@ -21,7 +21,7 @@
     "@kobalte/utils": "^0.9.0",
     "@tanstack/solid-query": "5.18.1",
     "astro": "^4.2.8",
-    "astro-sst": "2.40.1",
+    "astro-sst": "2.38.7",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "jspdf": "^2.5.1",
