@@ -7,14 +7,20 @@ import { Donation } from "../entities/donations";
 
 export * as Sponsor from "./sponsors";
 
-export const create = z.function(z.tuple([createInsertSchema(sponsors).omit({
-  createdAt: true,
-  updatedAt: true,
-  deletedAt: true,
-})])).implement(async (input) => {
-  const [x] = await db.insert(sponsors).values(input).returning();
-  return x;
-});
+export const create = z
+  .function(
+    z.tuple([
+      createInsertSchema(sponsors).omit({
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+      }),
+    ]),
+  )
+  .implement(async (input) => {
+    const [x] = await db.insert(sponsors).values(input).returning();
+    return x;
+  });
 
 export const donate = z
   .function(
@@ -27,7 +33,7 @@ export const donate = z
         .extend({
           createdByAdmin: z.string().uuid(),
         }),
-    ])
+    ]),
   )
   .implement(async (sponsorId, input) => {
     const [x] = await db
@@ -60,7 +66,7 @@ export const updateDonation = z
       createInsertSchema(sponsors_donations).partial().omit({
         sponsorId: true,
       }),
-    ])
+    ]),
   )
   .implement(async (sponsorId, donationId, input) => {
     const [x] = await db
@@ -75,7 +81,7 @@ export const createWithDonation = z
   .function(
     z.tuple([
       createInsertSchema(sponsors).extend(createInsertSchema(sponsors_donations).omit({ sponsorId: true }).shape),
-    ])
+    ]),
   )
   .implement(async (input) => {
     const x = await db.transaction(async (trx) => {
@@ -259,7 +265,7 @@ export const update = z
         .partial()
         .omit({ createdAt: true, updatedAt: true, deletedAt: true })
         .merge(z.object({ id: z.string().uuid() })),
-    ])
+    ]),
   )
   .implement(async (input) => {
     const [x] = await db

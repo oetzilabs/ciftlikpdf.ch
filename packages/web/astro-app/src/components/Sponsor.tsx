@@ -241,8 +241,8 @@ function SponsorView(props: { language?: string; API_URL: string }) {
                     language().value === "tr"
                       ? "Do MMMM YYYY"
                       : language().value === "de"
-                        ? "Do MMMM YYYY"
-                        : "Do MMMM YYYY",
+                      ? "Do MMMM YYYY"
+                      : "Do MMMM YYYY",
                   )}
               </div>
             </div>

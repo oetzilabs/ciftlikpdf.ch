@@ -94,7 +94,9 @@ export default function SponsorDonate(props: {
                 <span>{year}</span>
                 <span>
                   {props.alreadyDonated.some((d) => d.year === year) &&
-                    `${props.alreadyDonated.find((d) => d.year === year)?.amount} ${props.alreadyDonated.find((d) => d.year === year)?.currency}`}
+                    `${props.alreadyDonated.find((d) => d.year === year)?.amount} ${props.alreadyDonated.find(
+                      (d) => d.year === year,
+                    )?.currency}`}
                 </span>
               </button>
             )}

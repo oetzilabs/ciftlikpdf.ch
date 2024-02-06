@@ -1,18 +1,20 @@
-import { createMutation} from "@tanstack/solid-query";
+import { createMutation } from "@tanstack/solid-query";
 import { TextField, Select } from "@kobalte/core";
 import { Mutations, Donations } from "../utils/mutations";
 import { Match, Show, Switch, createSignal } from "solid-js";
 import dayjs from "dayjs";
 import { qC } from "../utils/stores";
 
-
 export function NewSponsorForm(props: { API_URL: string; session: string; sponsorId: string }) {
-  const createDonation = createMutation(() => ({
-    mutationKey: ["newSponsor"],
-    mutationFn: async (donation: Parameters<typeof Mutations.Donations.create>[2]) => {
-      return Mutations.Donations.create(props.API_URL, props.sponsorId, donation);
-    },
-  }), () => qC);
+  const createDonation = createMutation(
+    () => ({
+      mutationKey: ["newSponsor"],
+      mutationFn: async (donation: Parameters<typeof Mutations.Donations.create>[2]) => {
+        return Mutations.Donations.create(props.API_URL, props.sponsorId, donation);
+      },
+    }),
+    () => qC,
+  );
   const [newDonation, setNewDonation] = createSignal<Parameters<typeof Mutations.Donations.create>[2]>({
     amount: 0,
     year: dayjs().year(),

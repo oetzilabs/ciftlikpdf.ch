@@ -4,14 +4,16 @@ import { Mutations } from "../utils/mutations";
 import { Match, Switch, createSignal } from "solid-js";
 import { qC, API_URL } from "../utils/stores";
 
-
 export function NewSponsorForm(props: { API_URL: string }) {
-  const createSponsor = createMutation(() => ({
-    mutationKey: ["newSponsor"],
-    mutationFn: async (sponsor: Parameters<typeof Mutations.Sponsors.create>[1]) => {
-      return Mutations.Sponsors.create(props.API_URL, sponsor);
-    },
-  }), () => qC);
+  const createSponsor = createMutation(
+    () => ({
+      mutationKey: ["newSponsor"],
+      mutationFn: async (sponsor: Parameters<typeof Mutations.Sponsors.create>[1]) => {
+        return Mutations.Sponsors.create(props.API_URL, sponsor);
+      },
+    }),
+    () => qC,
+  );
   const [newSponsor, setNewSponsor] = createSignal<Parameters<typeof Mutations.Sponsors.create>[1]>({
     name: "",
     address: "",
@@ -24,7 +26,7 @@ export function NewSponsorForm(props: { API_URL: string }) {
     if (!s.name) {
       alert("Isim bos olamaz");
       return;
-    };
+    }
     if (!s.address) {
       alert("Adress bos olamaz");
       return;

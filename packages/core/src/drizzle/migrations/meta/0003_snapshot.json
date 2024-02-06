@@ -241,12 +241,8 @@
           "name": "sponsors_donations_sponsorId_sponsors_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "sponsors",
-          "columnsFrom": [
-            "sponsorId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sponsorId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

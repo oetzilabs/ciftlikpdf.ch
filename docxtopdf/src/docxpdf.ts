@@ -37,7 +37,7 @@ export const handler = async (
       };
     };
   },
-  context: Context
+  context: Context,
 ) => {
   if (event.requestContext.http.method !== "POST") {
     return {
