@@ -1,12 +1,10 @@
 import { Api, Config, StackContext, use } from "sst/constructs";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
-// import { DocXToPDFStackV2 } from "./DocXToPDFStackV2";
 import { SecretsStack } from "./SecretsStack";
 
 export function ApiStack({ stack }: StackContext) {
   const dns = use(DNSStack);
-  // const { DOCX_TO_PDF_URL } = use(DocXToPDFStackV2);
   const secrets = use(SecretsStack);
 
   const { bucket } = use(StorageStack);
@@ -19,7 +17,7 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       function: {
         nodejs: {
-          install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp", "pandoc"],
+          install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp"],
           // esbuild: { external: ["@libsql/linux-x64-gnu"] },
         },
         // handler: "packages/functions/src/migrator.handler",

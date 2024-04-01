@@ -6,8 +6,8 @@ const DEV = "dev.ciftlikpdf.ch";
 
 export function DNSStack(ctx: StackContext) {
   if (ctx.stack.stage === "production") {
-    const zone = new HostedZone(ctx.stack, "zone", {
-      zoneName: PRODUCTION,
+    const zone = HostedZone.fromLookup(ctx.stack, "zone", {
+      domainName: PRODUCTION,
     });
     return {
       zone,
@@ -17,8 +17,8 @@ export function DNSStack(ctx: StackContext) {
 
   if (ctx.stack.stage === "dev") {
     return {
-      zone: new HostedZone(ctx.stack, "zone", {
-        zoneName: DEV,
+      zone: HostedZone.fromLookup(ctx.stack, "zone", {
+        domainName: DEV,
       }),
       domain: DEV,
     };
