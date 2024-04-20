@@ -20,6 +20,7 @@ export function ApiStack({ stack }: StackContext) {
           install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp"],
           // esbuild: { external: ["@libsql/linux-x64-gnu"] },
         },
+        runtime: "nodejs20.x",
         // handler: "packages/functions/src/migrator.handler",
         bind: [secrets.DATABASE_URL, secrets.DATABASE_AUTH_TOKEN, secrets.JWT_SECRET, bucket],
         copyFiles: [
