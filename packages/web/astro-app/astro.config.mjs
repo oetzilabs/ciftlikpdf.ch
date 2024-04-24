@@ -9,4 +9,7 @@ export default defineConfig({
   output: "server",
   adapter: aws(),
   site: "https://ciftlikpdf.ch",
+  vite: {
+    ssr: { external: ["html2pdf.js"] },
+  },
 });

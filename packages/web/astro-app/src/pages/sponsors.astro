@@ -1,9 +1,8 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import { Queries } from "../utils/queries";
-import { API_URL } from "../consts";
+import { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 export const prerender = false;
-const allSponsors = await Queries.Sponsors.all(API_URL);
+const allSponsors = await Sponsor.all();
 ---
 
 <MainLayout>

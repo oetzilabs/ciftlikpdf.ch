@@ -25,6 +25,7 @@ export function AstroStack({ stack, app }: StackContext) {
     runtime: "nodejs20.x",
     nodejs: {
       format: "esm",
+      install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp"],
       esbuild: {
         format: "esm",
         platform: "node",

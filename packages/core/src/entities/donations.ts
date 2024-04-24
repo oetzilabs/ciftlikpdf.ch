@@ -1,17 +1,10 @@
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import { eq, sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { db } from "../drizzle/sql";
 import { SponsorDonationsSelect, sponsors_donations } from "../drizzle/sql/schema";
-import { Template } from "./templates";
-import { Sponsor } from "../entities/sponsors";
-import fetch from "node-fetch";
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Bucket } from "sst/node/bucket";
-import dayjs from "dayjs";
-import tr from "dayjs/locale/tr";
-import advancedFormat from "dayjs/plugin/advancedFormat";
 dayjs.extend(advancedFormat);
 
 export * as Donation from "./donations";

@@ -41,17 +41,15 @@ function SponsorView(props: { language?: string; API_URL: string }) {
       if (!sponsorName) return;
       if (!pdfRef) return;
       const cleanName = sponsorName?.replace(/[^a-zA-Z0-9]/g, "-") ?? "sponsor";
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "pt",
-        format: "a3",
-        compress: true,
-      });
-      pdf.setFontSize(10);
-      await pdf.html(pdfRef, {
-        callback: (doc) => {
-          doc.save(`${cleanName}-${year()}.pdf`);
-        },
+      // @ts-ignore
+      import("html2pdf.js").then((html2pdf) => {
+        const opt = {
+          filename: "myfile.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
+        };
+        const pdf = html2pdf.default().set(opt).from(pdfRef);
+        pdf.save(`${cleanName}-${year()}.pdf`);
       });
     },
     mutationKey: ["createPdf"],
@@ -199,13 +197,13 @@ function SponsorView(props: { language?: string; API_URL: string }) {
         {/* here we are going to show a pdf preview with custom texts */}
         <div class="flex flex-col gap-4 bg-white border border-neutral-300 mx-auto shadow-sm ">
           <div
-            class="relative flex flex-col gap-4 w-[210mm] h-[297mm] py-14 px-20 text-black font-[Helvetica]"
+            class="relative flex flex-col gap-4 w-[210mm] h-[257mm] py-14 px-20 text-black font-[Helvetica]  leading-snug"
             ref={pdfRef!}
           >
             <div class="absolute top-0 right-0 px-20 py-8">
               <img src="/ciftlik-logo.jpeg" width="150px"></img>
             </div>
-            <div class="flex flex-col items-center justify-center text-[9pt]">
+            <div class="flex flex-col items-center justify-center text-[8pt]">
               <span>Ciftlik Köyü Sosyal Dayanisma Vakfi</span>
               <span>Stiftung für Unterstützung von Ciftlik Dorf</span>
               <span>Längistrasse 11 - 4133 Pratteln</span>
@@ -225,7 +223,7 @@ function SponsorView(props: { language?: string; API_URL: string }) {
               >
                 {(s) => (
                   <div class="flex flex-col">
-                    <div class="text-[11pt] font-bold">{s().name}</div>
+                    <div class="text-[10pt] font-bold">{s().name}</div>
                     <For each={s().address.split("\n")}>{(a) => <div class="text-[10pt]">{a}</div>}</For>
                   </div>
                 )}
@@ -234,20 +232,20 @@ function SponsorView(props: { language?: string; API_URL: string }) {
             </div>
             <div class="flex flex-row gap-4 items-center justify-between">
               <div></div>
-              <div class="w-max text-[11pt]">
+              <div class="w-max text-[10pt]">
                 {dayjs()
                   .locale(language().value)
                   .format(
                     language().value === "tr"
                       ? "Do MMMM YYYY"
                       : language().value === "de"
-                      ? "Do MMMM YYYY"
-                      : "Do MMMM YYYY",
+                        ? "Do MMMM YYYY"
+                        : "Do MMMM YYYY",
                   )}
               </div>
             </div>
             <div class="flex flex-row gap-4 items-center justify-between">
-              <div class="text-[11pt] font-bold">{translations.yourDonoOurThank[language().value]}</div>
+              <div class="text-[10pt] font-bold">{translations.yourDonoOurThank[language().value]}</div>
               <div></div>
             </div>
             <div class="flex flex-col gap-2">
@@ -259,14 +257,14 @@ function SponsorView(props: { language?: string; API_URL: string }) {
                   </Skeleton.Root>
                 }
               >
-                {(s) => <div class="text-[11pt]">{translations.greetings[language().value](s().name)}</div>}
+                {(s) => <div class="text-[10pt]">{translations.greetings[language().value](s().name)}</div>}
               </Show>
 
-              <div class="text-[11pt] text-justify">{translations.main[language().value]}</div>
-              <div class="text-[11pt]"></div>
-              <div class="text-[11pt]"></div>
+              <div class="text-[10pt] text-justify">{translations.main[language().value]}</div>
+              <div class="text-[10pt]"></div>
+              <div class="text-[10pt]"></div>
 
-              <div class="text-[11pt]">
+              <div class="text-[10pt]">
                 <Show
                   when={theDonation() && theDonation()}
                   fallback={
@@ -286,12 +284,12 @@ function SponsorView(props: { language?: string; API_URL: string }) {
                   )}
                 </Show>
               </div>
-              <div class="text-[11pt]"></div>
-              <div class="text-[11pt]"></div>
-              <div class="text-[11pt] text-justify">{translations.thanks[language().value]}</div>
-              <div class="text-[11pt]"></div>
-              <div class="text-[11pt]"></div>
-              <div class="text-[11pt]">{translations.goodbye[language().value]}</div>
+              <div class="text-[10pt]"></div>
+              <div class="text-[10pt]"></div>
+              <div class="text-[10pt] text-justify">{translations.thanks[language().value]}</div>
+              <div class="text-[10pt]"></div>
+              <div class="text-[10pt]"></div>
+              <div class="text-[10pt]">{translations.goodbye[language().value]}</div>
             </div>
           </div>
         </div>
