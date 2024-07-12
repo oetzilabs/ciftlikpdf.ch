@@ -6,4 +6,5 @@ export default {
   verbose: true,
   driver: "turso",
   strict: true,
+  dialect: "sqlite",
 } satisfies Config;

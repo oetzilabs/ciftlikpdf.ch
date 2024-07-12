@@ -1,11 +1,8 @@
-import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
 import { eq, sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { db } from "../drizzle/sql";
 import { SponsorDonationsSelect, sponsors_donations } from "../drizzle/sql/schema";
-dayjs.extend(advancedFormat);
 
 export * as Donation from "./donations";
 

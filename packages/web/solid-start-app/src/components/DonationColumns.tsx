@@ -1,12 +1,4 @@
-import type { Donation } from "@ciftlikpdf/core/src/entities/donations";
-import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
-import type { User } from "@ciftlikpdf/core/src/entities/users";
-import type { ColumnDef } from "@tanstack/solid-table";
-import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
-import turkishLocale from "dayjs/locale/tr";
-import germanLocale from "dayjs/locale/de";
-import frenchLocale from "dayjs/locale/fr";
+import { deleteDonationAction } from "@/actions/sponsors";
 import {
   AlertDialog,
   AlertDialogClose,
@@ -16,23 +8,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Button } from "./ui/button";
-import { DownloadCloud, LineChart, Loader2, Pen, Trash } from "lucide-solid";
-import { A, revalidate, useAction, useSubmission } from "@solidjs/router";
-import { createSignal, Match, Switch } from "solid-js";
-import { deleteDonationAction } from "../actions/sponsors";
-import { getSponsor } from "../data/sponsors";
-import { Badge } from "./ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuItemLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getSponsor } from "@/data/sponsors";
+import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
+import type { User } from "@ciftlikpdf/core/src/entities/users";
+import { A, revalidate, useAction, useSubmission } from "@solidjs/router";
+import type { ColumnDef } from "@tanstack/solid-table";
+import dayjs from "dayjs";
+import germanLocale from "dayjs/locale/de";
+import frenchLocale from "dayjs/locale/fr";
+import turkishLocale from "dayjs/locale/tr";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import { DownloadCloud, Loader2, Pen, Trash } from "lucide-solid";
+import { createSignal, Match, Switch } from "solid-js";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 dayjs.extend(advancedFormat);
 
 export const donationColumns = [

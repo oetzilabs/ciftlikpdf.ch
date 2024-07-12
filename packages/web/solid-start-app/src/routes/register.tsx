@@ -1,4 +1,4 @@
-import { login } from "@/actions/login";
+import { register } from "@/actions/register";
 import { Button } from "@/components/ui/button";
 import { TextField, TextFieldLabel, TextFieldRoot } from "@/components/ui/textfield";
 import { getAuthenticatedSession } from "@/data/auth";
@@ -15,7 +15,6 @@ export const route = {
 
 export default function Login() {
   const session = createAsync(() => getAuthenticatedSession());
-  const submission = useSubmission(login);
 
   const [user, setUser] = createStore<{
     name: string;
@@ -25,7 +24,8 @@ export default function Login() {
     password: "",
   });
 
-  const loginAction = useAction(login);
+  const registerAction = useAction(register);
+  const submission = useSubmission(register);
 
   return (
     <main class="text-center mx-auto p-4 pt-20 container flex flex-col gap-4">
@@ -51,20 +51,18 @@ export default function Login() {
           </TextFieldLabel>
         </TextFieldRoot>
         <div class="flex flex-row justify-between gap-4 items-center">
-          <Button size="lg" as={A} href="/register" variant="secondary">
-            Register
-          </Button>
+          <div></div>
           <Button
             size="lg"
             onClick={async () => {
               const fd = new FormData();
               fd.append("name", user.name);
               fd.append("password", user.password);
-              await loginAction(fd);
+              await registerAction(fd);
               await revalidate(getAuthenticatedSession.key);
             }}
           >
-            Login
+            Register
           </Button>
         </div>
         <Show when={submission.result}>{(result) => <p>{result().message}</p>}</Show>

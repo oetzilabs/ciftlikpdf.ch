@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import crypto from "crypto";
 import { eq, sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -7,9 +7,18 @@ import { users } from "../drizzle/sql/schema";
 
 export * as User from "./users";
 
+// Configurable constants for hashing
+const SALT_LENGTH = 16;
+const HASH_ALGORITHM = "sha256";
+const HASH_ITERATIONS = 100;
+const KEY_LENGTH = 64;
+
 export const create = z.function(z.tuple([createInsertSchema(users)])).implement(async (userInput) => {
-  const pwd = await bcrypt.hash(userInput.password, 10);
-  userInput.password = pwd;
+  // Generate a salt
+  const salt = crypto.randomBytes(SALT_LENGTH).toString("hex");
+  // Hash the password with the salt
+  const pwd = crypto.pbkdf2Sync(userInput.password, salt, HASH_ITERATIONS, KEY_LENGTH, HASH_ALGORITHM).toString("hex");
+  userInput.password = `${salt}:${pwd}`;
   const [x] = await db.insert(users).values(userInput).returning({
     id: users.id,
     name: users.name,
@@ -22,8 +31,11 @@ export const create = z.function(z.tuple([createInsertSchema(users)])).implement
 
 export const validatePassword = z.function(z.tuple([z.string(), z.string()])).implement(async (input, pass) => {
   const [u] = await db.select({ pwd: users.password }).from(users).where(eq(users.id, input));
-  const valid = await bcrypt.compare(pass, u.pwd);
-  return valid;
+
+  const [salt, storedHash] = u.pwd.split(":");
+  const hash = crypto.pbkdf2Sync(pass, salt, HASH_ITERATIONS, KEY_LENGTH, HASH_ALGORITHM).toString("hex");
+
+  return storedHash === hash;
 });
 
 export const countAll = z.function(z.tuple([])).implement(async () => {

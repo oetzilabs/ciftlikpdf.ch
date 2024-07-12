@@ -71,3 +71,52 @@ export const deleteDonationAction = action(async (id: string) => {
   });
   return donated;
 });
+
+export const addSponsorAction = action(async (data: Parameters<typeof Sponsor.create>[0]) => {
+  "use server";
+  const [session] = await withSession();
+  if (!session) {
+    console.log("No session");
+    throw redirect("/login", {
+      status: 302,
+      statusText: "You need to be logged in to create a sponsor",
+    });
+  }
+  if (!session.user) {
+    console.log("No user in session");
+    throw redirect("/login", { status: 302, statusText: "You need to be logged in to create a sponsor" });
+  }
+
+  const exists = await Sponsor.findByName(data.name);
+  if (exists) {
+    return new Error("Sponsor with this name already exists");
+  }
+
+  const sponsor = await Sponsor.create(data);
+  throw redirect(`/sponsors/${sponsor.id}`);
+});
+
+export const deleteSponsorAction = action(async (id: string) => {
+  "use server";
+  const [session] = await withSession();
+  if (!session) {
+    console.log("No session");
+    throw redirect("/login", {
+      status: 302,
+      statusText: "You need to be logged in to delete a sponsor",
+    });
+  }
+  if (!session.user) {
+    console.log("No user in session");
+    throw redirect("/login", { status: 302, statusText: "You need to be logged in to delete a sponsor" });
+  }
+  const sponsor = await Sponsor.findById(id);
+  if (!sponsor) {
+    return new Error("Sponsor not found");
+  }
+  const rr = await Sponsor.remove(id);
+  if (!rr) {
+    return new Error("Failed to delete sponsor");
+  }
+  throw redirect(`/`);
+});

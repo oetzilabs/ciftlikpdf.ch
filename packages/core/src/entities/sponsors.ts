@@ -3,7 +3,6 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { db } from "../drizzle/sql";
 import { SponsorSelect, sponsors, sponsors_donations } from "../drizzle/sql/schema";
-import { Donation } from "../entities/donations";
 
 export * as Sponsor from "./sponsors";
 

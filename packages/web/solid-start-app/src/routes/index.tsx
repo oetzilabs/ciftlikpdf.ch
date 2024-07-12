@@ -1,7 +1,8 @@
-import { A, createAsync, RouteDefinition, RoutePreloadFunc } from "@solidjs/router";
-import { For, Show } from "solid-js";
-import { getAllSponsors } from "@/data/sponsors";
 import { getAuthenticatedSession } from "@/data/auth";
+import { getAllSponsors } from "@/data/sponsors";
+import { A, createAsync, RouteDefinition } from "@solidjs/router";
+import { For, Show } from "solid-js";
+import { Button } from "../components/ui/button";
 
 export const route = {
   preload: async () => {
@@ -18,7 +19,17 @@ export default function Home() {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Show when={allSponsors()}>
           {(sponsors) => (
-            <For each={sponsors()}>
+            <For
+              each={sponsors()}
+              fallback={
+                <div class="w-full col-span-full flex flex-col items-center justify-center gap-4 p-4 border border-neutral-200 dark:border-neutral-900 rounded-lg">
+                  <span>Sponsorlarınız yok</span>
+                  <Button as={A} href="/sponsors/create" variant="secondary" size="lg">
+                    Sponsor oluştur
+                  </Button>
+                </div>
+              }
+            >
               {(sponsor) => (
                 <A
                   class="flex flex-row gap-2 border border-neutral-300 dark:border-neutral-800 shadow-sm rounded-lg px-4 py-2 bg-white dark:bg-black"

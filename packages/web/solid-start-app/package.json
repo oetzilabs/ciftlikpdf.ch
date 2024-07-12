@@ -16,7 +16,7 @@
     "@kobalte/utils": "^0.9.0",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.14.1",
-    "@solidjs/start": "1.0.2",
+    "@solidjs/start": "1.0.4",
     "@tanstack/solid-query": "5.32.0",
     "@tanstack/solid-table": "^8.19.2",
     "@vinxi/plugin-mdx": "^3.7.1",
