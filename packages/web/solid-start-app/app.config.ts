@@ -4,18 +4,14 @@ import { defineConfig } from "@solidjs/start/config";
 import pkg from "@vinxi/plugin-mdx";
 const { default: mdx } = pkg;
 
-const prod = process.env.NODE_ENV === "production";
-
 export default defineConfig({
   extensions: ["mdx", "md", "tsx", "ts"],
   server: {
-    preset: prod ? "aws-lambda" : "node-server",
-    output: prod
-      ? {
-          dir: "dist",
-          publicDir: "dist/client",
-        }
-      : {},
+    preset: "aws-lambda",
+    output: {
+      dir: "dist",
+      publicDir: "dist/client",
+    },
     esbuild: {
       options: {
         target: "esnext",
