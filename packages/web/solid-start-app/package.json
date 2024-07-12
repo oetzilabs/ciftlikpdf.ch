@@ -28,6 +28,8 @@
     "embla-carousel-solid": "^8.1.6",
     "lucia": "^3.2.0",
     "lucide-solid": "^0.373.0",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.5.4",
     "oslo": "^1.2.1",
     "postcss": "^8.4.38",
     "solid-js": "^1.8.18",
