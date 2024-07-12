@@ -57,5 +57,5 @@ jobs:
 
       - name: Deploy app to Production
         env:
-          NODE_OPTIONS: "--max-old-space-size=8192"
+          NODE_OPTIONS: "--max-old-space-size=9216"
         run: pnpm sst deploy --stage production
