@@ -25,7 +25,7 @@ export function AstroStack({ stack, app }: StackContext) {
     runtime: "nodejs20.x",
     nodejs: {
       format: "esm",
-      install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp", "nock", "mock-aws-s3"],
+      install: ["@libsql/linux-x64-gnu", "@libsql/client", "nock", "mock-aws-s3"],
       esbuild: {
         format: "esm",
         platform: "node",
@@ -48,7 +48,7 @@ export function AstroStack({ stack, app }: StackContext) {
     },
     runtime: "nodejs20.x",
     nodejs: {
-      install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp", "nock", "mock-aws-s3"],
+      install: ["@libsql/linux-x64-gnu", "@libsql/client", "nock", "mock-aws-s3"],
     },
   });
 

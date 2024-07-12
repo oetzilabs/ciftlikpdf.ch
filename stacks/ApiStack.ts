@@ -17,7 +17,7 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       function: {
         nodejs: {
-          install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp"],
+          install: ["@libsql/linux-x64-gnu", "@libsql/client"],
           // esbuild: { external: ["@libsql/linux-x64-gnu"] },
         },
         runtime: "nodejs20.x",
