@@ -48,14 +48,7 @@ export function AstroStack({ stack, app }: StackContext) {
     },
     runtime: "nodejs20.x",
     nodejs: {
-      format: "esm",
       install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp", "nock", "mock-aws-s3"],
-      esbuild: {
-        format: "esm",
-        platform: "node",
-        target: ["es2022", "node20"],
-        supported: { "top-level-await": true },
-      },
     },
   });
 
