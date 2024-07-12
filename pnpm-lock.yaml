@@ -114,77 +114,7 @@ importers:
         specifier: 0.34.6
         version: 0.34.6(terser@5.31.2)
 
-  packages/web/astro-app:
-    dependencies:
-      '@astrojs/check':
-        specifier: ^0.5.10
-        version: 0.5.10(prettier-plugin-astro@0.13.0)(prettier@3.2.4)(typescript@5.4.5)
-      '@astrojs/sitemap':
-        specifier: ^3.1.2
-        version: 3.1.2
-      '@astrojs/solid-js':
-        specifier: ^4.1.0
-        version: 4.1.0(solid-js@1.8.17)(vite@5.2.10(@types/node@20.9.0)(terser@5.31.2))
-      '@astrojs/tailwind':
-        specifier: ^5.1.0
-        version: 5.1.0(astro@4.6.4(@types/node@20.9.0)(terser@5.31.2)(typescript@5.4.5))(tailwindcss@3.4.3)
-      '@kobalte/core':
-        specifier: ^0.12.6
-        version: 0.12.6(solid-js@1.8.17)
-      '@kobalte/tailwindcss':
-        specifier: ^0.9.0
-        version: 0.9.0(tailwindcss@3.4.3)
-      '@kobalte/utils':
-        specifier: ^0.9.0
-        version: 0.9.0(solid-js@1.8.17)
-      '@tanstack/solid-query':
-        specifier: 5.32.0
-        version: 5.32.0(solid-js@1.8.17)
-      astro:
-        specifier: ^4.6.4
-        version: 4.6.4(@types/node@20.9.0)(terser@5.31.2)(typescript@5.4.5)
-      astro-sst:
-        specifier: 2.43.4
-        version: 2.43.4
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      dayjs:
-        specifier: ^1.11.10
-        version: 1.11.10
-      html2pdf.js:
-        specifier: ^0.10.1
-        version: 0.10.1
-      jspdf:
-        specifier: ^2.5.1
-        version: 2.5.1
-      lucide-solid:
-        specifier: ^0.373.0
-        version: 0.373.0(solid-js@1.8.17)
-      nanostores:
-        specifier: ^0.10.3
-        version: 0.10.3
-      solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
-      tailwind-merge:
-        specifier: ^2.3.0
-        version: 2.3.0
-      tailwindcss:
-        specifier: ^3.4.3
-        version: 3.4.3
-      typescript:
-        specifier: ^5.4.5
-        version: 5.4.5
-      zod:
-        specifier: ^3.23.4
-        version: 3.23.4
-    devDependencies:
-      '@ciftlikpdf/core':
-        specifier: workspace:*
-        version: link:../../core
-
-  packages/web/solid-start-app:
+  packages/v2:
     dependencies:
       '@ark-ui/solid':
         specifier: ^3.5.0
@@ -194,7 +124,7 @@ importers:
         version: 3.614.0
       '@ciftlikpdf/core':
         specifier: workspace:*
-        version: link:../../core
+        version: link:../core
       '@corvu/drawer':
         specifier: ^0.2.2
         version: 0.2.2(solid-js@1.8.18)
@@ -289,6 +219,76 @@ importers:
       sst:
         specifier: 2.43.4
         version: 2.43.4(aws-crt@1.19.0)
+
+  packages/web/astro-app:
+    dependencies:
+      '@astrojs/check':
+        specifier: ^0.5.10
+        version: 0.5.10(prettier-plugin-astro@0.13.0)(prettier@3.2.4)(typescript@5.4.5)
+      '@astrojs/sitemap':
+        specifier: ^3.1.2
+        version: 3.1.2
+      '@astrojs/solid-js':
+        specifier: ^4.1.0
+        version: 4.1.0(solid-js@1.8.17)(vite@5.2.10(@types/node@20.9.0)(terser@5.31.2))
+      '@astrojs/tailwind':
+        specifier: ^5.1.0
+        version: 5.1.0(astro@4.6.4(@types/node@20.9.0)(terser@5.31.2)(typescript@5.4.5))(tailwindcss@3.4.3)
+      '@kobalte/core':
+        specifier: ^0.12.6
+        version: 0.12.6(solid-js@1.8.17)
+      '@kobalte/tailwindcss':
+        specifier: ^0.9.0
+        version: 0.9.0(tailwindcss@3.4.3)
+      '@kobalte/utils':
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.17)
+      '@tanstack/solid-query':
+        specifier: 5.32.0
+        version: 5.32.0(solid-js@1.8.17)
+      astro:
+        specifier: ^4.6.4
+        version: 4.6.4(@types/node@20.9.0)(terser@5.31.2)(typescript@5.4.5)
+      astro-sst:
+        specifier: 2.43.4
+        version: 2.43.4
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
+      html2pdf.js:
+        specifier: ^0.10.1
+        version: 0.10.1
+      jspdf:
+        specifier: ^2.5.1
+        version: 2.5.1
+      lucide-solid:
+        specifier: ^0.373.0
+        version: 0.373.0(solid-js@1.8.17)
+      nanostores:
+        specifier: ^0.10.3
+        version: 0.10.3
+      solid-js:
+        specifier: ^1.8.17
+        version: 1.8.17
+      tailwind-merge:
+        specifier: ^2.3.0
+        version: 2.3.0
+      tailwindcss:
+        specifier: ^3.4.3
+        version: 3.4.3
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+      zod:
+        specifier: ^3.23.4
+        version: 3.23.4
+    devDependencies:
+      '@ciftlikpdf/core':
+        specifier: workspace:*
+        version: link:../../core
 
 packages:
 
@@ -3321,13 +3321,6 @@ packages:
     resolution: {integrity: sha512-ooviqdwwgfIfNmDwo94wlshcdzfO64XV0Cg6oDsDYBJfITDz1EngD2z7DkbvCWn+XIMsIqW27sEVF6qcpJrRcg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  autoprefixer@10.4.16:
-    resolution: {integrity: sha512-7vd3UC6xKp0HLfua5IjZlcXvGAGy7cBAXTg2lyQ/8WpNhd6SiZ8Be+xm3FyBSYJx5GKcpRCzBh7RH4/0dnY+uQ==}
-    engines: {node: ^10 || ^12 || >=14}
-    hasBin: true
-    peerDependencies:
-      postcss: ^8.1.0
-
   autoprefixer@10.4.19:
     resolution: {integrity: sha512-BaENR2+zBZ8xXhM4pUaKUxlVdxZ0EZhjvbopwnXmxRUfqDmwSpC2lAi/QXvx7NRdPCo1WKEcEF6mV64si1z4Ew==}
     engines: {node: ^10 || ^12 || >=14}
@@ -5133,10 +5126,6 @@ packages:
   loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
 
-  lru-cache@10.0.2:
-    resolution: {integrity: sha512-Yj9mA8fPiVgOUpByoTZO5pNrcl5Yk37FcSHsUINpAsaBIEZIuqcCclDZJCVxqQShDsmYX8QG63svJiTbOATZwg==}
-    engines: {node: 14 || >=16.14}
-
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
@@ -5850,14 +5839,6 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.4.31:
-    resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
-    engines: {node: ^10 || ^12 || >=14}
-
-  postcss@8.4.33:
-    resolution: {integrity: sha512-Kkpbhhdjw2qQs2O2DGX+8m5OVqEcbB9HRBvuYM9pgrjEFUg30A9LmXNlTAUj4S9kgtGyrMbTzVjH7E+s5Re2yg==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.4.38:
     resolution: {integrity: sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==}
     engines: {node: ^10 || ^12 || >=14}
@@ -6375,10 +6356,6 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.7
-
-  source-map-js@1.0.2:
-    resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
-    engines: {node: '>=0.10.0'}
 
   source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
@@ -7498,7 +7475,7 @@ snapshots:
   '@astrojs/sitemap@3.1.2':
     dependencies:
       sitemap: 7.1.1
-      zod: 3.23.4
+      zod: 3.23.8
 
   '@astrojs/solid-js@4.1.0(solid-js@1.8.17)(vite@5.2.10(@types/node@20.9.0)(terser@5.31.2))':
     dependencies:
@@ -7512,9 +7489,9 @@ snapshots:
   '@astrojs/tailwind@5.1.0(astro@4.6.4(@types/node@20.9.0)(terser@5.31.2)(typescript@5.4.5))(tailwindcss@3.4.3)':
     dependencies:
       astro: 4.6.4(@types/node@20.9.0)(terser@5.31.2)(typescript@5.4.5)
-      autoprefixer: 10.4.16(postcss@8.4.31)
-      postcss: 8.4.31
-      postcss-load-config: 4.0.2(postcss@8.4.31)
+      autoprefixer: 10.4.19(postcss@8.4.38)
+      postcss: 8.4.38
+      postcss-load-config: 4.0.2(postcss@8.4.38)
       tailwindcss: 3.4.3
     transitivePeerDependencies:
       - ts-node
@@ -9263,7 +9240,7 @@ snapshots:
 
   '@floating-ui/dom@1.6.6':
     dependencies:
-      '@floating-ui/core': 1.5.0
+      '@floating-ui/core': 1.6.4
       '@floating-ui/utils': 0.2.4
 
   '@floating-ui/dom@1.6.7':
@@ -9582,7 +9559,7 @@ snapshots:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.5.4
+      semver: 7.6.2
       tar: 6.2.0
     transitivePeerDependencies:
       - encoding
@@ -10921,8 +10898,8 @@ snapshots:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
       '@rollup/pluginutils': 4.2.1
-      acorn: 8.11.3
-      acorn-import-attributes: 1.9.5(acorn@8.11.3)
+      acorn: 8.12.1
+      acorn-import-attributes: 1.9.5(acorn@8.12.1)
       async-sema: 3.1.1
       bindings: 1.5.0
       estree-walker: 2.0.2
@@ -11568,9 +11545,9 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  acorn-import-attributes@1.9.5(acorn@8.11.3):
+  acorn-import-attributes@1.9.5(acorn@8.12.1):
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.1
 
   acorn-jsx@5.3.2(acorn@8.12.1):
     dependencies:
@@ -11814,8 +11791,8 @@ snapshots:
       vitefu: 0.2.5(vite@5.2.10(@types/node@20.9.0)(terser@5.31.2))
       which-pm: 2.1.1
       yargs-parser: 21.1.1
-      zod: 3.23.4
-      zod-to-json-schema: 3.23.0(zod@3.23.4)
+      zod: 3.23.8
+      zod-to-json-schema: 3.23.0(zod@3.23.8)
     optionalDependencies:
       sharp: 0.32.6
     transitivePeerDependencies:
@@ -11844,16 +11821,6 @@ snapshots:
   atomically@1.7.0: {}
 
   auto-bind@5.0.1: {}
-
-  autoprefixer@10.4.16(postcss@8.4.31):
-    dependencies:
-      browserslist: 4.22.1
-      caniuse-lite: 1.0.30001561
-      fraction.js: 4.3.7
-      normalize-range: 0.1.2
-      picocolors: 1.0.0
-      postcss: 8.4.31
-      postcss-value-parser: 4.2.0
 
   autoprefixer@10.4.19(postcss@8.4.38):
     dependencies:
@@ -13843,10 +13810,6 @@ snapshots:
     dependencies:
       get-func-name: 2.0.2
 
-  lru-cache@10.0.2:
-    dependencies:
-      semver: 7.5.4
-
   lru-cache@10.4.3: {}
 
   lru-cache@5.1.1:
@@ -14316,7 +14279,7 @@ snapshots:
 
   mlly@1.7.1:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.1
       pathe: 1.1.2
       pkg-types: 1.1.3
       ufo: 1.5.3
@@ -14755,7 +14718,7 @@ snapshots:
 
   path-scurry@1.10.1:
     dependencies:
-      lru-cache: 10.0.2
+      lru-cache: 10.4.3
       minipass: 7.0.4
 
   path-to-regexp@0.1.7: {}
@@ -14807,35 +14770,28 @@ snapshots:
     dependencies:
       find-up: 3.0.0
 
-  postcss-import@15.1.0(postcss@8.4.33):
+  postcss-import@15.1.0(postcss@8.4.38):
     dependencies:
-      postcss: 8.4.33
+      postcss: 8.4.38
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.8
 
-  postcss-js@4.0.1(postcss@8.4.33):
+  postcss-js@4.0.1(postcss@8.4.38):
     dependencies:
       camelcase-css: 2.0.1
-      postcss: 8.4.33
+      postcss: 8.4.38
 
-  postcss-load-config@4.0.2(postcss@8.4.31):
+  postcss-load-config@4.0.2(postcss@8.4.38):
     dependencies:
       lilconfig: 3.0.0
       yaml: 2.3.4
     optionalDependencies:
-      postcss: 8.4.31
+      postcss: 8.4.38
 
-  postcss-load-config@4.0.2(postcss@8.4.33):
+  postcss-nested@6.0.1(postcss@8.4.38):
     dependencies:
-      lilconfig: 3.0.0
-      yaml: 2.3.4
-    optionalDependencies:
-      postcss: 8.4.33
-
-  postcss-nested@6.0.1(postcss@8.4.33):
-    dependencies:
-      postcss: 8.4.33
+      postcss: 8.4.38
       postcss-selector-parser: 6.0.13
 
   postcss-selector-parser@6.0.13:
@@ -14844,18 +14800,6 @@ snapshots:
       util-deprecate: 1.0.2
 
   postcss-value-parser@4.2.0: {}
-
-  postcss@8.4.31:
-    dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
-
-  postcss@8.4.33:
-    dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
 
   postcss@8.4.38:
     dependencies:
@@ -15509,8 +15453,6 @@ snapshots:
     dependencies:
       solid-js: 1.8.18
 
-  source-map-js@1.0.2: {}
-
   source-map-js@1.2.0: {}
 
   source-map-support@0.5.21:
@@ -15780,11 +15722,11 @@ snapshots:
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.0.0
-      postcss: 8.4.33
-      postcss-import: 15.1.0(postcss@8.4.33)
-      postcss-js: 4.0.1(postcss@8.4.33)
-      postcss-load-config: 4.0.2(postcss@8.4.33)
-      postcss-nested: 6.0.1(postcss@8.4.33)
+      postcss: 8.4.38
+      postcss-import: 15.1.0(postcss@8.4.38)
+      postcss-js: 4.0.1(postcss@8.4.38)
+      postcss-load-config: 4.0.2(postcss@8.4.38)
+      postcss-nested: 6.0.1(postcss@8.4.38)
       postcss-selector-parser: 6.0.13
       resolve: 1.22.8
       sucrase: 3.34.0
@@ -15837,7 +15779,7 @@ snapshots:
   terser@5.31.2:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.11.3
+      acorn: 8.12.1
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -15940,7 +15882,7 @@ snapshots:
 
   unctx@2.3.1:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.1
       estree-walker: 3.0.3
       magic-string: 0.30.10
       unplugin: 1.11.0
@@ -15988,7 +15930,7 @@ snapshots:
   unimport@3.7.2(rollup@4.18.1):
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.18.1)
-      acorn: 8.11.3
+      acorn: 8.12.1
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
       fast-glob: 3.3.2
@@ -16072,7 +16014,7 @@ snapshots:
 
   unplugin@1.11.0:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.1
       chokidar: 3.6.0
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.6.2
@@ -16623,9 +16565,9 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-to-json-schema@3.23.0(zod@3.23.4):
+  zod-to-json-schema@3.23.0(zod@3.23.8):
     dependencies:
-      zod: 3.23.4
+      zod: 3.23.8
 
   zod@3.22.4: {}
 

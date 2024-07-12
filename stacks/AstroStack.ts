@@ -37,7 +37,7 @@ export function AstroStack({ stack, app }: StackContext) {
 
   const publicSolidStartApp = new SolidStartSite(stack, `${app.name}-solid-start-app`, {
     bind: [bucket, api, DATABASE_URL, DATABASE_AUTH_TOKEN],
-    path: "packages/web/solid-start-app",
+    path: "packages/v2",
     buildCommand: "pnpm build",
     environment: {
       VITE_API_URL: api.customDomainUrl || api.url,

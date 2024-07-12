@@ -1,5 +1,5 @@
 {
-  "name": "@ciftlikpdf/solid-start-app",
+  "name": "@ciftlikpdf/v2",
   "type": "module",
   "scripts": {
     "dev": "sst bind 'vinxi dev --port 3001'",
