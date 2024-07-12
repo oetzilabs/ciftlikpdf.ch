@@ -23,7 +23,7 @@ export function AstroStack({ stack, app }: StackContext) {
     },
     runtime: "nodejs20.x",
     nodejs: {
-      install: ["@libsql/linux-x64-gnu", "@libsql/client"],
+      install: ["@libsql/linux-x64-gnu", "@libsql/client", "@aws-sdk/core", "uuid", "tslib"],
     },
   });
 
