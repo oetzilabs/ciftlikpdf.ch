@@ -20,7 +20,6 @@
     "@solidjs/start": "1.0.4",
     "@tanstack/solid-query": "5.32.0",
     "@tanstack/solid-table": "^8.19.2",
-    "@vinxi/plugin-mdx": "^3.7.1",
     "autoprefixer": "^10.4.19",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
