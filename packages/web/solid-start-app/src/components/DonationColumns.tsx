@@ -98,6 +98,7 @@ export const donationColumns = [
       const [isCreatingPDF, setIsCreatingPDF] = createSignal<"tr" | "de" | "fr" | false>(false);
 
       const generatePDF = async (donation: Sponsor.Frontend["donations"][number], language: "tr" | "de" | "fr") => {
+        const slugifiedSponsorName = donation.sponsor.name.replaceAll(/[^a-zA-Z0-9]/g, "-");
         setIsCreatingPDF(language);
         dayjs.locale(language, language === "tr" ? turkishLocale : language === "de" ? germanLocale : frenchLocale);
         const res = await fetch(`${import.meta.env.VITE_API_URL}/pdf-generate`, {
@@ -119,7 +120,7 @@ export const donationColumns = [
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "donation_receipt.pdf");
+        link.setAttribute("download", `donation_receipt_${slugifiedSponsorName}_${donation.year}.pdf`);
         document.body.appendChild(link);
         link.click();
         setIsCreatingPDF(false);
