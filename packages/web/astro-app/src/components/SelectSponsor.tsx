@@ -1,5 +1,5 @@
 import { For, Show, createSignal } from "solid-js";
-import type { Sponsor } from "../../../../core/src/entities/sponsors";
+import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import { createMutation } from "@tanstack/solid-query";
 import { qC, sponsorAtom } from "../utils/stores";
 import { cn } from "../utils/cn";

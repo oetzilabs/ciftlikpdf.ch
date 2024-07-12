@@ -3,7 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Providers from "../components/Providers.tsx";
-import { SITE_TITLE, SITE_DESCRIPTION, API_URL } from "../consts";
+import { SITE_TITLE, SITE_DESCRIPTION, API_URL } from "../consts.ts";
 
 // get cookie for theme
 const theme = Astro.cookies.get("theme")?.value || ("light" as "light" | "dark");

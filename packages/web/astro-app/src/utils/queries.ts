@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Sponsor } from "../../../../core/src/entities/sponsors";
+import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import type { User } from "@ciftlikpdf/core/src/entities/users";
 import type { Donation } from "@ciftlikpdf/core/src/entities/donations";
 export * as Queries from "./queries";

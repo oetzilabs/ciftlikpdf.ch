@@ -10,7 +10,7 @@ dayjs.extend(advancedFormat);
 dayjs.extend(localizedFormat);
 import { jsPDF } from "jspdf";
 import { qC, sponsorAtom } from "../utils/stores";
-import type { Sponsor as Sp } from "../../../../core/src/entities/sponsors";
+import type { Sponsor as Sp } from "@ciftlikpdf/core/src/entities/sponsors";
 import { createMutation } from "@tanstack/solid-query";
 import { cn } from "../utils/cn";
 import { Mutations } from "../utils/mutations";

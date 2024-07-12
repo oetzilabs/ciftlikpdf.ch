@@ -1,4 +1,4 @@
-import { AstroSite, StackContext, use } from "sst/constructs";
+import { AstroSite, SolidStartSite, StackContext, use } from "sst/constructs";
 import { ApiStack } from "./ApiStack";
 import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
@@ -35,11 +35,37 @@ export function AstroStack({ stack, app }: StackContext) {
     },
   });
 
+  const publicSolidStartApp = new SolidStartSite(stack, `${app.name}-solid-start-app`, {
+    bind: [bucket, api, DATABASE_URL, DATABASE_AUTH_TOKEN],
+    path: "packages/web/solid-start-app",
+    buildCommand: "pnpm build",
+    environment: {
+      VITE_API_URL: api.customDomainUrl || api.url,
+    },
+    customDomain: {
+      domainName: `v2.${dns.domain}`,
+      hostedZone: dns.zone.zoneName,
+    },
+    runtime: "nodejs20.x",
+    nodejs: {
+      format: "esm",
+      install: ["@libsql/linux-x64-gnu", "@libsql/client", "bcrypt", "jsonwebtoken", "node-gyp"],
+      esbuild: {
+        format: "esm",
+        platform: "node",
+        target: ["es2022", "node20"],
+        supported: { "top-level-await": true },
+      },
+    },
+  });
+
   stack.addOutputs({
-    SiteUrl: publicAstroApp.customDomainUrl || "http://localhost:4321",
+    AstroSiteUrl: publicAstroApp.customDomainUrl || "http://localhost:4321",
+    SolidStartSiteUrl: publicSolidStartApp.customDomainUrl || "http://localhost:3001",
   });
 
   return {
-    publicSolidStartApp: publicAstroApp,
+    publicAstroApp: publicAstroApp,
+    publicSolidStartApp: publicSolidStartApp,
   };
 }

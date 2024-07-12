@@ -1,6 +1,6 @@
 import { atom } from "nanostores";
 import { QueryClient } from "@tanstack/solid-query";
-import type { Sponsor } from "../../../../../core/src/entities/sponsors";
+import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 
 export const qC = new QueryClient();
 

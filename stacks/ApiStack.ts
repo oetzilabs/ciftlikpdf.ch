@@ -152,6 +152,13 @@ export function ApiStack({ stack }: StackContext) {
           description: "This is the superadmin makeSuperadmin function",
         },
       },
+      "POST /pdf-generate": {
+        function: {
+          handler: "packages/pdf/main.go",
+          description: "This is the pdf generate function",
+          runtime: "go",
+        },
+      },
     },
     cors: {
       allowOrigins: ["*", "http://localhost:3000", "http://localhost:3001"],

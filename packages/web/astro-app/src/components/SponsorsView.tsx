@@ -3,7 +3,7 @@ import { For, Match, Switch, createSignal } from "solid-js";
 import { Queries } from "../utils/queries";
 import { QueryClientProvider, createQuery, useQueryClient } from "@tanstack/solid-query";
 import { qC } from "../utils/stores";
-import { SelectSponsor } from "../components/SelectSponsor";
+import { SelectSponsor } from "./SelectSponsor";
 import { cn } from "../utils/cn";
 
 export function SponsorsView(props: {

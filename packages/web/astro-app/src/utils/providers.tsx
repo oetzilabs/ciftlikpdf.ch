@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/solid-query";
-import { qC } from "../utils/stores";
+import { qC } from "./stores";
 import type { JSX } from "solid-js";
 
 export const Tanstack = (props: { children: JSX.Element }) => (

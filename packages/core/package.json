@@ -25,6 +25,7 @@
     "dayjs": "1.11.10",
     "drizzle-orm": "^0.29.3",
     "drizzle-zod": "0.5.1",
+    "@lucia-auth/adapter-drizzle": "1.0.7",
     "jsonwebtoken": "^9.0.2",
     "node-fetch": "3.3.2",
     "uuid": "9.0.1",

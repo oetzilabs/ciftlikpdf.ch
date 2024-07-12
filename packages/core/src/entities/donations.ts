@@ -95,7 +95,7 @@ export const all = z.function(z.tuple([])).implement(async () => {
   });
 });
 
-const update = z
+export const update = z
   .function(
     z.tuple([
       createInsertSchema(sponsors_donations)

@@ -3,7 +3,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import { SponsorsView } from "../../components/SponsorsView";
 import { Sponsor as Sp } from "../../components/Sponsor";
 import { API_URL } from "../../consts";
-import { Sponsor } from "../../../../../core/src/entities/sponsors";
+import { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 
 const session = Astro.cookies.get("session")?.value;
 if (!session) {

@@ -1,7 +1,7 @@
 import { z } from "zod";
-import type { Sponsor } from "../../../../core/src/entities/sponsors";
-import type { User } from "../../../../core/src/entities/users";
-import type { Superuser } from "../../../../core/src/entities/superadmins";
+import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
+import type { User } from "@ciftlikpdf/core/src/entities/users";
+import type { Superuser } from "@ciftlikpdf/core/src/entities/superadmins";
 export * as Mutations from "./mutations";
 
 export const Sponsors = {

@@ -1,0 +1,47 @@
+{
+  "name": "example-with-tailwindcss",
+  "type": "module",
+  "scripts": {
+    "dev": "sst bind 'vinxi dev --port 3001'",
+    "build": "vinxi build",
+    "start": "sst bind 'vinxi start --port 3001'"
+  },
+  "dependencies": {
+    "@ark-ui/solid": "^3.5.0",
+    "@corvu/drawer": "^0.2.2",
+    "@corvu/otp-field": "^0.1.1",
+    "@corvu/resizable": "^0.2.2",
+    "@kobalte/core": "^0.13.3",
+    "@kobalte/tailwindcss": "^0.9.0",
+    "@kobalte/utils": "^0.9.0",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.14.1",
+    "@solidjs/start": "1.0.2",
+    "@tanstack/solid-query": "5.32.0",
+    "@tanstack/solid-table": "^8.19.2",
+    "@vinxi/plugin-mdx": "^3.7.1",
+    "autoprefixer": "^10.4.19",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "cmdk-solid": "^1.0.1",
+    "dayjs": "^1.11.11",
+    "embla-carousel-solid": "^8.1.6",
+    "lucia": "^3.2.0",
+    "lucide-solid": "^0.373.0",
+    "oslo": "^1.2.1",
+    "postcss": "^8.4.38",
+    "solid-js": "^1.8.18",
+    "solid-sonner": "^0.2.8",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss": "^3.4.3",
+    "tailwindcss-animate": "^1.0.7",
+    "vinxi": "^0.3.14",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@ciftlikpdf/core": "workspace:*"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

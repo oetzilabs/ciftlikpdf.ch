@@ -22,6 +22,14 @@ export const create = z
     return x;
   });
 
+export const hasDonated = z.function(z.tuple([z.string().uuid(), z.number()])).implement(async (sponsorId, year) => {
+  const [x] = await db
+    .select()
+    .from(sponsors_donations)
+    .where(and(eq(sponsors_donations.sponsorId, sponsorId), eq(sponsors_donations.year, year)));
+  return x;
+});
+
 export const donate = z
   .function(
     z.tuple([
@@ -158,6 +166,7 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
               password: false,
             },
           },
+          sponsor: true,
         },
       },
     },
