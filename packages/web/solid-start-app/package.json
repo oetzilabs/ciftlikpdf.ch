@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "sst bind 'vinxi dev --port 3001'",
-    "build": "NODE_MAX_OLD_SPACE_SIZE=8192 vinxi build",
+    "build": "NODE_MAX_OLD_SPACE_SIZE=4096 vinxi build",
     "start": "sst bind 'vinxi start --port 3001'"
   },
   "dependencies": {
