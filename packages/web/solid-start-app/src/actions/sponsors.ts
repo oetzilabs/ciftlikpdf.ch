@@ -25,10 +25,9 @@ export const donateAction = action(
     const hasDonated = await Sponsor.hasDonated(id, data.year);
     if (hasDonated) {
       throw redirect(`/sponsors/${id}/donations/${hasDonated.id}`);
-    } else {
-      const donated = await Sponsor.donate(id, { ...data, createdByAdmin: session.user.id });
-      return donated;
     }
+    const donated = await Sponsor.donate(id, { ...data, createdByAdmin: session.user.id });
+    return donated;
   },
 );
 
