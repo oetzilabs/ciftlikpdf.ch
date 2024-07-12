@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "sst bind 'vinxi dev --port 3001'",
     "build": "vinxi build --preset aws-lambda",
-    "start": "sst bind 'vinxi start --port 3001'"
+    "build:local": "vinxi build --preset node-server",
+    "start": "sst bind 'vinxi start --port 3001'",
+    "start:local": "sst bind 'PORT=3001 node dist/server/index.mjs'"
   },
   "dependencies": {
     "@ciftlikpdf/core": "workspace:*",

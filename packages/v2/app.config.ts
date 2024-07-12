@@ -7,11 +7,11 @@ export default defineConfig({
     output: {
       dir: "dist",
       publicDir: "dist/client",
-      serverDir: "dist/server",
     },
     esbuild: {
       options: {
         target: "esnext",
+        treeShaking: true,
       },
     },
   },
