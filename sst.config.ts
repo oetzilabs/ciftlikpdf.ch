@@ -13,7 +13,9 @@ export default {
     };
   },
   stacks(app) {
-    app.setDefaultRemovalPolicy("destroy");
+    if (app.stage !== "production") {
+      app.setDefaultRemovalPolicy("destroy");
+    }
     app
       //
       .stack(DNSStack)
