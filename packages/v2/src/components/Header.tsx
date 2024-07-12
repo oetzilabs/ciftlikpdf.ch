@@ -1,9 +1,10 @@
 import { A, createAsync, useLocation } from "@solidjs/router";
-import { JSX, Match, Show, Switch } from "solid-js";
+import { JSX, Match, Show, Suspense, Switch } from "solid-js";
 import { logout } from "../actions/logout";
 import { getAuthenticatedSession } from "../data/auth";
 import { Button } from "./ui/button";
 import { cn } from "../libs/cn";
+import { Loader2 } from "lucide-solid";
 
 const HeaderLink = (props: { href: string; class?: string; children: JSX.Element }) => {
   const location = useLocation();
@@ -37,19 +38,21 @@ export const Header = () => {
           {/* <HeaderLink href="/">Sponsorlar</HeaderLink> */}
         </div>
         <div class="w-max flex flex-row items-center justify-between gap-4">
-          <Switch
-            fallback={
-              <Button as={A} href="/login">
-                Giriş Yap
-              </Button>
-            }
-          >
-            <Match when={session() && session()!.user}>
-              <form action={logout} method="post">
-                <Button type="submit">Çıkış</Button>
-              </form>
-            </Match>
-          </Switch>
+          <Suspense fallback={<Loader2 class="size-4" />}>
+            <Switch
+              fallback={
+                <Button as={A} href="/login">
+                  Giriş Yap
+                </Button>
+              }
+            >
+              <Match when={session() && session()!.user}>
+                <form action={logout} method="post">
+                  <Button type="submit">Çıkış</Button>
+                </form>
+              </Match>
+            </Switch>
+          </Suspense>
         </div>
       </nav>
     </header>

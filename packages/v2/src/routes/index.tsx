@@ -7,13 +7,11 @@ import { Button } from "../components/ui/button";
 export const route = {
   preload: async () => {
     const session = await getAuthenticatedSession();
-    const sponsors = await getAllSponsors();
-    return { sponsors, session };
+    return { session };
   },
 } satisfies RouteDefinition;
 
 export default function Home() {
-  const allSponsors = createAsync(() => getAllSponsors());
   return (
     <main class="text-center mx-auto p-4 pt-20 container">
       <div class="flex flex-col gap-4">
