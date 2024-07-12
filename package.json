@@ -19,10 +19,14 @@
     "sst": "2.43.4",
     "typescript": "^5.5.3"
   },
+  "updateConfig": {
+    "ignoreDependencies": [
+      "sst",
+      "constructs",
+      "aws-cdk-lib"
+    ]
+  },
   "workspaces": [
     "packages/*"
-  ],
-  "dependencies": {
-    "prettier-plugin-astro": "^0.13.0"
-  }
+  ]
 }
