@@ -16,7 +16,6 @@ export const sponsors_donations = sqliteTable("sponsors_donations", {
     .notNull()
     .$defaultFn(() => "CHF"),
   year: integer("year").notNull(),
-  s3Key: text("s3Key"),
   createdByAdmin: text("createdBy")
     .references(() => users.id)
     .default(sql`NULL`),

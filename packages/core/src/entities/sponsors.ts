@@ -340,18 +340,6 @@ export const isUpdateValid = createInsertSchema(sponsors)
   })
   .extend({ id: z.string() }).safeParseAsync;
 
-export const invalidateDonations = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
-  const [x] = await db
-    .update(sponsors_donations)
-    .set({
-      s3Key: null,
-      updatedAt: new Date(),
-    })
-    .where(eq(sponsors_donations.sponsorId, input))
-    .returning();
-  return x;
-});
-
 export type Frontend = NonNullable<Awaited<ReturnType<typeof findById>>>;
 
 export type Profile = SponsorSelect;

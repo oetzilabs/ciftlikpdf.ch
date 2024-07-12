@@ -7,8 +7,6 @@
     "typecheck": "tsc -noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.445.0",
-    "@aws-sdk/s3-request-presigner": "3.445.0",
     "@libsql/client": "0.3.6",
     "@octokit/rest": "20.0.2",
     "bcrypt": "^5.1.1",

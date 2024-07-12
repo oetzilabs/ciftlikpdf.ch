@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "16a8c57a-773b-4174-a75a-abe89512afb4",
+  "id": "dffd4e37-5967-407b-9c34-ea03ac0a3c42",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
@@ -43,13 +43,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "password": {
           "name": "password",
           "type": "text",
@@ -67,6 +60,50 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "session": {
+      "name": "session",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "session_user_id_users_id_fk": {
+          "name": "session_user_id_users_id_fk",
+          "tableFrom": "session",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -181,6 +218,30 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        },
+        "deletedBy": {
+          "name": "deletedBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
         }
       },
       "indexes": {},
@@ -189,8 +250,51 @@
           "name": "sponsors_donations_sponsorId_sponsors_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "sponsors",
-          "columnsFrom": ["sponsorId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "sponsorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "sponsors_donations_createdBy_users_id_fk": {
+          "name": "sponsors_donations_createdBy_users_id_fk",
+          "tableFrom": "sponsors_donations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "sponsors_donations_updatedBy_users_id_fk": {
+          "name": "sponsors_donations_updatedBy_users_id_fk",
+          "tableFrom": "sponsors_donations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "sponsors_donations_deletedBy_users_id_fk": {
+          "name": "sponsors_donations_deletedBy_users_id_fk",
+          "tableFrom": "sponsors_donations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "deletedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

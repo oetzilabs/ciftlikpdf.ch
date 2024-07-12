@@ -1,1 +1,0 @@
-ALTER TABLE sponsors_donations ADD `s3Key` text;

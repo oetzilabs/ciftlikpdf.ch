@@ -1,1 +1,0 @@
-ALTER TABLE sponsors_donations ADD `updatedBy` text DEFAULT NULL REFERENCES users(id);
