@@ -1,8 +1,8 @@
-import { AstroSite, SolidStartSite, StackContext, use } from "sst/constructs";
+import { SolidStartSite, StackContext, use } from "sst/constructs";
 import { ApiStack } from "./ApiStack";
-import { StorageStack } from "./StorageStack";
 import { DNSStack } from "./DNSStack";
 import { SecretsStack } from "./SecretsStack";
+import { StorageStack } from "./StorageStack";
 
 export function AstroStack({ stack, app }: StackContext) {
   const dns = use(DNSStack);
@@ -18,7 +18,7 @@ export function AstroStack({ stack, app }: StackContext) {
       VITE_API_URL: api.customDomainUrl || api.url,
     },
     customDomain: {
-      domainName: `v2.${dns.domain}`,
+      domainName: dns.domain,
       hostedZone: dns.zone.zoneName,
     },
     runtime: "nodejs20.x",
