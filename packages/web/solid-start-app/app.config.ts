@@ -11,7 +11,6 @@ export default defineConfig({
     esbuild: {
       options: {
         target: "esnext",
-        treeShaking: true,
       },
     },
   },
