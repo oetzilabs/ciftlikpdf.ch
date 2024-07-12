@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@ark-ui/solid": "^3.5.0",
+    "@aws-sdk/core": "3.496.0",
     "@corvu/drawer": "^0.2.2",
     "@corvu/otp-field": "^0.1.1",
     "@corvu/resizable": "^0.2.2",
