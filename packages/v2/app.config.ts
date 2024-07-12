@@ -4,6 +4,7 @@ import { defineConfig } from "@solidjs/start/config";
 export default defineConfig({
   server: {
     preset: "aws-lambda",
+    buildDir: "dist",
     output: {
       dir: "dist",
       publicDir: "dist/client",
