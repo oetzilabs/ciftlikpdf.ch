@@ -26,6 +26,10 @@ export function AstroStack({ stack, app }: StackContext) {
       install: ["@libsql/linux-x64-gnu", "@libsql/client", "@aws-sdk/core", "uuid", "tslib", "@smithy/core"],
     },
     permissions: ["s3"],
+    invalidation: {
+      paths: "all",
+      wait: true,
+    },
   });
 
   stack.addOutputs({

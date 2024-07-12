@@ -1,10 +1,9 @@
-import { A, createAsync, RouteDefinition, RoutePreloadFunc, useParams } from "@solidjs/router";
-import { For, Show } from "solid-js";
-import { getSponsor, getSponsorDonation } from "@/data/sponsors";
-import { getAuthenticatedSession } from "@/data/auth";
-import { LineChart, Loader2, Pen } from "lucide-solid";
 import { Button } from "@/components/ui/button";
-import { Suspense } from "solid-js";
+import { getAuthenticatedSession } from "@/data/auth";
+import { getSponsor, getSponsorDonation } from "@/data/sponsors";
+import { A, createAsync, RouteDefinition, useParams } from "@solidjs/router";
+import { Loader2, Pen } from "lucide-solid";
+import { Show, Suspense } from "solid-js";
 
 export const route = {
   preload: async ({ params }) => {
