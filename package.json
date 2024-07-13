@@ -26,6 +26,9 @@
       "aws-cdk-lib"
     ]
   },
+  "overrides": {
+    "nitropack": "npm:nitropack-nightly@latest"
+  },
   "workspaces": [
     "packages/*"
   ]

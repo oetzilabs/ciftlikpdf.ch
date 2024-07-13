@@ -94,12 +94,8 @@
           "name": "session_user_id_users_id_fk",
           "tableFrom": "session",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -250,12 +246,8 @@
           "name": "sponsors_donations_sponsorId_sponsors_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "sponsors",
-          "columnsFrom": [
-            "sponsorId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sponsorId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -263,12 +255,8 @@
           "name": "sponsors_donations_createdBy_users_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "users",
-          "columnsFrom": [
-            "createdBy"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["createdBy"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -276,12 +264,8 @@
           "name": "sponsors_donations_updatedBy_users_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "users",
-          "columnsFrom": [
-            "updatedBy"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updatedBy"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -289,12 +273,8 @@
           "name": "sponsors_donations_deletedBy_users_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "users",
-          "columnsFrom": [
-            "deletedBy"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["deletedBy"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

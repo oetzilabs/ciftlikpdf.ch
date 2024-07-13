@@ -5,6 +5,5 @@
   "printWidth": 120,
   "singleQuote": false,
   "quoteProps": "as-needed",
-  "endOfLine": "lf",
-  "plugins": ["prettier-plugin-astro"]
+  "endOfLine": "lf"
 }

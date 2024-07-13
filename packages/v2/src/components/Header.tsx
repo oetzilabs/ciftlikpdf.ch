@@ -27,7 +27,7 @@ const HeaderLink = (props: { href: string; class?: string; children: JSX.Element
 export const Header = () => {
   const session = createAsync(() => getAuthenticatedSession());
 
-  const [allowed, setAllowed] = createSignal(false);
+  // const [allowed, setAllowed] = createSignal(false);
 
   return (
     <header class="z-50 fixed top-0 w-full flex flex-row items-center justify-center border-b border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black">
@@ -40,23 +40,23 @@ export const Header = () => {
           {/* <HeaderLink href="/">Sponsorlar</HeaderLink> */}
         </div>
         <div class="w-max flex flex-row items-center justify-between gap-4">
-          <Show when={allowed()}>
-            <Suspense fallback={<Loader2 class="size-4" />}>
-              <Switch
-                fallback={
-                  <Button as={A} href="/login">
-                    Giriş Yap
-                  </Button>
-                }
-              >
-                <Match when={session() && session()!.user}>
-                  <form action={logout} method="post">
-                    <Button type="submit">Çıkış</Button>
-                  </form>
-                </Match>
-              </Switch>
-            </Suspense>
-          </Show>
+          {/* <Show when={allowed()}> */}
+          <Suspense fallback={<Loader2 class="size-4" />}>
+            <Switch
+              fallback={
+                <Button as={A} href="/login">
+                  Giriş Yap
+                </Button>
+              }
+            >
+              <Match when={session() && session()!.user}>
+                <form action={logout} method="post">
+                  <Button type="submit">Çıkış</Button>
+                </form>
+              </Match>
+            </Switch>
+          </Suspense>
+          {/* </Show> */}
         </div>
       </nav>
     </header>
