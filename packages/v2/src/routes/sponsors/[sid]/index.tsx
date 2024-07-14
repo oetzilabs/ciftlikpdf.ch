@@ -1,13 +1,6 @@
+import { deleteSponsorAction } from "@/actions/sponsors";
 import { DataTable } from "@/components/DataTable";
 import { donationColumns } from "@/components/DonationColumns";
-import { Button } from "@/components/ui/button";
-import { getAuthenticatedSession } from "@/data/auth";
-import { getSponsor } from "@/data/sponsors";
-import { Title } from "@solidjs/meta";
-import { A, createAsync, revalidate, RouteDefinition, useAction, useParams, useSubmission } from "@solidjs/router";
-import { Loader2, Plus, Trash } from "lucide-solid";
-import { createSignal, Match, Show, Suspense, Switch } from "solid-js";
-import { getAllSponsors } from "../../../data/sponsors";
 import {
   AlertDialog,
   AlertDialogClose,
@@ -18,7 +11,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { deleteSponsorAction } from "../../../actions/sponsors";
+import { Button } from "@/components/ui/button";
+import { getAuthenticatedSession } from "@/data/auth";
+import { getAllSponsors, getSponsor } from "@/data/sponsors";
+import { Title } from "@solidjs/meta";
+import { A, createAsync, revalidate, RouteDefinition, useAction, useParams, useSubmission } from "@solidjs/router";
+import { Loader2, Pen, Plus, Trash } from "lucide-solid";
+import { createSignal, Match, Show, Suspense, Switch } from "solid-js";
 
 export const route = {
   preload: async ({ params }) => {
@@ -61,12 +60,19 @@ export default function SponsorSIDIndex() {
                   <div class="w-full flex flex-row items-center justify-between gap-4">
                     <h1 class="text-2xl font-bold text-center">{s.name}</h1>
                     <div class="flex flex-row gap-2">
-                      <Show when={session() && session()!.user !== null}>
-                        <Button as={A} href={`/sponsors/${s.id}/donate`} class="flex flex-row items-center gap-2">
-                          <Plus class="size-4" />
-                          Donate
-                        </Button>
-                      </Show>
+                      <Button as={A} href={`/sponsors/${s.id}/donate`} class="flex flex-row items-center gap-2">
+                        <Plus class="size-4" />
+                        Donate
+                      </Button>
+                      <Button
+                        as={A}
+                        href={`/sponsors/${s.id}/edit`}
+                        class="flex flex-row items-center gap-2"
+                        variant="secondary"
+                      >
+                        <Pen class="size-4" />
+                        Güncelle
+                      </Button>
                       <AlertDialog open={openDeleteDialog()} onOpenChange={setOpenDeleteDialog}>
                         <AlertDialogTrigger as={Button} class="flex flex-row items-center gap-2" variant="destructive">
                           <Trash class="size-4" />

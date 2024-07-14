@@ -1,15 +1,16 @@
+import { withSession } from "@/data/utils";
+import { Donation } from "@ciftlikpdf/core/src/entities/donations";
 import { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import { action, redirect } from "@solidjs/router";
-import { withSession } from "../data/utils";
-import { Donation } from "@ciftlikpdf/core/src/entities/donations";
 
 export const donateAction = action(
   async (
     id: string,
-    data: Omit<Parameters<typeof Sponsor.donate>[1], "createdByAdmin" | "deletedByAdmin" | "updatedByAdmin">,
+    data: Omit<Parameters<typeof Sponsor.donate>[1], "createdByAdmin" | "deletedByAdmin" | "updatedByAdmin">
   ) => {
     "use server";
     const [session] = await withSession();
+
     if (!session) {
       console.log("No session");
       throw redirect("/login", {
@@ -17,24 +18,28 @@ export const donateAction = action(
         statusText: "You need to be logged in to donate",
       });
     }
+
     if (!session.user) {
       console.log("No user in session");
       throw redirect("/login", { status: 302, statusText: "You need to be logged in to donate" });
     }
     // check if the year is already taken
     const hasDonated = await Sponsor.hasDonated(id, data.year);
+
     if (hasDonated) {
       throw redirect(`/sponsors/${id}/donations/${hasDonated.id}`);
     }
+
     const donated = await Sponsor.donate(id, { ...data, createdByAdmin: session.user.id });
     return donated;
-  },
+  }
 );
 
 export const updateDonationAction = action(
   async (data: Omit<Parameters<typeof Donation.update>[0], "createdByAdmin" | "deletedByAdmin" | "updatedByAdmin">) => {
     "use server";
     const [session] = await withSession();
+
     if (!session) {
       console.log("No session");
       throw redirect("/login", {
@@ -42,18 +47,21 @@ export const updateDonationAction = action(
         statusText: "You need to be logged in to donate",
       });
     }
+
     if (!session.user) {
       console.log("No user in session");
       throw redirect("/login", { status: 302, statusText: "You need to be logged in to donate" });
     }
+
     const donated = await Donation.update({ ...data, updatedByAdmin: session.user.id });
     return donated;
-  },
+  }
 );
 
 export const deleteDonationAction = action(async (id: string) => {
   "use server";
   const [session] = await withSession();
+
   if (!session) {
     console.log("No session");
     throw redirect("/login", {
@@ -61,10 +69,12 @@ export const deleteDonationAction = action(async (id: string) => {
       statusText: "You need to be logged in to donate",
     });
   }
+
   if (!session.user) {
     console.log("No user in session");
     throw redirect("/login", { status: 302, statusText: "You need to be logged in to donate" });
   }
+
   const donated = await Donation.markAsDeleted({
     id,
   });
@@ -74,6 +84,7 @@ export const deleteDonationAction = action(async (id: string) => {
 export const addSponsorAction = action(async (data: Parameters<typeof Sponsor.create>[0]) => {
   "use server";
   const [session] = await withSession();
+
   if (!session) {
     console.log("No session");
     throw redirect("/login", {
@@ -81,6 +92,7 @@ export const addSponsorAction = action(async (data: Parameters<typeof Sponsor.cr
       statusText: "You need to be logged in to create a sponsor",
     });
   }
+
   if (!session.user) {
     console.log("No user in session");
     throw redirect("/login", { status: 302, statusText: "You need to be logged in to create a sponsor" });
@@ -98,6 +110,39 @@ export const addSponsorAction = action(async (data: Parameters<typeof Sponsor.cr
 export const deleteSponsorAction = action(async (id: string) => {
   "use server";
   const [session] = await withSession();
+
+  if (!session) {
+    console.log("No session");
+    throw redirect("/login", {
+      status: 302,
+      statusText: "You need to be logged in to delete a sponsor",
+    });
+  }
+
+  if (!session.user) {
+    console.log("No user in session");
+    throw redirect("/login", { status: 302, statusText: "You need to be logged in to delete a sponsor" });
+  }
+
+  const sponsor = await Sponsor.findById(id);
+
+  if (!sponsor) {
+    return new Error("Sponsor not found");
+  }
+
+  const rr = await Sponsor.remove(id);
+
+  if (!rr) {
+    return new Error("Failed to delete sponsor");
+  }
+
+  throw redirect(`/`);
+});
+
+export const updateSponsorAction = action(async (data: Parameters<typeof Sponsor.update>[0]) => {
+  "use server";
+  const [session] = await withSession();
+
   if (!session) {
     console.log("No session");
     throw redirect("/login", {
@@ -109,13 +154,19 @@ export const deleteSponsorAction = action(async (id: string) => {
     console.log("No user in session");
     throw redirect("/login", { status: 302, statusText: "You need to be logged in to delete a sponsor" });
   }
-  const sponsor = await Sponsor.findById(id);
+
+  const sponsor = await Sponsor.findById(data.id);
   if (!sponsor) {
     return new Error("Sponsor not found");
   }
-  const rr = await Sponsor.remove(id);
+
+  const rr = await Sponsor.update({
+    ...data,
+  });
+
   if (!rr) {
-    return new Error("Failed to delete sponsor");
+    return new Error("Failed to update sponsor");
   }
-  throw redirect(`/`);
+
+  throw redirect(`/sponsors/${data.id}`);
 });
