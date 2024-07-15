@@ -165,6 +165,16 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
               password: false,
             },
           },
+          updatedBy: {
+            columns: {
+              password: false,
+            },
+          },
+          deletedBy: {
+            columns: {
+              password: false,
+            },
+          },
           sponsor: true,
         },
       },
@@ -260,6 +270,7 @@ export const allWithoutDeleted = z.function(z.tuple([])).implement(async () => {
               password: false,
             },
           },
+          sponsor: true,
         },
       },
     },

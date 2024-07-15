@@ -19,7 +19,7 @@ importers:
         version: 10.3.0
       sst:
         specifier: 2.43.4
-        version: link:../../oezguerisbert/sst/packages/sst/dist
+        version: link:../../sst/sst/packages/sst/dist
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
