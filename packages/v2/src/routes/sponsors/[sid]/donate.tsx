@@ -39,9 +39,7 @@ export default function SponsorSIDDonate() {
   const sponsor = createAsync(() => getSponsor(params.sid));
   const session = createAsync(() => getAuthenticatedSession());
 
-  const [newDonation, setNewDonation] = createStore<
-    Omit<Parameters<typeof Sponsor.donate>[1], "createdByAdmin" | "deletedByAdmin" | "updatedByAdmin">
-  >({
+  const [newDonation, setNewDonation] = createStore<Omit<Parameters<typeof Sponsor.donate>[1], "admin_id">>({
     amount: 0,
     currency: "CHF",
     year: new Date().getFullYear(),
@@ -53,9 +51,9 @@ export default function SponsorSIDDonate() {
   const navigate = useNavigate();
 
   return (
-    <Suspense fallback={<Loader2 class="size-4" />}>
+    <Suspense fallback={<Loader2 class="size-4 animate-spin" />}>
       <Show
-        when={session()}
+        when={session() && session()!.user !== null && session()!.user?.type === "admin"}
         fallback={
           <main class="text-center mx-auto p-4 pt-20">
             <span>Lütfen giriş yapınız.</span>
@@ -67,7 +65,7 @@ export default function SponsorSIDDonate() {
       >
         <main class="text-center mx-auto p-4 pt-20 container flex flex-col gap-4">
           <div class="w-full flex flex-row items-center gap-2">
-            <Button as={A} href={`/sponsors/${params.sid}`} class="w-max flex flex-row items-center gap-2">
+            <Button as={A} href={`/sponsors/${params.sid}`} size="sm" class="w-max flex flex-row items-center gap-2">
               <ArrowLeft class="size-4" />
               Geri
             </Button>
@@ -102,7 +100,7 @@ export default function SponsorSIDDonate() {
                               variant={newDonation.currency === currency ? "default" : "outline"}
                               onClick={() => setNewDonation("currency", currency)}
                               class="flex flex-row items-center gap-2 !h-20 text-2xl"
-                              size="lg"
+                              size="sm"
                             >
                               <Show when={newDonation.currency === currency}>
                                 <CheckCheck class="size-4" />
@@ -118,8 +116,8 @@ export default function SponsorSIDDonate() {
                             new Set(
                               Array.from({ length: 5 })
                                 .map((_, i) => dayjs().subtract(i, "year").year())
-                                .concat(Array.from({ length: 5 }).map((_, i) => dayjs().add(i, "year").year())),
-                            ),
+                                .concat(Array.from({ length: 5 }).map((_, i) => dayjs().add(i, "year").year()))
+                            )
                           ).sort()}
                         >
                           {(year) => (
@@ -128,7 +126,7 @@ export default function SponsorSIDDonate() {
                               variant={newDonation.year === year ? "default" : "outline"}
                               onClick={() => setNewDonation("year", year)}
                               class="flex flex-row items-center gap-2 justify-center px-3"
-                              size="lg"
+                              size="sm"
                             >
                               <div class="flex flex-row items-center justify-center gap-2">
                                 <span>{year}</span>
@@ -143,7 +141,7 @@ export default function SponsorSIDDonate() {
                     </div>
                     <div class="flex flex-row items-center gap-2 justify-end w-full">
                       <Button
-                        size="lg"
+                        size="sm"
                         onClick={async () => {
                           const x = await donate(s.id, newDonation);
                           await revalidate(getSponsor.keyFor(s.id));

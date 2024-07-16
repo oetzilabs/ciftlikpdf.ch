@@ -7,7 +7,7 @@ import { getAllSponsors, getSponsor } from "@/data/sponsors";
 import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import { Title } from "@solidjs/meta";
 import { A, createAsync, revalidate, RouteDefinition, useAction, useParams, useSubmission } from "@solidjs/router";
-import { Loader2, Plus } from "lucide-solid";
+import { ArrowLeft, Loader2, Plus } from "lucide-solid";
 import { Match, Show, Suspense, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 
@@ -36,9 +36,9 @@ export default function SponsorCreate() {
 
   return (
     <div class=" mx-auto p-4 pt-20 container flex flex-col gap-4">
-      <Suspense fallback={<Loader2 class="size-4" />}>
+      <Suspense fallback={<Loader2 class="size-4 animate-spin" />}>
         <Show
-          when={session() && session()!.user !== null}
+          when={session() && session()!.user !== null && session()!.user?.type === "admin"}
           keyed
           fallback={
             <main class="text-center mx-auto p-4 pt-20">
@@ -58,6 +58,17 @@ export default function SponsorCreate() {
                 <>
                   <Title>{s.name} | Sponsor</Title>
                   <div class="w-full flex flex-col gap-4 items-start">
+                    <div class="w-full flex flex-row items-center gap-2">
+                      <Button
+                        as={A}
+                        href={`/sponsors/${params.sid}`}
+                        size="sm"
+                        class="w-max flex flex-row items-center gap-2"
+                      >
+                        <ArrowLeft class="size-4" />
+                        Geri
+                      </Button>
+                    </div>
                     <TextFieldRoot
                       class="w-full flex flex-col gap-2"
                       required

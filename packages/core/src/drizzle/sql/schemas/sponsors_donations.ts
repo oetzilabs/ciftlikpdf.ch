@@ -16,13 +16,7 @@ export const sponsors_donations = sqliteTable("sponsors_donations", {
     .notNull()
     .$defaultFn(() => "CHF"),
   year: integer("year").notNull(),
-  createdByAdmin: text("createdBy")
-    .references(() => users.id)
-    .default(sql`NULL`),
-  updatedByAdmin: text("updatedBy")
-    .references(() => users.id)
-    .default(sql`NULL`),
-  deletedByAdmin: text("deletedBy")
+  admin_id: text("admin_id")
     .references(() => users.id)
     .default(sql`NULL`),
 });
@@ -35,16 +29,8 @@ export const sponsorDonationRelation = relations(sponsors_donations, ({ one }) =
     fields: [sponsors_donations.sponsorId],
     references: [sponsors.id],
   }),
-  createdBy: one(users, {
-    fields: [sponsors_donations.createdByAdmin],
-    references: [users.id],
-  }),
-  updatedBy: one(users, {
-    fields: [sponsors_donations.updatedByAdmin],
-    references: [users.id],
-  }),
-  deletedBy: one(users, {
-    fields: [sponsors_donations.deletedByAdmin],
+  admin: one(users, {
+    fields: [sponsors_donations.admin_id],
     references: [users.id],
   }),
 }));

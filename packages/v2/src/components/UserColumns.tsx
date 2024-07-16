@@ -1,4 +1,4 @@
-import { deleteSponsorAction } from "@/actions/sponsors";
+import { deleteUserAction } from "@/actions/users";
 import {
   AlertDialog,
   AlertDialogClose,
@@ -9,19 +9,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { getSponsor } from "@/data/sponsors";
-import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import { A, revalidate, useAction, useSubmission } from "@solidjs/router";
 import type { ColumnDef } from "@tanstack/solid-table";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { LineChart, Loader2, Pen, Trash } from "lucide-solid";
-import { createSignal, For, Match, Switch } from "solid-js";
+import { createSignal, Match, Switch } from "solid-js";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { getAllUsers, getUser } from "@/data/users";
+import type { User } from "@ciftlikpdf/core/src/entities/users";
 dayjs.extend(advancedFormat);
 
-export const sponsorColumns = [
+export const userColumns = [
   {
     accessorKey: "name",
     header(props) {
@@ -29,9 +29,9 @@ export const sponsorColumns = [
     },
   },
   {
-    accessorKey: "address",
+    accessorKey: "type",
     header(props) {
-      return <span class="capitalize">Adress</span>;
+      return <span class="capitalize">Type</span>;
     },
   },
   {
@@ -44,42 +44,23 @@ export const sponsorColumns = [
     },
   },
   {
-    accessorKey: "donations",
-    header(props) {
-      return <span class="capitalize">Bağışlar</span>;
-    },
-    cell(props) {
-      return (
-        <div class="flex flex-row gap-1">
-          <For each={props.row.original.donations} fallback={<span>Yok</span>}>
-            {(d) => (
-              <Badge variant="outline">
-                {d.amount} {d.currency} ({d.year})
-              </Badge>
-            )}
-          </For>
-        </div>
-      );
-    },
-  },
-  {
     id: "actions",
     header(props) {
       return <span class="capitalize flex flex-row items-center gap-2 justify-end">Eylemler</span>;
     },
     size: 200,
     cell(props) {
-      const sponsor = props.row.original;
+      const user = props.row.original;
       const [openDeleteDialog, setOpenDeleteDialog] = createSignal(false);
 
-      const deleteSponsor = useAction(deleteSponsorAction);
-      const deleteSponsorState = useSubmission(deleteSponsorAction);
+      const deleteUser = useAction(deleteUserAction);
+      const deleteUserState = useSubmission(deleteUserAction);
 
       return (
         <div class="flex flex-row items-center gap-2 justify-end">
           <Button
             as={A}
-            href={`/sponsors/${sponsor.id}`}
+            href={`/users/${user.id}`}
             size="sm"
             class="flex flex-row items-center gap-2"
             variant="outline"
@@ -89,7 +70,7 @@ export const sponsorColumns = [
           </Button>
           <Button
             as={A}
-            href={`/sponsors/${sponsor.id}/edit`}
+            href={`/users/${user.id}/edit`}
             size="sm"
             class="flex flex-row items-center gap-2"
             variant="outline"
@@ -114,17 +95,17 @@ export const sponsorColumns = [
                 <Button
                   variant="destructive"
                   onClick={async () => {
-                    await deleteSponsor(sponsor.id);
-                    await revalidate(getSponsor.keyFor(sponsor.id));
+                    await deleteUser(user.id);
+                    await revalidate([getUser.keyFor(user.id), getAllUsers.key]);
                     setOpenDeleteDialog(false);
                   }}
                 >
                   <Switch fallback={<span>Evet, Sil</span>}>
-                    <Match when={deleteSponsorState.pending}>
+                    <Match when={deleteUserState.pending}>
                       <span>Siliniyor...</span>
                       <Loader2 class="size-4 animate-spin" />
                     </Match>
-                    <Match when={deleteSponsorState.result}>
+                    <Match when={deleteUserState.result}>
                       <span>Silindi</span>
                     </Match>
                   </Switch>
@@ -136,4 +117,4 @@ export const sponsorColumns = [
       );
     },
   },
-] satisfies ColumnDef<Sponsor.Frontend>[];
+] satisfies ColumnDef<User.Frontend>[];

@@ -53,7 +53,7 @@ export default function Login() {
         <div class="flex flex-row justify-between gap-4 items-center">
           <div></div>
           <Button
-            size="lg"
+            size="sm"
             onClick={async () => {
               const fd = new FormData();
               fd.append("name", user.name);

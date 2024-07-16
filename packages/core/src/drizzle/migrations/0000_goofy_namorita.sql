@@ -33,11 +33,7 @@ CREATE TABLE `sponsors_donations` (
 	`amount` integer NOT NULL,
 	`currency` text NOT NULL,
 	`year` integer NOT NULL,
-	`createdBy` text DEFAULT NULL,
-	`updatedBy` text DEFAULT NULL,
-	`deletedBy` text DEFAULT NULL,
+	`admin_id` text DEFAULT NULL,
 	FOREIGN KEY (`sponsorId`) REFERENCES `sponsors`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`createdBy`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`updatedBy`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`deletedBy`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`admin_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );

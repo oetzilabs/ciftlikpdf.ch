@@ -31,7 +31,7 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 dayjs.extend(advancedFormat);
 
-export const donationColumns = [
+export const userDonationColumns = [
   {
     accessorKey: "year",
     header(props) {
@@ -70,7 +70,7 @@ export const donationColumns = [
     },
   },
   {
-    accessorKey: "admin",
+    accessorKey: "createdBy",
     header(props) {
       return <span class="capitalize">Oluşturan</span>;
     },
@@ -93,7 +93,7 @@ export const donationColumns = [
 
       const [isCreatingPDF, setIsCreatingPDF] = createSignal<"tr" | "de" | "fr" | false>(false);
 
-      const generatePDF = async (donation: Sponsor.Frontend["donations"][number], language: "tr" | "de" | "fr") => {
+      const generatePDF = async (donation: User.Frontend["donations"][number], language: "tr" | "de" | "fr") => {
         const slugifiedSponsorName = donation.sponsor.name.replaceAll(/[^a-zA-Z0-9]/g, "-");
         setIsCreatingPDF(language);
         dayjs.locale(language, language === "tr" ? turkishLocale : language === "de" ? germanLocale : frenchLocale);
@@ -124,16 +124,6 @@ export const donationColumns = [
 
       return (
         <div class="flex flex-row items-center gap-2 justify-end">
-          {/* <Button
-            as={A}
-            href={`/sponsors/${props.row.original.sponsorId}/donations/${props.row.original.id}`}
-            size="sm"
-            class="flex flex-row items-center gap-2"
-            variant="outline"
-          >
-            <LineChart class="size-4" />
-            <span class="">Details</span>
-          </Button> */}
           <DropdownMenu>
             <DropdownMenuTrigger
               as={Button}
@@ -147,7 +137,7 @@ export const donationColumns = [
                   <Loader2 class="size-4 animate-spin" />
                 </Match>
               </Switch>
-              <span class="sr-only md:not-sr-only">PDF Olustur</span>
+              <span class="">PDF Olustur</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem
@@ -185,7 +175,6 @@ export const donationColumns = [
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
           <Button
             as={A}
             href={`/sponsors/${props.row.original.sponsorId}/donations/${props.row.original.id}/edit`}
@@ -193,9 +182,8 @@ export const donationColumns = [
             class="flex flex-row items-center gap-2"
           >
             <Pen class="size-4" />
-            <span class="sr-only md:not-sr-only">Düzenle</span>
+            <span class="">Düzenle</span>
           </Button>
-
           <AlertDialog open={openDeleteDialog()} onOpenChange={setOpenDeleteDialog}>
             <AlertDialogTrigger as={Button} class="flex flex-row items-center gap-2" variant="destructive" size="sm">
               <Trash class="size-4" />
@@ -235,4 +223,4 @@ export const donationColumns = [
       );
     },
   },
-] satisfies ColumnDef<Sponsor.Frontend["donations"][number]>[];
+] satisfies ColumnDef<User.Frontend["donations"][number]>[];

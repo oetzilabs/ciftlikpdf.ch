@@ -14,14 +14,18 @@ export const route = {
 export default function Home() {
   return (
     <main class="text-center mx-auto p-4 pt-20 container">
-      <span>Merhaba, bu site için çalışıyoruz.</span>
-      <span>Başka zamana geri dönüş yapin. Sayfa şu an çalışmıyor.</span>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 items-center justify-center w-full">
         <A
-          class="flex flex-row gap-2 border border-neutral-300 dark:border-neutral-800 shadow-sm rounded-lg px-4 py-2 bg-white dark:bg-black text-lg"
+          class="flex flex-row gap-2 border border-neutral-300 dark:border-neutral-800 shadow-sm rounded-lg px-4 py-2 bg-white dark:bg-black text-lg items-center justify-center w-full max-w-md"
           href="/sponsors"
         >
-          Sponsorları görüntüle
+          Sponsorlar
+        </A>
+        <A
+          class="flex flex-row gap-2 border border-neutral-300 dark:border-neutral-800 shadow-sm rounded-lg px-4 py-2 bg-white dark:bg-black text-lg items-center justify-center w-full max-w-md"
+          href="/users"
+        >
+          Userlar
         </A>
       </div>
     </main>

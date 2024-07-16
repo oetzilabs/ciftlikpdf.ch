@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { getAuthenticatedSession } from "@/data/auth";
 import { getSponsor, getSponsorDonation } from "@/data/sponsors";
 import { A, createAsync, RouteDefinition, useParams } from "@solidjs/router";
-import { Loader2, Pen } from "lucide-solid";
+import { ArrowLeft, Loader2, Pen } from "lucide-solid";
 import { Show, Suspense } from "solid-js";
 
 export const route = {
@@ -21,9 +21,9 @@ export default function SponsorDonationPage() {
   const session = createAsync(() => getAuthenticatedSession());
 
   return (
-    <Suspense fallback={<Loader2 class="size-4" />}>
+    <Suspense fallback={<Loader2 class="size-4 animate-spin" />}>
       <Show
-        when={session() && session()!.user !== null}
+        when={session() && session()!.user !== null && session()!.user?.type === "admin"}
         keyed
         fallback={
           <main class="text-center mx-auto p-4 pt-20">
@@ -35,6 +35,12 @@ export default function SponsorDonationPage() {
         }
       >
         <main class="text-center mx-auto p-4 pt-20 container flex flex-col gap-4">
+          <div class="w-full flex flex-row items-center gap-2">
+            <Button as={A} href={`/sponsors/${params.sid}`} class="w-max flex flex-row items-center gap-2">
+              <ArrowLeft class="size-4" />
+              Geri
+            </Button>
+          </div>
           <Show when={sponsor()} keyed fallback={<div>Sponsor not found</div>}>
             {(s) => (
               <div class="w-full flex flex-col gap-4 items-start">

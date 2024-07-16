@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e3dcad5c-38fc-4847-bec1-1de475f759c4",
+  "id": "2e68c0a2-70d2-4af1-a8a2-60c69e37121f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
@@ -94,8 +94,12 @@
           "name": "session_user_id_users_id_fk",
           "tableFrom": "session",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -215,24 +219,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "createdBy": {
-          "name": "createdBy",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "NULL"
-        },
-        "updatedBy": {
-          "name": "updatedBy",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "NULL"
-        },
-        "deletedBy": {
-          "name": "deletedBy",
+        "admin_id": {
+          "name": "admin_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -246,35 +234,25 @@
           "name": "sponsors_donations_sponsorId_sponsors_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "sponsors",
-          "columnsFrom": ["sponsorId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "sponsorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "sponsors_donations_createdBy_users_id_fk": {
-          "name": "sponsors_donations_createdBy_users_id_fk",
+        "sponsors_donations_admin_id_users_id_fk": {
+          "name": "sponsors_donations_admin_id_users_id_fk",
           "tableFrom": "sponsors_donations",
           "tableTo": "users",
-          "columnsFrom": ["createdBy"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "sponsors_donations_updatedBy_users_id_fk": {
-          "name": "sponsors_donations_updatedBy_users_id_fk",
-          "tableFrom": "sponsors_donations",
-          "tableTo": "users",
-          "columnsFrom": ["updatedBy"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "sponsors_donations_deletedBy_users_id_fk": {
-          "name": "sponsors_donations_deletedBy_users_id_fk",
-          "tableFrom": "sponsors_donations",
-          "tableTo": "users",
-          "columnsFrom": ["deletedBy"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "admin_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

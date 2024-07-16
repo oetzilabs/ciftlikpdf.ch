@@ -6,7 +6,7 @@ import { getAuthenticatedSession } from "@/data/auth";
 import { getAllSponsors } from "@/data/sponsors";
 import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import { A, createAsync, revalidate, RouteDefinition, useAction, useSubmission } from "@solidjs/router";
-import { Loader2, Plus } from "lucide-solid";
+import { ArrowLeft, Loader2, Plus } from "lucide-solid";
 import { Match, Show, Suspense, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 
@@ -30,9 +30,15 @@ export default function SponsorCreate() {
 
   return (
     <div class=" mx-auto p-4 pt-20 container flex flex-col gap-4">
-      <Suspense fallback={<Loader2 class="size-4" />}>
+      <div class="w-full flex flex-row items-center gap-2">
+        <Button as={A} href={`/sponsors`} size="sm" class="w-max flex flex-row items-center gap-2">
+          <ArrowLeft class="size-4" />
+          Geri
+        </Button>
+      </div>
+      <Suspense fallback={<Loader2 class="size-4 animate-spin" />}>
         <Show
-          when={session() && session()!.user !== null}
+          when={session() && session()!.user !== null && session()!.user?.type === "admin"}
           keyed
           fallback={
             <main class="text-center mx-auto p-4 pt-20">

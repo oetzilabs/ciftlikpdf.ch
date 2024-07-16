@@ -50,9 +50,9 @@ export default function SponsorSIDIndex() {
   const navigate = useNavigate();
 
   return (
-    <Suspense fallback={<Loader2 class="size-4" />}>
+    <Suspense fallback={<Loader2 class="size-4 animate-spin" />}>
       <Show
-        when={session() && session()!.user !== null}
+        when={session() && session()!.user !== null && session()!.user?.type === "admin"}
         fallback={
           <main class="text-center mx-auto p-4 pt-20">
             <span>Lütfen giriş yapınız.</span>
@@ -94,7 +94,7 @@ export default function SponsorSIDIndex() {
                                     variant={donationEdit.currency === currency ? "default" : "outline"}
                                     onClick={() => setDonationEdit("currency", currency)}
                                     class="flex flex-row items-center gap-2 !h-20 text-2xl"
-                                    size="lg"
+                                    size="sm"
                                   >
                                     <Show when={donationEdit.currency === currency}>
                                       <CheckCheck class="size-8" />
@@ -110,8 +110,8 @@ export default function SponsorSIDIndex() {
                                   new Set(
                                     Array.from({ length: 5 })
                                       .map((_, i) => dayjs().subtract(i, "year").year())
-                                      .concat(Array.from({ length: 5 }).map((_, i) => dayjs().add(i, "year").year())),
-                                  ),
+                                      .concat(Array.from({ length: 5 }).map((_, i) => dayjs().add(i, "year").year()))
+                                  )
                                 ).sort()}
                               >
                                 {(year) => (
@@ -120,7 +120,7 @@ export default function SponsorSIDIndex() {
                                     variant={donationEdit.year === year ? "default" : "outline"}
                                     onClick={() => setDonationEdit("year", year)}
                                     class="flex flex-row items-center gap-2 justify-center px-3"
-                                    size="lg"
+                                    size="sm"
                                   >
                                     <div class="flex flex-row items-center justify-center gap-2">
                                       <span>{year}</span>
@@ -135,7 +135,7 @@ export default function SponsorSIDIndex() {
                           </div>
                           <div class="flex flex-row items-center gap-2 justify-end w-full">
                             <Button
-                              size="lg"
+                              size="sm"
                               onClick={async () => {
                                 await updateDonation(donationEdit);
                                 await revalidate([

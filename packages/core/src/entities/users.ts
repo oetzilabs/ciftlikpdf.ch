@@ -47,10 +47,16 @@ export const countAll = z.function(z.tuple([])).implement(async () => {
   return x.count;
 });
 
-export const findById = z.function(z.tuple([z.string()])).implement(async (input) => {
+export const findById = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
   return db.query.users.findFirst({
     where: (users, operations) => operations.eq(users.id, input),
-    with: {},
+    with: {
+      donations: {
+        with: {
+          sponsor: true,
+        },
+      },
+    },
     columns: {
       password: false,
     },
@@ -60,7 +66,13 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
 export const findByName = z.function(z.tuple([z.string()])).implement(async (input) => {
   return db.query.users.findFirst({
     where: (users, operations) => operations.eq(users.name, input),
-    with: {},
+    with: {
+      donations: {
+        with: {
+          sponsor: true,
+        },
+      },
+    },
     columns: {
       password: false,
     },
@@ -69,21 +81,27 @@ export const findByName = z.function(z.tuple([z.string()])).implement(async (inp
 
 export const all = z.function(z.tuple([])).implement(async () => {
   return db.query.users.findMany({
-    with: {},
+    with: {
+      donations: {
+        with: {
+          sponsor: true,
+        },
+      },
+    },
     columns: {
       password: false,
     },
   });
 });
 
-const update = z
+export const update = z
   .function(
     z.tuple([
       createInsertSchema(users)
         .partial()
         .omit({ createdAt: true, updatedAt: true })
         .merge(z.object({ id: z.string().uuid() })),
-    ]),
+    ])
   )
   .implement(async (input) => {
     await db
@@ -93,6 +111,11 @@ const update = z
       .returning();
     return true;
   });
+
+export const remove = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
+  const [x] = await db.delete(users).where(eq(users.id, input)).returning();
+  return x;
+});
 
 export const markAsDeleted = z.function(z.tuple([z.object({ id: z.string().uuid() })])).implement(async (input) => {
   return update({ id: input.id, deletedAt: new Date() });

@@ -1,6 +1,5 @@
-import { deleteSponsorAction } from "@/actions/sponsors";
+import { deleteUserAction } from "@/actions/users";
 import { DataTable } from "@/components/DataTable";
-import { donationColumns } from "@/components/DonationColumns";
 import {
   AlertDialog,
   AlertDialogClose,
@@ -12,42 +11,43 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { userDonationColumns } from "@/components/UserDonationColumns";
 import { getAuthenticatedSession } from "@/data/auth";
-import { getAllSponsors, getSponsor } from "@/data/sponsors";
+import { getAllUsers, getUser } from "@/data/users";
 import { Title } from "@solidjs/meta";
 import { A, createAsync, revalidate, RouteDefinition, useAction, useParams, useSubmission } from "@solidjs/router";
-import { ArrowLeft, Loader2, Pen, Plus, RotateCcw, Trash } from "lucide-solid";
+import { ArrowLeft, Loader2, Pen, Trash } from "lucide-solid";
 import { createSignal, Match, Show, Suspense, Switch } from "solid-js";
 
 export const route = {
   preload: async ({ params }) => {
-    const sponsors = await getSponsor(params.sid);
+    const sponsors = await getUser(params.uid);
     const session = await getAuthenticatedSession();
     return { sponsors, session };
   },
 } satisfies RouteDefinition;
 
-export default function SponsorSIDIndex() {
+export default function UserUIDIndex() {
   const params = useParams();
-  const sponsor = createAsync(() => getSponsor(params.sid));
+  const user = createAsync(() => getUser(params.uid));
   const session = createAsync(() => getAuthenticatedSession());
 
   const [openDeleteDialog, setOpenDeleteDialog] = createSignal(false);
 
-  const deleteSponsor = useAction(deleteSponsorAction);
-  const submission = useSubmission(deleteSponsorAction);
+  const deleteUser = useAction(deleteUserAction);
+  const submission = useSubmission(deleteUserAction);
 
   return (
     <main class="text-center mx-auto p-4 pt-20 container flex flex-col gap-4 ">
       <div class="w-full flex flex-row items-center gap-2">
-        <Button as={A} href={`/sponsors`} size="sm" class="w-max flex flex-row items-center gap-2">
+        <Button as={A} href={`/users`} size="sm" class="flex flex-row items-center gap-2">
           <ArrowLeft class="size-4" />
           Geri
         </Button>
       </div>
-      <Suspense fallback={<Loader2 class="size-4 animate-spin" />}>
+      <Suspense fallback={<Loader2 class="size-4" />}>
         <Show
-          when={session() && session()!.user !== null && session()!.user?.type === "admin"}
+          when={session() && session()!.user !== null}
           keyed
           fallback={
             <main class="text-center mx-auto p-4 pt-20">
@@ -58,51 +58,27 @@ export default function SponsorSIDIndex() {
             </main>
           }
         >
-          <Show when={sponsor()} keyed fallback={<div>Sponsor not found</div>}>
+          <Show when={user()} keyed fallback={<div>User not found</div>}>
             {(s) => (
               <>
-                <Title>{s.name} | Sponsor</Title>
+                <Title>{s.name} | User</Title>
                 <div class="w-full flex flex-col gap-4 items-start">
                   <div class="w-full flex flex-row items-center justify-between gap-4">
                     <h1 class="text-2xl font-bold text-center">{s.name}</h1>
                     <div class="flex flex-row gap-2">
                       <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={async () => await revalidate(getSponsor.keyFor(s.id))}
-                        class="px-3 md:px-4 flex flex-row items-center gap-2"
-                      >
-                        <RotateCcw class="size-5" />
-                        <span class="sr-only md:not-sr-only">Tekrar yükle</span>
-                      </Button>
-                      <Button
                         as={A}
-                        href={`/sponsors/${s.id}/donate`}
-                        size="sm"
-                        class="px-3 md:px-4 flex flex-row items-center gap-2"
-                      >
-                        <Plus class="size-5" />
-                        <span class="sr-only md:not-sr-only">Donate</span>
-                      </Button>
-                      <Button
-                        as={A}
-                        href={`/sponsors/${s.id}/edit`}
-                        class="px-3 md:px-4 flex flex-row items-center gap-2"
-                        size="sm"
+                        href={`/users/${s.id}/edit`}
+                        class="flex flex-row items-center gap-2"
                         variant="secondary"
                       >
-                        <Pen class="size-5" />
-                        <span class="sr-only md:not-sr-only">Güncelle</span>
+                        <Pen class="size-4" />
+                        Güncelle
                       </Button>
                       <AlertDialog open={openDeleteDialog()} onOpenChange={setOpenDeleteDialog}>
-                        <AlertDialogTrigger
-                          as={Button}
-                          variant="destructive"
-                          size="sm"
-                          class="px-3 md:px-4 flex flex-row items-center gap-2"
-                        >
-                          <Trash class="size-5" />
-                          <span class="sr-only md:not-sr-only">Sil</span>
+                        <AlertDialogTrigger as={Button} class="flex flex-row items-center gap-2" variant="destructive">
+                          <Trash class="size-4" />
+                          Sil
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
@@ -117,8 +93,8 @@ export default function SponsorSIDIndex() {
                             <Button
                               variant="destructive"
                               onClick={async () => {
-                                await deleteSponsor(s.id);
-                                await revalidate(getAllSponsors.key);
+                                await deleteUser(s.id);
+                                await revalidate(getAllUsers.key);
                                 setOpenDeleteDialog(false);
                               }}
                             >
@@ -135,10 +111,10 @@ export default function SponsorSIDIndex() {
                       </AlertDialog>
                     </div>
                   </div>
-                  <div class="flex flex-col gap-0.5 items-start">{s.address}</div>
+                  <div class="flex flex-col gap-0.5 items-start">{s.type}</div>
                   <div class="w-full border border-neutral-200 dark:border-neutral-800 rounded-md min-h-[calc(50svh)] flex flex-col overflow-clip">
                     <DataTable
-                      columns={donationColumns}
+                      columns={userDonationColumns}
                       data={() => s.donations}
                       searchBy="year"
                       sorting={[{ id: "year", desc: false }]}

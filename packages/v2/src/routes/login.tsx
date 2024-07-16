@@ -51,11 +51,11 @@ export default function Login() {
           </TextFieldLabel>
         </TextFieldRoot>
         <div class="flex flex-row justify-between gap-4 items-center">
-          <Button size="lg" as={A} href="/register" variant="secondary">
+          <Button size="sm" as={A} href="/register" variant="secondary">
             Register
           </Button>
           <Button
-            size="lg"
+            size="sm"
             onClick={async () => {
               const fd = new FormData();
               fd.append("name", user.name);

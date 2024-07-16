@@ -25,17 +25,7 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
     where: (fields, operations) => operations.eq(fields.id, input),
     with: {
       sponsor: true,
-      createdBy: {
-        columns: {
-          password: false,
-        },
-      },
-      updatedBy: {
-        columns: {
-          password: false,
-        },
-      },
-      deletedBy: {
+      admin: {
         columns: {
           password: false,
         },
@@ -50,17 +40,7 @@ export const findBySponsorId = z.function(z.tuple([z.string()])).implement(async
       operations.and(operations.eq(fields.sponsorId, input), operations.isNull(fields.deletedAt)),
     with: {
       sponsor: true,
-      createdBy: {
-        columns: {
-          password: false,
-        },
-      },
-      updatedBy: {
-        columns: {
-          password: false,
-        },
-      },
-      deletedBy: {
+      admin: {
         columns: {
           password: false,
         },
@@ -73,17 +53,7 @@ export const all = z.function(z.tuple([])).implement(async () => {
   return db.query.sponsors_donations.findMany({
     with: {
       sponsor: true,
-      createdBy: {
-        columns: {
-          password: false,
-        },
-      },
-      updatedBy: {
-        columns: {
-          password: false,
-        },
-      },
-      deletedBy: {
+      admin: {
         columns: {
           password: false,
         },
@@ -99,7 +69,7 @@ export const update = z
         .partial()
         .omit({ createdAt: true, updatedAt: true })
         .merge(z.object({ id: z.string().uuid() })),
-    ]),
+    ])
   )
   .implement(async (input) => {
     await db
@@ -123,6 +93,28 @@ export const updateAmount = z
 export const isAllowedToSignUp = z.function(z.tuple([z.object({ email: z.string() })])).implement(async (input) => {
   return true;
 });
+
+export const remove = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
+  const [x] = await db.delete(sponsors_donations).where(eq(sponsors_donations.id, input)).returning();
+  return x;
+});
+
+export const findBySponsorIdAndYear = z
+  .function(z.tuple([z.string().uuid(), z.number()]))
+  .implement(async (sponsorId, year) => {
+    return db.query.sponsors_donations.findFirst({
+      where: (fields, operations) =>
+        operations.and(operations.eq(fields.sponsorId, sponsorId), operations.eq(fields.year, year)),
+      with: {
+        sponsor: true,
+        admin: {
+          columns: {
+            password: false,
+          },
+        },
+      },
+    });
+  });
 
 export type Frontend = NonNullable<Awaited<ReturnType<typeof findById>>>;
 

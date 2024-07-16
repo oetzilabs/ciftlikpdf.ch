@@ -14,11 +14,12 @@ export const create = z
         updatedAt: true,
         deletedAt: true,
       }),
-    ]),
+    ])
   )
   .implement(async (input) => {
     const [x] = await db.insert(sponsors).values(input).returning();
-    return x;
+    const y = await findById(x.id);
+    return y!;
   });
 
 export const hasDonated = z.function(z.tuple([z.string().uuid(), z.number()])).implement(async (sponsorId, year) => {
@@ -38,9 +39,9 @@ export const donate = z
           sponsorId: true,
         })
         .extend({
-          createdByAdmin: z.string().uuid(),
+          admin_id: z.string().uuid(),
         }),
-    ]),
+    ])
   )
   .implement(async (sponsorId, input) => {
     const [x] = await db
@@ -52,13 +53,13 @@ export const donate = z
 
 export const removeDonation = z
   .function(z.tuple([z.string().uuid(), z.string().uuid(), z.string().uuid()]))
-  .implement(async (sponsorId, donationId, deletedByAdmin) => {
+  .implement(async (sponsorId, donationId, admin_id) => {
     const [x] = await db
       .update(sponsors_donations)
       .set({
         deletedAt: new Date(),
         updatedAt: new Date(),
-        deletedByAdmin,
+        admin_id,
       })
       .where(and(eq(sponsors_donations.sponsorId, sponsorId), eq(sponsors_donations.id, donationId)))
       .returning();
@@ -73,7 +74,7 @@ export const updateDonation = z
       createInsertSchema(sponsors_donations).partial().omit({
         sponsorId: true,
       }),
-    ]),
+    ])
   )
   .implement(async (sponsorId, donationId, input) => {
     const [x] = await db
@@ -88,7 +89,7 @@ export const createWithDonation = z
   .function(
     z.tuple([
       createInsertSchema(sponsors).extend(createInsertSchema(sponsors_donations).omit({ sponsorId: true }).shape),
-    ]),
+    ])
   )
   .implement(async (input) => {
     const x = await db.transaction(async (trx) => {
@@ -109,17 +110,7 @@ export const createWithDonation = z
         with: {
           donations: {
             with: {
-              createdBy: {
-                columns: {
-                  password: false,
-                },
-              },
-              updatedBy: {
-                columns: {
-                  password: false,
-                },
-              },
-              deletedBy: {
+              admin: {
                 columns: {
                   password: false,
                 },
@@ -160,17 +151,7 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
           return operators.isNull(fields.deletedAt);
         },
         with: {
-          createdBy: {
-            columns: {
-              password: false,
-            },
-          },
-          updatedBy: {
-            columns: {
-              password: false,
-            },
-          },
-          deletedBy: {
+          admin: {
             columns: {
               password: false,
             },
@@ -188,17 +169,7 @@ export const findByName = z.function(z.tuple([z.string()])).implement(async (inp
     with: {
       donations: {
         with: {
-          createdBy: {
-            columns: {
-              password: false,
-            },
-          },
-          updatedBy: {
-            columns: {
-              password: false,
-            },
-          },
-          deletedBy: {
+          admin: {
             columns: {
               password: false,
             },
@@ -220,17 +191,7 @@ export const all = z.function(z.tuple([])).implement(async () => {
           return operators.asc(fields.year);
         },
         with: {
-          createdBy: {
-            columns: {
-              password: false,
-            },
-          },
-          updatedBy: {
-            columns: {
-              password: false,
-            },
-          },
-          deletedBy: {
+          admin: {
             columns: {
               password: false,
             },
@@ -255,17 +216,7 @@ export const allWithoutDeleted = z.function(z.tuple([])).implement(async () => {
           return operators.asc(fields.year);
         },
         with: {
-          createdBy: {
-            columns: {
-              password: false,
-            },
-          },
-          updatedBy: {
-            columns: {
-              password: false,
-            },
-          },
-          deletedBy: {
+          admin: {
             columns: {
               password: false,
             },
@@ -284,7 +235,7 @@ export const update = z
         .partial()
         .omit({ createdAt: true, updatedAt: true, deletedAt: true })
         .merge(z.object({ id: z.string().uuid() })),
-    ]),
+    ])
   )
   .implement(async (input) => {
     const [x] = await db
@@ -313,14 +264,14 @@ export const isCreateWithDonationValid = z.object({
   amount: z.string().transform((x) => Number(x)),
   currency: z.union([z.literal("CHF"), z.literal("EUR")]),
   year: z.string().transform((x) => Number(x)),
-  createdByAdmin: z.string().uuid(),
+  adminAdmin: z.string().uuid(),
 }).safeParseAsync;
 
 export const isDonateValid = z.object({
   amount: z.number().or(z.string().transform((x) => Number(x))),
   currency: z.union([z.literal("CHF"), z.literal("EUR")]),
   year: z.number().or(z.string().transform((x) => Number(x))),
-  createdByAdmin: z.string().uuid(),
+  adminAdmin: z.string().uuid(),
 }).safeParseAsync;
 
 export const isUpdateDonationValid = z.object({
@@ -332,14 +283,7 @@ export const isUpdateDonationValid = z.object({
 }).safeParseAsync;
 
 export const remove = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
-  const [x] = await db
-    .update(sponsors)
-    .set({
-      deletedAt: new Date(),
-      updatedAt: new Date(),
-    })
-    .where(eq(sponsors.id, input))
-    .returning();
+  const [x] = await db.delete(sponsors).where(eq(sponsors.id, input)).returning();
   return x;
 });
 

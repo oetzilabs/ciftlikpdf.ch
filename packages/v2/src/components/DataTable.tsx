@@ -88,7 +88,9 @@ export const DataTable = <TData, TValue>(props: Props<TData, TValue>) => {
           </TextFieldRoot>
         </div>
         <div class="flex flex-row items-center justify-end gap-2">
-          <Show when={props.menu}>{(menu) => <div class="flex items-center">{menu()}</div>}</Show>
+          <Show when={props.menu} keyed>
+            {(menu) => <div class="flex items-center">{menu}</div>}
+          </Show>
           <DropdownMenu>
             <DropdownMenuTrigger
               as={Button}
