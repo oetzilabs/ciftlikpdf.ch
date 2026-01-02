@@ -1,13 +1,13 @@
 import { User } from "@ciftlikpdf/core/src/entities/users";
-import { cache, redirect } from "@solidjs/router";
+import { query, redirect } from "@solidjs/router";
 
-export const getAllUsers = cache(async () => {
+export const getAllUsers = query(async () => {
   "use server";
   const users = await User.all();
   return users;
 }, "getAllUserss");
 
-export const getUser = cache(async (id: string) => {
+export const getUser = query(async (id: string) => {
   "use server";
   const user = await User.findById(id);
   if (!user) {

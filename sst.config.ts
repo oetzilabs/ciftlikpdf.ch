@@ -1,27 +1,13 @@
-import { SSTConfig } from "sst";
-import { ApiStack } from "./stacks/ApiStack";
-import { StorageStack } from "./stacks/StorageStack";
-import { DNSStack } from "./stacks/DNSStack";
-import { AstroStack } from "./stacks/AstroStack";
-import { SecretsStack } from "./stacks/SecretsStack";
+/// <reference path="./.sst/platform/config.d.ts" />
 
-export default {
-  config(_input) {
+export default $config({
+  app(input) {
     return {
       name: "ciftlikpdf",
-      region: "eu-central-1",
+      home: "cloudflare",
     };
   },
-  stacks(app) {
-    if (app.stage !== "production") {
-      app.setDefaultRemovalPolicy("destroy");
-    }
-    app
-      //
-      .stack(DNSStack)
-      .stack(SecretsStack)
-      .stack(StorageStack)
-      .stack(ApiStack)
-      .stack(AstroStack);
+  async run() {
+    await import("./stacks/solid-start.js");
   },
-} satisfies SSTConfig;
+});

@@ -1,5 +1,5 @@
 import { User } from "@ciftlikpdf/core/src/entities/users";
-import { cache } from "@solidjs/router";
+import { query } from "@solidjs/router";
 import { withSession } from "./utils";
 
 export type UserSession = {
@@ -8,7 +8,7 @@ export type UserSession = {
   user: User.Frontend | null;
 };
 
-export const getAuthenticatedSession = cache(async () => {
+export const getAuthenticatedSession = query(async () => {
   "use server";
   let userSession = {
     id: null,
