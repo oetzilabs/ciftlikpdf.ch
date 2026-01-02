@@ -25,5 +25,10 @@
     "aws-sdk",
     "es5-ext",
     "esbuild"
-  ]
+  ],
+  "dependencies": {
+    "@types/pdfmake": "^0.2.12",
+    "effect": "^3.19.14",
+    "pdfmake": "^0.3.0"
+  }
 }

@@ -7,12 +7,15 @@ import { getAllSponsors, getSponsor } from "@/data/sponsors";
 import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import { Title } from "@solidjs/meta";
 import { A, createAsync, revalidate, RouteDefinition, useAction, useParams, useSubmission } from "@solidjs/router";
-import { ArrowLeft, Loader2, Plus } from "lucide-solid";
+import ArrowLeft from "lucide-solid/icons/arrow-left";
+import Loader2 from "lucide-solid/icons/loader-2";
+import Plus from "lucide-solid/icons/plus";
 import { Match, Show, Suspense, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 
 export const route = {
   preload: async ({ params }) => {
+    if (!params.sid) return {};
     const sponsors = await getSponsor(params.sid);
     const session = await getAuthenticatedSession();
     return { sponsors, session };
@@ -21,6 +24,7 @@ export const route = {
 
 export default function SponsorCreate() {
   const params = useParams();
+  if (!params.sid) return <div>Sponsor not found</div>;
   const session = createAsync(() => getAuthenticatedSession());
 
   const sponsor = createAsync(() => getSponsor(params.sid));

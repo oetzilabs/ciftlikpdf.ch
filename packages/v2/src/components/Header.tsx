@@ -1,5 +1,6 @@
 import { A, createAsync, useLocation } from "@solidjs/router";
-import { Loader2, LogOut } from "lucide-solid";
+import Loader2 from "lucide-solid/icons/loader-2";
+import LogOut from "lucide-solid/icons/log-out";
 import { JSX, Match, Suspense, Switch } from "solid-js";
 import { logout } from "../actions/logout";
 import { getAuthenticatedSession } from "../data/auth";

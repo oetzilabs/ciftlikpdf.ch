@@ -6,12 +6,14 @@ import { SponsorDonationsSelect, sponsors_donations } from "../drizzle/sql/schem
 
 export * as Donation from "./donations";
 
-export const create = z.function(z.tuple([createInsertSchema(sponsors_donations)])).implement(async (input) => {
-  const [x] = await db.insert(sponsors_donations).values(input).returning();
-  return x;
-});
+export const create = z
+  .function({ input: z.tuple([createInsertSchema(sponsors_donations)]) })
+  .implement(async (input) => {
+    const [x] = await db.insert(sponsors_donations).values(input).returning();
+    return x;
+  });
 
-export const countAll = z.function(z.tuple([])).implement(async () => {
+export const countAll = z.function().implement(async () => {
   const [x] = await db
     .select({
       count: sql`COUNT(${sponsors_donations.id})`,
@@ -20,7 +22,7 @@ export const countAll = z.function(z.tuple([])).implement(async () => {
   return x.count;
 });
 
-export const findById = z.function(z.tuple([z.string()])).implement(async (input) => {
+export const findById = z.function({ input: z.tuple([z.string()]) }).implement(async (input) => {
   return db.query.sponsors_donations.findFirst({
     where: (fields, operations) => operations.eq(fields.id, input),
     with: {
@@ -34,7 +36,7 @@ export const findById = z.function(z.tuple([z.string()])).implement(async (input
   });
 });
 
-export const findBySponsorId = z.function(z.tuple([z.string()])).implement(async (input) => {
+export const findBySponsorId = z.function({ input: z.tuple([z.string()]) }).implement(async (input) => {
   return db.query.sponsors_donations.findMany({
     where: (fields, operations) =>
       operations.and(operations.eq(fields.sponsorId, input), operations.isNull(fields.deletedAt)),
@@ -49,7 +51,7 @@ export const findBySponsorId = z.function(z.tuple([z.string()])).implement(async
   });
 });
 
-export const all = z.function(z.tuple([])).implement(async () => {
+export const all = z.function().implement(async () => {
   return db.query.sponsors_donations.findMany({
     with: {
       sponsor: true,
@@ -63,14 +65,14 @@ export const all = z.function(z.tuple([])).implement(async () => {
 });
 
 export const update = z
-  .function(
-    z.tuple([
+  .function({
+    input: z.tuple([
       createInsertSchema(sponsors_donations)
         .partial()
         .omit({ createdAt: true, updatedAt: true })
-        .merge(z.object({ id: z.string().uuid() })),
-    ])
-  )
+        .merge(z.object({ id: z.uuid() })),
+    ]),
+  })
   .implement(async (input) => {
     await db
       .update(sponsors_donations)
@@ -80,27 +82,29 @@ export const update = z
     return true;
   });
 
-export const markAsDeleted = z.function(z.tuple([z.object({ id: z.string().uuid() })])).implement(async (input) => {
+export const markAsDeleted = z.function({ input: z.tuple([z.object({ id: z.uuid() })]) }).implement(async (input) => {
   return update({ id: input.id, deletedAt: new Date() });
 });
 
 export const updateAmount = z
-  .function(z.tuple([z.object({ id: z.string().uuid(), amount: z.number() })]))
+  .function({ input: z.tuple([z.object({ id: z.uuid(), amount: z.number() })]) })
   .implement(async (input) => {
     return update({ id: input.id, amount: input.amount });
   });
 
-export const isAllowedToSignUp = z.function(z.tuple([z.object({ email: z.string() })])).implement(async (input) => {
-  return true;
-});
+export const isAllowedToSignUp = z
+  .function({ input: z.tuple([z.object({ email: z.string() })]) })
+  .implement(async (input) => {
+    return true;
+  });
 
-export const remove = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
+export const remove = z.function({ input: z.tuple([z.uuid()]) }).implement(async (input) => {
   const [x] = await db.delete(sponsors_donations).where(eq(sponsors_donations.id, input)).returning();
   return x;
 });
 
 export const findBySponsorIdAndYear = z
-  .function(z.tuple([z.string().uuid(), z.number()]))
+  .function({ input: z.tuple([z.uuid(), z.number()]) })
   .implement(async (sponsorId, year) => {
     return db.query.sponsors_donations.findFirst({
       where: (fields, operations) =>
