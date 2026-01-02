@@ -4,29 +4,19 @@
   "type": "module",
   "scripts": {
     "test": "sst bind vitest",
-    "typecheck": "tsc -noEmit",
-    "generate": "drizzle-kit generate"
+    "typecheck": "tsc -noEmit"
   },
   "devDependencies": {
-    "@libsql/linux-x64-gnu": "0.5.22",
     "@types/bcrypt": "6.0.0",
     "@types/pdfmake": "^0.2.12",
     "@types/node": "25.0.3",
     "@types/uuid": "11.0.0",
-    "drizzle-kit": "0.31.8",
     "sst": "3.17.25",
     "vitest": "0.34.6"
   },
   "dependencies": {
-    "@libsql/client": "0.15.15",
-    "@lucia-auth/adapter-drizzle": "1.0.7",
-    "lucia": "3.2.2",
     "dayjs": "1.11.19",
-    "drizzle-orm": "0.45.1",
-    "drizzle-zod": "0.8.3",
     "effect": "3.19.14",
-    "@effect/platform": "0.94.1",
-    "@effect/platform-node": "0.104.0",
     "node-fetch": "3.3.2",
     "pdfmake": "^0.2.20",
     "uuid": "13.0.0",

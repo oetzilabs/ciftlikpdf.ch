@@ -17,10 +17,6 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "MySolidStart": {
-      "type": "sst.cloudflare.SolidStart"
-      "url": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />
