@@ -16,7 +16,7 @@ export const default_styles = {
     font: "Helvetica",
   },
   subheader: {
-    fontSize: 8,
+    fontSize: 10,
     color: "#555555",
     font: "Helvetica",
   },
@@ -26,12 +26,12 @@ export const default_styles = {
     font: "Helvetica",
   },
   normalText: {
-    fontSize: 8,
+    fontSize: 10,
     font: "Helvetica",
     lineHeight: 1.4,
   },
   smallText: {
-    fontSize: 7,
+    fontSize: 8,
     font: "Helvetica",
     lineHeight: 1.4,
   },
@@ -42,12 +42,12 @@ export const default_styles = {
     color: "#495057",
   },
   tableCell: {
-    fontSize: 9,
+    fontSize: 10,
     font: "Helvetica",
     color: "#212529",
   },
   smallHeaderLogo: {
-    fontSize: 8,
+    fontSize: 10,
     font: "Helvetica",
     alignment: "center",
   },
@@ -58,14 +58,18 @@ export const default_styles = {
   },
   smallHeaderText: {
     fontSize: 8,
-    color: "grey",
     font: "Helvetica",
   },
   mono: {
     font: "Courier",
-    fontSize: 8,
+    fontSize: 10,
     color: "#212529",
     lineHeight: 1,
+  },
+  boldText: {
+    fontSize: 10,
+    font: "Helvetica",
+    bold: true,
   },
 } as const;
 
