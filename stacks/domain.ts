@@ -4,4 +4,4 @@ export const domain = (() => {
   return `${$app.stage}.dev.ciftlikpdf.ch`;
 })();
 
-// export const zoneID = "6f659090c4a868d00656d51dbb55facf";
+export const zoneID = "bae2152a70fa64165c1572a50e1fa8f8";
