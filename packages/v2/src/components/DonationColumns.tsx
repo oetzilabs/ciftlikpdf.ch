@@ -100,7 +100,7 @@ export const donationColumns = [
         const slugifiedSponsorName = donation.sponsor.name.replaceAll(/[^a-zA-Z0-9]/g, "-");
         setIsCreatingPDF(language);
         dayjs.locale(language, language === "tr" ? turkishLocale : language === "de" ? germanLocale : frenchLocale);
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/pdf-generate`, {
+        const res = await fetch(`/api/pdf`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

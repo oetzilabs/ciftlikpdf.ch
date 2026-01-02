@@ -17,20 +17,11 @@ const fingerprint = Effect.fn("fingerprint")(function* () {
   }
   return fp;
 });
-const innerProgram = Effect.fn("auth-middleware")(function* <A, E, R>(
-  functionName: string,
-  effect: Effect.Effect<A, E, R>
-) {
-  const otelUrl = yield* Config.string("OTEL_URL").pipe(Config.withDefault("http://localhost:4318/v1/traces"));
-  const fp = yield* fingerprint();
-  yield* Effect.annotateCurrentSpan("auth-middleware/fingerprint", fp);
-  return yield* effect;
-});
 
 export const createWebHandler =
-  <Name extends string, A = unknown, E = never>(name: Name, program: (ctx: APIEvent) => Effect.Effect<A, E, never>) =>
+  <A = unknown, E = never>(program: (ctx: APIEvent) => Effect.Effect<A, E, never>) =>
   async (context: APIEvent) => {
-    const result = Exit.match(await Effect.runPromiseExit(innerProgram(name, program(context))), {
+    const result = Exit.match(await Effect.runPromiseExit(program(context)), {
       onSuccess: (data) => data,
       onFailure: (cause) => {
         return {
@@ -41,37 +32,37 @@ export const createWebHandler =
     return result;
   };
 
-export const createWebStreamHandler =
-  <Name extends string, A, E>(name: Name, program: (ctx: APIEvent) => Effect.Effect<A, E, never>) =>
-  <StreamA extends A = A, StreamE extends E = E>(context: APIEvent) => {
-    const programEffect = innerProgram(name, program(context));
-    // Handle both Streams, arrays (stream individual elements), and single values
-    const stream = programEffect.pipe(
-      Effect.map((result): Stream.Stream<StreamA, StreamE, never> => {
-        // Check if result is a Stream by checking the StreamTypeId
-        if (result && typeof result === "object" && Stream.StreamTypeId in result) {
-          return result as unknown as Stream.Stream<StreamA, StreamE, never>;
-        }
-        // If result is an array, stream each element
-        if (Array.isArray(result)) {
-          return Stream.fromIterable(result);
-        }
-        // Otherwise stream as a single value
-        return Stream.succeed(result as StreamA);
-      }),
-      Stream.unwrap,
-      // Convert data to SSE format and encode as Uint8Array
-      Stream.map((data) => {
-        const serializedData = typeof data === "string" ? data : JSON.stringify(data);
-        const sseData = `data: ${serializedData}\n\n`;
-        return new TextEncoder().encode(sseData);
-      })
-    );
-    return new Response(Stream.toReadableStream(stream), {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
-  };
+// export const createWebStreamHandler =
+//   <Name extends string, A, E>(name: Name, program: (ctx: APIEvent) => Effect.Effect<A, E, never>) =>
+//   <StreamA extends A = A, StreamE extends E = E>(context: APIEvent) => {
+//     const programEffect = innerProgram(name, program(context));
+//     // Handle both Streams, arrays (stream individual elements), and single values
+//     const stream = programEffect.pipe(
+//       Effect.map((result): Stream.Stream<StreamA, StreamE, never> => {
+//         // Check if result is a Stream by checking the StreamTypeId
+//         if (result && typeof result === "object" && Stream.StreamTypeId in result) {
+//           return result as unknown as Stream.Stream<StreamA, StreamE, never>;
+//         }
+//         // If result is an array, stream each element
+//         if (Array.isArray(result)) {
+//           return Stream.fromIterable(result);
+//         }
+//         // Otherwise stream as a single value
+//         return Stream.succeed(result as StreamA);
+//       }),
+//       Stream.unwrap,
+//       // Convert data to SSE format and encode as Uint8Array
+//       Stream.map((data) => {
+//         const serializedData = typeof data === "string" ? data : JSON.stringify(data);
+//         const sseData = `data: ${serializedData}\n\n`;
+//         return new TextEncoder().encode(sseData);
+//       })
+//     );
+//     return new Response(Stream.toReadableStream(stream), {
+//       headers: {
+//         "Content-Type": "text/event-stream",
+//         "Cache-Control": "no-cache",
+//         Connection: "keep-alive",
+//       },
+//     });
+//   };
