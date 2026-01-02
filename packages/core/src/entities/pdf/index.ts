@@ -1,7 +1,7 @@
-import { Effect } from "effect";
+import { Config, Effect } from "effect";
 import PdfPrinter from "pdfmake";
-import { Content, TDocumentDefinitions } from "pdfmake/interfaces";
-import { default_styles, Text, Image } from "./components";
+import { Content } from "pdfmake/interfaces";
+import { default_styles, Image, Text } from "./components";
 import { PDFGenerationError } from "./errors";
 import { logo } from "./logo";
 
@@ -75,6 +75,13 @@ export class PDFService extends Effect.Service<PDFService>()("@ciftlikpdf/pdf", 
         bold: "Helvetica-Bold",
         italics: "Helvetica-Oblique",
         bolditalics: "Helvetica-BoldOblique",
+      },
+      // download default Roboto font from cdnjs.com
+      Roboto: {
+        normal: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.0/fonts/Roboto/Roboto-Regular.ttf",
+        bold: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.0/fonts/Roboto/Roboto-Medium.ttf",
+        italics: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.0/fonts/Roboto/Roboto-Italic.ttf",
+        bolditalics: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.0/fonts/Roboto/Roboto-MediumItalic.ttf",
       },
     };
 
@@ -222,6 +229,7 @@ export class PDFService extends Effect.Service<PDFService>()("@ciftlikpdf/pdf", 
       letter,
     } as const;
   }),
+  dependencies: [],
 }) {}
 
 export const PDFLive = PDFService.Default;

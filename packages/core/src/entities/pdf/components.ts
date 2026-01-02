@@ -13,52 +13,42 @@ export const default_styles = {
   header: {
     fontSize: 14,
     bold: true,
-    font: "Helvetica",
   },
   subheader: {
     fontSize: 10,
     color: "#555555",
-    font: "Helvetica",
   },
   sectionHeader: {
     fontSize: 10,
     bold: true,
-    font: "Helvetica",
   },
   normalText: {
     fontSize: 10,
-    font: "Helvetica",
     lineHeight: 1.4,
   },
   smallText: {
     fontSize: 8,
-    font: "Helvetica",
     lineHeight: 1.4,
   },
   tableHeader: {
     fontSize: 10,
     bold: true,
-    font: "Helvetica",
     color: "#495057",
   },
   tableCell: {
     fontSize: 10,
-    font: "Helvetica",
     color: "#212529",
   },
   smallHeaderLogo: {
     fontSize: 10,
-    font: "Helvetica",
     alignment: "center",
   },
   smallHeaderTitle: {
     fontSize: 10,
     bold: true,
-    font: "Helvetica",
   },
   smallHeaderText: {
     fontSize: 8,
-    font: "Helvetica",
   },
   mono: {
     font: "Courier",
@@ -68,7 +58,6 @@ export const default_styles = {
   },
   boldText: {
     fontSize: 10,
-    font: "Helvetica",
     bold: true,
   },
 } as const;
