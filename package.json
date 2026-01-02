@@ -13,23 +13,17 @@
     "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
   },
   "devDependencies": {
-    "@tsconfig/node18": "18.2.2",
-    "aws-cdk-lib": "2.142.1",
-    "constructs": "10.3.0",
-    "sst": "2.43.4",
-    "typescript": "^5.5.3"
-  },
-  "updateConfig": {
-    "ignoreDependencies": [
-      "sst",
-      "constructs",
-      "aws-cdk-lib"
-    ]
-  },
-  "overrides": {
-    "nitropack": "npm:nitropack-nightly@latest"
+    "@tsconfig/node24": "24.0.3",
+    "sst": "3.17.25",
+    "typescript": "5.9.3"
   },
   "workspaces": [
     "packages/*"
+  ],
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "aws-sdk",
+    "es5-ext",
+    "esbuild"
   ]
 }

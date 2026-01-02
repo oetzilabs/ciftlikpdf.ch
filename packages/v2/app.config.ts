@@ -1,32 +1,26 @@
-import path from "node:path";
+import { resolve } from "node:path";
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  server: {
-    preset: "aws-lambda",
-    inlineDynamicImports: true,
-    esbuild: {
-      options: {
-        target: "esnext",
-        treeShaking: true,
-      },
-    },
-  },
   vite: {
-    ssr: { noExternal: ["@kobalte/core", "lucide-solid"] },
+    ssr: { noExternal: ["@kobalte/core", "@internationalized/message"] },
     resolve: {
       alias: {
-        "@": path.resolve(process.cwd(), "src"),
-      },
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        target: "esnext",
-        treeShaking: true,
+        "@": resolve(process.cwd(), "src"),
       },
     },
     build: {
-      target: "esnext",
+      rollupOptions: {
+        external: ["cloudflare:workers"],
+      },
+    },
+  },
+  server: {
+    baseURL: undefined,
+    preset: "cloudflare_module",
+    compatibilityDate: "2024-09-19",
+    cloudflare: {
+      nodeCompat: true,
     },
   },
 });

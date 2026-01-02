@@ -1,14 +1,14 @@
 import { Donation } from "@ciftlikpdf/core/src/entities/donations";
 import { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
-import { cache, redirect } from "@solidjs/router";
+import { query, redirect } from "@solidjs/router";
 
-export const getAllSponsors = cache(async () => {
+export const getAllSponsors = query(async () => {
   "use server";
   const sponsors = await Sponsor.allWithoutDeleted();
   return sponsors;
 }, "getAllSponsors");
 
-export const getSponsor = cache(async (id: string) => {
+export const getSponsor = query(async (id: string) => {
   "use server";
   const sponsor = await Sponsor.findById(id);
   if (!sponsor) {
@@ -19,7 +19,7 @@ export const getSponsor = cache(async (id: string) => {
   return sponsor;
 }, "getSponsor");
 
-export const getSponsorDonation = cache(async (id: string, did: string) => {
+export const getSponsorDonation = query(async (id: string, did: string) => {
   "use server";
   const sponsor = await Sponsor.findById(id);
   if (!sponsor) {
