@@ -2,11 +2,14 @@ import { Button } from "@/components/ui/button";
 import { getAuthenticatedSession } from "@/data/auth";
 import { getSponsor, getSponsorDonation } from "@/data/sponsors";
 import { A, createAsync, RouteDefinition, useParams } from "@solidjs/router";
-import { ArrowLeft, Loader2, Pen } from "lucide-solid";
+import Loader2 from "lucide-solid/icons/loader-2";
+import Pen from "lucide-solid/icons/pen";
+import ArrowLeft from "lucide-solid/icons/arrow-left";
 import { Show, Suspense } from "solid-js";
 
 export const route = {
   preload: async ({ params }) => {
+    if (!params.sid || !params.did) return {};
     const sponsors = await getSponsor(params.sid);
     const donation = await getSponsorDonation(params.sid, params.did);
     const session = await getAuthenticatedSession();
@@ -16,6 +19,8 @@ export const route = {
 
 export default function SponsorDonationPage() {
   const params = useParams();
+  if (!params.sid) return <div>Sponsor not found</div>;
+  if (!params.did) return <div>Donation not found</div>;
   const sponsor = createAsync(() => getSponsor(params.sid));
   const donation = createAsync(() => getSponsorDonation(params.sid, params.did));
   const session = createAsync(() => getAuthenticatedSession());

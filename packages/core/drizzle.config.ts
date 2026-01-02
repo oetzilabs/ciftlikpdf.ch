@@ -1,10 +1,13 @@
-import type { Config } from "drizzle-kit";
+import { defineConfig } from "drizzle-kit";
 
-export default {
+export default defineConfig({
   out: "./src/drizzle/migrations",
   schema: "./src/drizzle/sql/schema.ts",
-  verbose: true,
-  driver: "turso",
+  verbose: false,
   strict: true,
-  dialect: "sqlite",
-} satisfies Config;
+  dialect: "turso",
+  dbCredentials: {
+    url: process.env.DATABASE_URL!,
+    authToken: process.env.DATABASE_TOKEN!,
+  },
+});

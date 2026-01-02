@@ -16,11 +16,15 @@ import { getAuthenticatedSession } from "@/data/auth";
 import { getAllUsers, getUser } from "@/data/users";
 import { Title } from "@solidjs/meta";
 import { A, createAsync, revalidate, RouteDefinition, useAction, useParams, useSubmission } from "@solidjs/router";
-import { ArrowLeft, Loader2, Pen, Trash } from "lucide-solid";
+import ArrowLeft from "lucide-solid/icons/arrow-left";
+import Loader2 from "lucide-solid/icons/loader-2";
+import Pen from "lucide-solid/icons/pen";
+import Trash from "lucide-solid/icons/trash";
 import { createSignal, Match, Show, Suspense, Switch } from "solid-js";
 
 export const route = {
   preload: async ({ params }) => {
+    if (!params.uid) return {};
     const sponsors = await getUser(params.uid);
     const session = await getAuthenticatedSession();
     return { sponsors, session };
@@ -29,6 +33,7 @@ export const route = {
 
 export default function UserUIDIndex() {
   const params = useParams();
+  if (!params.uid) return <div>User not found</div>;
   const user = createAsync(() => getUser(params.uid));
   const session = createAsync(() => getAuthenticatedSession());
 

@@ -15,7 +15,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
 } from "@tanstack/solid-table";
-import { Eye } from "lucide-solid";
+import Eye from "lucide-solid/icons/eye";
 import { Accessor, For, JSX, Show, createSignal, splitProps } from "solid-js";
 
 type Props<TData, TValue> = {

@@ -16,11 +16,17 @@ import { getAuthenticatedSession } from "@/data/auth";
 import { getAllSponsors, getSponsor } from "@/data/sponsors";
 import { Title } from "@solidjs/meta";
 import { A, createAsync, revalidate, RouteDefinition, useAction, useParams, useSubmission } from "@solidjs/router";
-import { ArrowLeft, Loader2, Pen, Plus, RotateCcw, Trash } from "lucide-solid";
+import ArrowLeft from "lucide-solid/icons/arrow-left";
+import Loader2 from "lucide-solid/icons/loader-2";
+import Pen from "lucide-solid/icons/pen";
+import Plus from "lucide-solid/icons/plus";
+import RotateCcw from "lucide-solid/icons/rotate-ccw";
+import Trash from "lucide-solid/icons/trash";
 import { createSignal, Match, Show, Suspense, Switch } from "solid-js";
 
 export const route = {
   preload: async ({ params }) => {
+    if (!params.sid) return {};
     const sponsors = await getSponsor(params.sid);
     const session = await getAuthenticatedSession();
     return { sponsors, session };
@@ -29,6 +35,7 @@ export const route = {
 
 export default function SponsorSIDIndex() {
   const params = useParams();
+  if (!params.sid) return <div>Sponsor not found</div>;
   const sponsor = createAsync(() => getSponsor(params.sid));
   const session = createAsync(() => getAuthenticatedSession());
 

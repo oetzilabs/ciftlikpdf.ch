@@ -6,7 +6,9 @@ import { getAuthenticatedSession } from "@/data/auth";
 import { getAllSponsors } from "@/data/sponsors";
 import type { Sponsor } from "@ciftlikpdf/core/src/entities/sponsors";
 import { A, createAsync, revalidate, RouteDefinition, useAction, useSubmission } from "@solidjs/router";
-import { ArrowLeft, Loader2, Plus } from "lucide-solid";
+import Loader2 from "lucide-solid/icons/loader-2";
+import ArrowLeft from "lucide-solid/icons/arrow-left";
+import Plus from "lucide-solid/icons/plus";
 import { Match, Show, Suspense, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 

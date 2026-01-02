@@ -5,7 +5,9 @@ import { Show, Suspense } from "solid-js";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/DataTable";
 import { userColumns } from "@/components/UserColumns";
-import { ArrowLeft, Plus, RotateCcw } from "lucide-solid";
+import ArrowLeft from "lucide-solid/icons/arrow-left";
+import Plus from "lucide-solid/icons/plus";
+import RotateCcw from "lucide-solid/icons/rotate-ccw";
 
 export const route = {
   preload: async () => {

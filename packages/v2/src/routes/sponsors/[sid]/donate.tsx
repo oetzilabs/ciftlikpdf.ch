@@ -22,12 +22,16 @@ import {
   useSubmission,
 } from "@solidjs/router";
 import dayjs from "dayjs";
-import { ArrowLeft, CheckCheck, Loader2, Plus } from "lucide-solid";
+import ArrowLeft from "lucide-solid/icons/arrow-left";
+import CheckCheck from "lucide-solid/icons/check-check";
+import Loader2 from "lucide-solid/icons/loader-2";
+import Plus from "lucide-solid/icons/plus";
 import { For, Match, Show, Suspense, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 
 export const route = {
   preload: async ({ params }) => {
+    if (!params.sid) return {};
     const sponsors = await getSponsor(params.sid);
     const session = await getAuthenticatedSession();
     return { sponsors, session };

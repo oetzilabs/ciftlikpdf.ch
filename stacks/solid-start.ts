@@ -1,11 +1,11 @@
 import { domain } from "./domain";
+import { SECRET } from "./secrets";
 
 new sst.cloudflare.x.SolidStart("MySolidStart", {
   path: "packages/web",
-  link: [api],
+  link: [SECRET],
   domain,
   environment: {
     SST_STAGE: $app.stage,
-    VITE_API_URL: api.customDomainUrl || api.url,
   },
 });

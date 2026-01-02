@@ -13,7 +13,7 @@ const HASH_ALGORITHM = "sha256";
 const HASH_ITERATIONS = 100;
 const KEY_LENGTH = 64;
 
-export const create = z.function(z.tuple([createInsertSchema(users)])).implement(async (userInput) => {
+export const create = z.function({ input: z.tuple([createInsertSchema(users)]) }).implement(async (userInput) => {
   // Generate a salt
   const salt = crypto.randomBytes(SALT_LENGTH).toString("hex");
   // Hash the password with the salt
@@ -29,16 +29,18 @@ export const create = z.function(z.tuple([createInsertSchema(users)])).implement
   return x;
 });
 
-export const validatePassword = z.function(z.tuple([z.string(), z.string()])).implement(async (input, pass) => {
-  const [u] = await db.select({ pwd: users.password }).from(users).where(eq(users.id, input));
+export const validatePassword = z
+  .function({ input: z.tuple([z.string(), z.string()]) })
+  .implement(async (input, pass) => {
+    const [u] = await db.select({ pwd: users.password }).from(users).where(eq(users.id, input));
 
-  const [salt, storedHash] = u.pwd.split(":");
-  const hash = crypto.pbkdf2Sync(pass, salt, HASH_ITERATIONS, KEY_LENGTH, HASH_ALGORITHM).toString("hex");
+    const [salt, storedHash] = u.pwd.split(":");
+    const hash = crypto.pbkdf2Sync(pass, salt, HASH_ITERATIONS, KEY_LENGTH, HASH_ALGORITHM).toString("hex");
 
-  return storedHash === hash;
-});
+    return storedHash === hash;
+  });
 
-export const countAll = z.function(z.tuple([])).implement(async () => {
+export const countAll = z.function().implement(async () => {
   const [x] = await db
     .select({
       count: sql`COUNT(${users.id})`,
@@ -47,7 +49,7 @@ export const countAll = z.function(z.tuple([])).implement(async () => {
   return x.count;
 });
 
-export const findById = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
+export const findById = z.function({ input: z.tuple([z.uuid()]) }).implement(async (input) => {
   return db.query.users.findFirst({
     where: (users, operations) => operations.eq(users.id, input),
     with: {
@@ -63,7 +65,7 @@ export const findById = z.function(z.tuple([z.string().uuid()])).implement(async
   });
 });
 
-export const findByName = z.function(z.tuple([z.string()])).implement(async (input) => {
+export const findByName = z.function({ input: z.tuple([z.string()]) }).implement(async (input) => {
   return db.query.users.findFirst({
     where: (users, operations) => operations.eq(users.name, input),
     with: {
@@ -79,7 +81,7 @@ export const findByName = z.function(z.tuple([z.string()])).implement(async (inp
   });
 });
 
-export const all = z.function(z.tuple([])).implement(async () => {
+export const all = z.function().implement(async () => {
   return db.query.users.findMany({
     with: {
       donations: {
@@ -95,14 +97,14 @@ export const all = z.function(z.tuple([])).implement(async () => {
 });
 
 export const update = z
-  .function(
-    z.tuple([
+  .function({
+    input: z.tuple([
       createInsertSchema(users)
         .partial()
         .omit({ createdAt: true, updatedAt: true })
-        .merge(z.object({ id: z.string().uuid() })),
-    ])
-  )
+        .merge(z.object({ id: z.uuid() })),
+    ]),
+  })
   .implement(async (input) => {
     await db
       .update(users)
@@ -112,23 +114,25 @@ export const update = z
     return true;
   });
 
-export const remove = z.function(z.tuple([z.string().uuid()])).implement(async (input) => {
+export const remove = z.function({ input: z.tuple([z.uuid()]) }).implement(async (input) => {
   const [x] = await db.delete(users).where(eq(users.id, input)).returning();
   return x;
 });
 
-export const markAsDeleted = z.function(z.tuple([z.object({ id: z.string().uuid() })])).implement(async (input) => {
+export const markAsDeleted = z.function({ input: z.tuple([z.object({ id: z.uuid() })]) }).implement(async (input) => {
   return update({ id: input.id, deletedAt: new Date() });
 });
 
 export const updateName = z
-  .function(z.tuple([z.object({ id: z.string().uuid(), name: z.string() })]))
+  .function({ input: z.tuple([z.object({ id: z.uuid(), name: z.string() })]) })
   .implement(async (input) => {
     return update({ id: input.id, name: input.name });
   });
 
-export const isAllowedToSignUp = z.function(z.tuple([z.object({ email: z.string() })])).implement(async (input) => {
-  return true;
-});
+export const isAllowedToSignUp = z
+  .function({ input: z.tuple([z.object({ email: z.string() })]) })
+  .implement(async (input) => {
+    return true;
+  });
 
 export type Frontend = NonNullable<Awaited<ReturnType<typeof findById>>>;
